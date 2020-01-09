@@ -5,3 +5,8 @@ export interface CreateMessage {
   rows?: number;
   rowHeight?: number;
 }
+
+export interface ReferenceCoordinates {
+  x: number;
+  y: number;
+}
