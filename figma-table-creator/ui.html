@@ -8,7 +8,9 @@
   </style>
   <body>
     <p>Columns: <input id="columns" value="5" /></p>
+    <p>Column Width: <input id="columnWidth" value="150" /> px</p>
     <p>Rows: <input id="rows" value="5" /></p>
+    <p>Row Height: <input id="rowHeight" value="30" /> px</p>
     <button id="create">Create</button>
     <button id="cancel">Cancel</button>
   </body>
@@ -16,9 +18,22 @@
 <script>
   document.getElementById("create").onclick = () => {
     const columns = parseInt(document.getElementById("columns").value, 10);
+    const columnWidth = parseInt(
+      document.getElementById("columnWidth").value,
+      10
+    );
     const rows = parseInt(document.getElementById("rows").value, 10);
+    const rowHeight = parseInt(document.getElementById("rowHeight").value, 10);
     parent.postMessage(
-      { pluginMessage: { type: "create-table", columns: columns, rows: rows } },
+      {
+        pluginMessage: {
+          type: "create-table",
+          columns: columns,
+          columnWidth: columnWidth,
+          rows: rows,
+          rowHeight: rowHeight
+        }
+      },
       "*"
     );
   };

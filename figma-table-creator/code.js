@@ -5,30 +5,24 @@ figma.showUI(__html__);
 // posted message.
 figma.ui.onmessage = msg => {
     processMessage(msg);
-    // Make sure to close the plugin when you're done. Otherwise the plugin will
-    // keep running, which shows the cancel button at the bottom of the screen.
     figma.closePlugin();
 };
 function processMessage(message) {
     if (message.type === "create-table") {
-        const columnWidth = 150;
-        const rowHeight = 30;
-        const verticalLinesNode = generateBorders("vertical", message.columns, columnWidth, rowHeight * message.rows);
-        const horizontalLinesNode = generateBorders("horizontal", message.rows, rowHeight, columnWidth * message.columns);
-        const verticalLinesGroup = figma.group(verticalLinesNode, figma.currentPage);
-        const horizontalLinesGroup = figma.group(horizontalLinesNode, figma.currentPage);
+        const verticalLinesGroup = generateBorders("vertical", true, message.columns, message.columnWidth, message.rowHeight * message.rows);
+        const horizontalLinesGroup = generateBorders("horizontal", false, message.rows, message.rowHeight, message.columnWidth * message.columns);
         const borderLinesNode = [
             verticalLinesGroup,
             horizontalLinesGroup
         ];
         const borderLinesGroup = figma.group(borderLinesNode, figma.currentPage);
         figma.currentPage.selection = [borderLinesGroup];
-        figma.viewport.scrollAndZoomIntoView(verticalLinesNode);
+        figma.viewport.scrollAndZoomIntoView([borderLinesGroup]);
     }
     figma.notify("Table created!");
     return null;
 }
-function generateBorders(borderType, borderCount, borderSpacing, borderWidth) {
+function generateBorders(borderType, visible = true, borderCount, borderSpacing, borderWidth) {
     const linesNode = [];
     for (let i = 0; i < borderCount + 1; i++) {
         const line = figma.createLine();
@@ -42,5 +36,9 @@ function generateBorders(borderType, borderCount, borderSpacing, borderWidth) {
         line.resize(borderWidth, 0);
         linesNode.push(line);
     }
-    return linesNode;
+    const linesGroup = figma.group(linesNode, figma.currentPage);
+    if (!visible) {
+        linesGroup.visible = false;
+    }
+    return linesGroup;
 }
