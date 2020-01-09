@@ -17,22 +17,36 @@ function processMessage(message: CreateMessage): void {
   if (message.type === "create-table") {
     const columnWidth: number = 150;
     const rowHeight: number = 30;
-    const verticalLineNode: SceneNode[] = generateBorders(
+    const verticalLinesNode: SceneNode[] = generateBorders(
       "vertical",
       message.columns,
       columnWidth,
       rowHeight * message.rows
     );
-    const horizontalLineNode: SceneNode[] = generateBorders(
+    const horizontalLinesNode: SceneNode[] = generateBorders(
       "horizontal",
       message.rows,
       rowHeight,
       columnWidth * message.columns
     );
-    figma.group(verticalLineNode, figma.currentPage);
-    figma.group(horizontalLineNode, figma.currentPage);
-    figma.currentPage.selection = verticalLineNode;
-    figma.viewport.scrollAndZoomIntoView(verticalLineNode);
+    const verticalLinesGroup = figma.group(
+      verticalLinesNode,
+      figma.currentPage
+    );
+    const horizontalLinesGroup = figma.group(
+      horizontalLinesNode,
+      figma.currentPage
+    );
+    const borderLinesNode: SceneNode[] = [
+      verticalLinesGroup,
+      horizontalLinesGroup
+    ];
+    const borderLinesGroup: GroupNode = figma.group(
+      borderLinesNode,
+      figma.currentPage
+    );
+    figma.currentPage.selection = [borderLinesGroup];
+    figma.viewport.scrollAndZoomIntoView(verticalLinesNode);
   }
   figma.notify("Table created!");
   return null;
