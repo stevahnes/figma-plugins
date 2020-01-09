@@ -1,9 +1,4 @@
-// This plugin will open a modal to prompt the user to enter a number, and
-// it will then create that many rectangles on the screen.
-
-// This file holds the main code for the plugins. It has access to the *document*.
-// You can access browser APIs in the <script> tag inside "ui.html" which has a
-// full browser enviroment (see documentation).
+import { CreateMessage } from "./interfaces/interfaces";
 
 // This shows the HTML page in "ui.html".
 figma.showUI(__html__);
@@ -12,22 +7,54 @@ figma.showUI(__html__);
 // callback. The callback will be passed the "pluginMessage" property of the
 // posted message.
 figma.ui.onmessage = msg => {
-  // One way of distinguishing between different types of messages sent from
-  // your HTML page is to use an object with a "type" property like this.
-  if (msg.type === 'create-rectangles') {
-    const nodes: SceneNode[] = [];
-    for (let i = 0; i < msg.count; i++) {
-      const rect = figma.createRectangle();
-      rect.x = i * 150;
-      rect.fills = [{type: 'SOLID', color: {r: 1, g: 0.5, b: 0}}];
-      figma.currentPage.appendChild(rect);
-      nodes.push(rect);
-    }
-    figma.currentPage.selection = nodes;
-    figma.viewport.scrollAndZoomIntoView(nodes);
-  }
-
+  processMessage(msg);
   // Make sure to close the plugin when you're done. Otherwise the plugin will
   // keep running, which shows the cancel button at the bottom of the screen.
   figma.closePlugin();
 };
+
+function processMessage(message: CreateMessage): void {
+  if (message.type === "create-table") {
+    const columnWidth: number = 150;
+    const rowHeight: number = 30;
+    const verticalLineNode: SceneNode[] = generateBorders(
+      "vertical",
+      message.columns,
+      columnWidth,
+      rowHeight * message.rows
+    );
+    const horizontalLineNode: SceneNode[] = generateBorders(
+      "horizontal",
+      message.rows,
+      rowHeight,
+      columnWidth * message.columns
+    );
+    figma.group(verticalLineNode, figma.currentPage);
+    figma.group(horizontalLineNode, figma.currentPage);
+    figma.currentPage.selection = verticalLineNode;
+    figma.viewport.scrollAndZoomIntoView(verticalLineNode);
+  }
+  figma.notify("Table created!");
+  return null;
+}
+
+function generateBorders(
+  borderType: "horizontal" | "vertical",
+  borderCount: number,
+  borderSpacing: number,
+  borderWidth: number
+): SceneNode[] {
+  const linesNode: SceneNode[] = [];
+  for (let i = 0; i < borderCount + 1; i++) {
+    const line = figma.createLine();
+    if (borderType === "vertical") {
+      line.rotation = 90;
+      line.x = i * borderSpacing;
+    } else {
+      line.y = i * -borderSpacing;
+    }
+    line.resize(borderWidth, 0);
+    linesNode.push(line);
+  }
+  return linesNode;
+}
