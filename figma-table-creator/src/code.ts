@@ -1,4 +1,10 @@
 import { CreateMessage, ReferenceCoordinates } from "./interfaces/interfaces";
+import {
+  generateRowBackground,
+  generateBorders,
+  generateTableTexts
+} from "./generators/generators";
+import * as Figma from "./utils/utils";
 const referenceCoordinates: ReferenceCoordinates = { x: 0, y: 0 };
 
 // This shows the HTML page in "ui.html".
@@ -19,19 +25,21 @@ function processMessage(message: CreateMessage): void {
       "Odd",
       message.rows,
       message.rowHeight,
-      message.columnWidth * message.columns
+      message.columnWidth * message.columns,
+      referenceCoordinates
     );
     const evenRowBackgroundGroup: GroupNode = generateRowBackground(
       "Even",
       message.rows,
       message.rowHeight,
-      message.columnWidth * message.columns
+      message.columnWidth * message.columns,
+      referenceCoordinates
     );
     const rowBackgroundNode: SceneNode[] = [
       oddRowBackgroundGroup,
       evenRowBackgroundGroup
     ];
-    const rowBackgroundGroup: GroupNode = groupNodes(
+    const rowBackgroundGroup: GroupNode = Figma.groupNodes(
       rowBackgroundNode,
       figma.currentPage
     );
@@ -43,28 +51,39 @@ function processMessage(message: CreateMessage): void {
       true,
       message.columns,
       message.columnWidth,
-      message.rowHeight * message.rows
+      message.rowHeight * message.rows,
+      referenceCoordinates
     );
     const horizontalLinesGroup: GroupNode = generateBorders(
       "Horizontal",
       true,
       message.rows,
       message.rowHeight,
-      message.columnWidth * message.columns
+      message.columnWidth * message.columns,
+      referenceCoordinates
     );
     const borderLinesNode: SceneNode[] = [
       verticalLinesGroup,
       horizontalLinesGroup
     ];
-    const borderLinesGroup: GroupNode = groupNodes(
+    const borderLinesGroup: GroupNode = Figma.groupNodes(
       borderLinesNode,
       figma.currentPage
     );
     borderLinesGroup.name = "Borders";
 
+    /* Generate Texts */
+    const columnTextsGroup: GroupNode = generateTableTexts(
+      message.rows,
+      message.rowHeight,
+      message.columns,
+      message.columnWidth,
+      referenceCoordinates
+    );
+
     /* Sort Group Nodes */
-    const tableGroup = groupNodes(
-      [borderLinesGroup, rowBackgroundGroup],
+    const tableGroup = Figma.groupNodes(
+      [columnTextsGroup, borderLinesGroup, rowBackgroundGroup],
       figma.currentPage
     );
 
@@ -76,70 +95,4 @@ function processMessage(message: CreateMessage): void {
   /* Notify Success to User */
   figma.notify("Table created!");
   return null;
-}
-
-function generateBorders(
-  borderType: "Horizontal" | "Vertical",
-  visible: boolean = true,
-  borderCount: number,
-  borderSpacing: number,
-  borderWidth: number
-): GroupNode {
-  const linesNode: SceneNode[] = [];
-  for (let i = 0; i < borderCount + 1; i++) {
-    const line = figma.createLine();
-    if (borderType === "Vertical") {
-      line.rotation = 90;
-      line.x = referenceCoordinates.x + i * borderSpacing;
-    } else {
-      line.y = referenceCoordinates.y - i * borderSpacing;
-    }
-    line.resize(borderWidth, 0);
-    linesNode.push(line);
-  }
-  const linesGroup: GroupNode = groupNodes(linesNode, figma.currentPage);
-  if (!visible) {
-    linesGroup.visible = false;
-  }
-  linesGroup.name = borderType;
-  return linesGroup;
-}
-
-function generateRowBackground(
-  rowBackgroundType: "Odd" | "Even",
-  rowCount: number,
-  rowHeight: number,
-  rowWidth: number
-): GroupNode {
-  const rowBackgroundNode: SceneNode[] = [];
-  const rowSpacing = rowHeight * 2;
-  let computedRowCount = 0;
-  let startingPoint = 0;
-  if (rowBackgroundType === "Odd") {
-    computedRowCount = Math.round(rowCount / 2);
-    startingPoint = referenceCoordinates.y - rowHeight;
-  } else {
-    computedRowCount = Math.floor(rowCount / 2);
-    startingPoint = referenceCoordinates.y - rowSpacing;
-  }
-  for (let i = 0; i < computedRowCount; i++) {
-    const background = figma.createRectangle();
-    background.resize(rowWidth, rowHeight);
-    background.y = startingPoint - i * rowSpacing;
-    rowBackgroundNode.push(background);
-  }
-  const rowBackgroundGroup: GroupNode = groupNodes(
-    rowBackgroundNode,
-    figma.currentPage
-  );
-  rowBackgroundGroup.name = rowBackgroundType;
-  return rowBackgroundGroup;
-}
-
-/* API Function Abstraction */
-function groupNodes(
-  nodes: ReadonlyArray<BaseNode>,
-  parent: BaseNode & ChildrenMixin
-): GroupNode {
-  return figma.group(nodes, parent);
 }
