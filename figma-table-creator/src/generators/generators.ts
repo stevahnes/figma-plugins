@@ -52,6 +52,17 @@ export function generateRowBackground(
   }
   for (let i = 0; i < computedRowCount; i++) {
     const background = figma.createRectangle();
+    const backgroundFills = Figma.clone(background.fills);
+    if (rowBackgroundType === "Odd") {
+      backgroundFills[0].color.r = 247 / 255;
+      backgroundFills[0].color.g = 247 / 255;
+      backgroundFills[0].color.b = 247 / 255;
+    } else {
+      backgroundFills[0].color.r = 1;
+      backgroundFills[0].color.g = 1;
+      backgroundFills[0].color.b = 1;
+    }
+    background.fills = backgroundFills;
     background.resize(rowWidth, rowHeight);
     background.y = startingPoint - i * rowSpacing;
     rowBackgroundNode.push(background);
