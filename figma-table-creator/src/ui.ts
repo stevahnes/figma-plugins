@@ -1,8 +1,20 @@
 import "./ui.css";
 
 /* Constants */
+const floatingFilterHTMLTag: string = document.getElementById(
+  "floating-filter-checkbox"
+).outerHTML;
+/* State Changes */
 let isShiftHeld: boolean = false;
 
+/* Toggle of Floating Filter Checkbox Rendering */
+document.getElementById("header").onchange = () => {
+  toggleFloatingFiltersVisibility(
+    (document.getElementById("header") as HTMLInputElement).checked
+  );
+};
+
+/* Keyboard Navigation */
 document.onkeydown = keyDown => {
   let activeElement = document.activeElement as HTMLInputElement;
   if (keyDown.key === "Shift") {
@@ -39,15 +51,22 @@ document.onkeydown = keyDown => {
       document.getElementById("cancel").focus();
       keyDown.preventDefault();
     }
+  } else if (keyDown.key === "Enter") {
+    if (activeElement.type === "checkbox") {
+      activeElement.checked = !activeElement.checked;
+      if (activeElement.id === "header") {
+        toggleFloatingFiltersVisibility(activeElement.checked);
+      }
+    }
   }
 };
-
 document.onkeyup = keyUp => {
   if (keyUp.key === "Shift") {
     isShiftHeld = false;
   }
 };
 
+/* Create and Cancel Button Actions */
 document.getElementById("create").onclick = () => {
   const columnsInput = document.getElementById("columns") as HTMLInputElement;
   const columnsWidthInput = document.getElementById(
@@ -57,10 +76,12 @@ document.getElementById("create").onclick = () => {
   const rowHeightInput = document.getElementById(
     "rowHeight"
   ) as HTMLInputElement;
+  const headerInput = document.getElementById("header") as HTMLInputElement;
   const columns = parseInt(columnsInput.value, 10);
   const columnWidth = parseInt(columnsWidthInput.value, 10);
   const rows = parseInt(rowsInput.value, 10);
   const rowHeight = parseInt(rowHeightInput.value, 10);
+  const header = headerInput.checked;
   parent.postMessage(
     {
       pluginMessage: {
@@ -68,13 +89,29 @@ document.getElementById("create").onclick = () => {
         columns: columns,
         columnWidth: columnWidth,
         rows: rows,
-        rowHeight: rowHeight
+        rowHeight: rowHeight,
+        header: header
       }
     },
     "*"
   );
 };
-
 document.getElementById("cancel").onclick = () => {
   parent.postMessage({ pluginMessage: { type: "cancel" } }, "*");
 };
+
+function toggleFloatingFiltersVisibility(isHeaderSelected: boolean): void {
+  if (isHeaderSelected) {
+    document
+      .getElementById("floating-filter-checkbox")
+      .classList.add("is-visible");
+  } else {
+    (document.getElementById(
+      "floating-filter"
+    ) as HTMLInputElement).checked = false;
+    document
+      .getElementById("floating-filter-checkbox")
+      .classList.remove("is-visible");
+  }
+  return null;
+}

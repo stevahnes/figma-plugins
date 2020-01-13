@@ -4,6 +4,7 @@ export interface CreateMessage {
   columnWidth?: number;
   rows?: number;
   rowHeight?: number;
+  header?: boolean;
 }
 
 export interface ReferenceCoordinates {

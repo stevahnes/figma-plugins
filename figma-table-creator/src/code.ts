@@ -6,9 +6,12 @@ import {
 } from "./generators/generators";
 import * as Figma from "./utils/utils";
 const referenceCoordinates: ReferenceCoordinates = { x: 0, y: 0 };
-
+const showUIOptions: ShowUIOptions = {
+  width: 300,
+  height: 300
+};
 // This shows the HTML page in "ui.html".
-figma.showUI(__html__);
+figma.showUI(__html__, showUIOptions);
 
 // Calls to "parent.postMessage" from within the HTML page will trigger this
 // callback. The callback will be passed the "pluginMessage" property of the
@@ -19,6 +22,7 @@ figma.ui.onmessage = msg => {
 };
 
 function processMessage(message: CreateMessage): void {
+  console.log(message);
   if (message.type === "create-table") {
     /* Generate Background */
     const oddRowBackgroundGroup: GroupNode = generateRowBackground(
