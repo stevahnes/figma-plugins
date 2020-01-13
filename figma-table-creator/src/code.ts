@@ -29,6 +29,7 @@ function processMessage(message: CreateMessage): void {
       message.rows,
       message.rowHeight,
       message.columnWidth * message.columns,
+      message.alternateBackgrounds,
       referenceCoordinates
     );
     const evenRowBackgroundGroup: GroupNode = generateRowBackground(
@@ -36,6 +37,7 @@ function processMessage(message: CreateMessage): void {
       message.rows,
       message.rowHeight,
       message.columnWidth * message.columns,
+      message.alternateBackgrounds,
       referenceCoordinates
     );
     const rowBackgroundNode: SceneNode[] = [
@@ -51,7 +53,7 @@ function processMessage(message: CreateMessage): void {
     /* Generate Borders */
     const verticalLinesGroup: GroupNode = generateBorders(
       "Vertical",
-      true,
+      message.borders,
       message.columns,
       message.columnWidth,
       message.rowHeight * message.rows,
@@ -59,7 +61,7 @@ function processMessage(message: CreateMessage): void {
     );
     const horizontalLinesGroup: GroupNode = generateBorders(
       "Horizontal",
-      true,
+      message.borders,
       message.rows,
       message.rowHeight,
       message.columnWidth * message.columns,

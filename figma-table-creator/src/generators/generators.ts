@@ -37,6 +37,7 @@ export function generateRowBackground(
   rowCount: number,
   rowHeight: number,
   rowWidth: number,
+  alternateBackgrounds: boolean,
   referenceCoordinates: ReferenceCoordinates
 ): GroupNode {
   const rowBackgroundNode: SceneNode[] = [];
@@ -53,7 +54,7 @@ export function generateRowBackground(
   for (let i = 0; i < computedRowCount; i++) {
     const background = figma.createRectangle();
     const backgroundFills = Figma.clone(background.fills);
-    if (rowBackgroundType === "Odd") {
+    if (alternateBackgrounds && rowBackgroundType === "Odd") {
       backgroundFills[0].color.r = 247 / 255;
       backgroundFills[0].color.g = 247 / 255;
       backgroundFills[0].color.b = 247 / 255;
@@ -91,7 +92,7 @@ export function generateTableTexts(
       const text = figma.createText();
       loadNodeFont(text.fontName as FontName).then(_ => {
         text.name = "Row " + (rowCount - j);
-        text.characters = "Text/Placeholder";
+        text.characters = "Sample";
         text.x = columnTextsStartingPosition;
         text.y = referenceCoordinates.y - (j + 1) * rowHeight;
         text.resize(columnWidth, rowHeight);

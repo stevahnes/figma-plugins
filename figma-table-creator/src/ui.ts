@@ -72,12 +72,22 @@ document.getElementById("create").onclick = () => {
   const rowHeightInput = document.getElementById(
     "rowHeight"
   ) as HTMLInputElement;
+  const bordersInput = document.getElementById("borders") as HTMLInputElement;
+  const alternateBackgroundsInput = document.getElementById(
+    "alternate-backgrounds"
+  ) as HTMLInputElement;
   const headerInput = document.getElementById("header") as HTMLInputElement;
+  const floatingFiltersInput = document.getElementById(
+    "floating-filter"
+  ) as HTMLInputElement;
   const columns = parseInt(columnsInput.value, 10);
   const columnWidth = parseInt(columnsWidthInput.value, 10);
   const rows = parseInt(rowsInput.value, 10);
   const rowHeight = parseInt(rowHeightInput.value, 10);
+  const borders = bordersInput.checked;
+  const alternateBackgrounds = alternateBackgroundsInput.checked;
   const header = headerInput.checked;
+  const floatingFilters = floatingFiltersInput.checked;
   parent.postMessage(
     {
       pluginMessage: {
@@ -86,7 +96,10 @@ document.getElementById("create").onclick = () => {
         columnWidth: columnWidth,
         rows: rows,
         rowHeight: rowHeight,
-        header: header
+        borders: borders,
+        alternateBackgrounds: alternateBackgrounds,
+        header: header,
+        floatingFilters: floatingFilters
       }
     },
     "*"
