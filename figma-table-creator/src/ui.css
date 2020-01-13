@@ -63,10 +63,10 @@ input:focus {
   width: 50% !important;
 }
 .label {
-  width: 65% !important;
+  width: 50% !important;
 }
 .text-input {
-  width: 35% !important;
+  width: 50% !important;
 }
 /* Clear floats after the columns */
 .row:after {

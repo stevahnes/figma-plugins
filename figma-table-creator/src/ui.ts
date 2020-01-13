@@ -74,11 +74,11 @@ document.getElementById("create").onclick = () => {
   ) as HTMLInputElement;
   const bordersInput = document.getElementById("borders") as HTMLInputElement;
   const alternateBackgroundsInput = document.getElementById(
-    "alternate-backgrounds"
+    "alternateBackgrounds"
   ) as HTMLInputElement;
   const headerInput = document.getElementById("header") as HTMLInputElement;
   const floatingFiltersInput = document.getElementById(
-    "floating-filter"
+    "floatingFilter"
   ) as HTMLInputElement;
   const columns = parseInt(columnsInput.value, 10);
   const columnWidth = parseInt(columnsWidthInput.value, 10);
@@ -112,14 +112,14 @@ document.getElementById("cancel").onclick = () => {
 function toggleFloatingFiltersVisibility(isHeaderSelected: boolean): void {
   if (isHeaderSelected) {
     document
-      .getElementById("floating-filter-checkbox")
+      .getElementById("floatingFiltersCheckbox")
       .classList.add("is-visible");
   } else {
     (document.getElementById(
       "floating-filter"
     ) as HTMLInputElement).checked = false;
     document
-      .getElementById("floating-filter-checkbox")
+      .getElementById("floatingFiltersCheckbox")
       .classList.remove("is-visible");
   }
   return null;
