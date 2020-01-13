@@ -8,6 +8,10 @@ document.getElementById("header").onchange = () => {
   toggleFloatingFiltersVisibility(
     (document.getElementById("header") as HTMLInputElement).checked
   );
+  toggleInputVisibility(
+    "headerHeightInput",
+    (document.getElementById("header") as HTMLInputElement).checked
+  );
 };
 
 /* Keyboard Navigation */
@@ -52,6 +56,7 @@ document.onkeydown = keyDown => {
       activeElement.checked = !activeElement.checked;
       if (activeElement.id === "header") {
         toggleFloatingFiltersVisibility(activeElement.checked);
+        toggleInputVisibility("headerHeightInput", activeElement.checked);
       }
     }
   }
@@ -116,11 +121,23 @@ function toggleFloatingFiltersVisibility(isHeaderSelected: boolean): void {
       .classList.add("is-visible");
   } else {
     (document.getElementById(
-      "floating-filter"
+      "floatingFilter"
     ) as HTMLInputElement).checked = false;
     document
       .getElementById("floatingFiltersCheckbox")
       .classList.remove("is-visible");
+  }
+  return null;
+}
+
+function toggleInputVisibility(
+  htmlTagId: string,
+  isPrerequisiteSelected: boolean
+): void {
+  if (isPrerequisiteSelected) {
+    document.getElementById(htmlTagId).classList.add("is-visible");
+  } else {
+    document.getElementById(htmlTagId).classList.remove("is-visible");
   }
   return null;
 }
