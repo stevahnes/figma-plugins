@@ -65,7 +65,7 @@ input:focus {
 .label {
   width: 50% !important;
 }
-.text-input {
+.input-column {
   width: 50% !important;
 }
 /* Clear floats after the columns */
