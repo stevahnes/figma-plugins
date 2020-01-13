@@ -138,7 +138,7 @@ export function generateTableTexts(
       columnTextsNode,
       Figma.getCurrentPage()
     );
-    columnTextsGroup.name = "Column " + i;
+    columnTextsGroup.name = "Column " + (i + 1);
     tableTextsNode.push(columnTextsGroup);
   }
   const tableTextsGroup: GroupNode = Figma.groupNodes(
@@ -171,6 +171,7 @@ export function generateTableHeader(
     background.resize(rowWidth, headerHeight);
     background.y =
       referenceCoordinates.y - headerHeight - (rowCount - 1) * rowHeight;
+    background.name = "Header Background";
     tableHeaderNode.push(background);
     // Texts
     const tableHeaderTextsNode: SceneNode[] = [];
@@ -180,7 +181,7 @@ export function generateTableHeader(
       const text = figma.createText();
       const fontName: FontName = { family: "Roboto", style: "Bold" };
       loadNodeFont(fontName).then(_ => {
-        text.name = "Column Header " + i;
+        text.name = "Column Header " + (i + 1);
         text.characters = "SAMPLE";
         text.fontName = fontName;
         text.x = columnTextsStartingPosition;
