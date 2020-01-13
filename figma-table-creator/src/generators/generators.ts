@@ -6,10 +6,25 @@ export function generateBorders(
   visible: boolean = true,
   borderCount: number,
   borderSpacing: number,
-  borderWidth: number,
+  borderWidthMultiplier: number,
+  borderWidthIndividual: number,
+  header: boolean,
+  headerHeight: number,
   referenceCoordinates: ReferenceCoordinates
 ): GroupNode {
   const linesNode: SceneNode[] = [];
+  let borderWidth: number;
+  if (header) {
+    if (borderType === "Vertical") {
+      borderWidth =
+        (borderWidthMultiplier - 1) * borderWidthIndividual + headerHeight;
+    } else {
+      borderCount -= 1;
+      borderWidth = borderWidthMultiplier * borderWidthIndividual;
+    }
+  } else {
+    borderWidth = borderWidthMultiplier * borderWidthIndividual;
+  }
   for (let i = 0; i < borderCount + 1; i++) {
     const line = figma.createLine();
     if (borderType === "Vertical") {
@@ -19,6 +34,13 @@ export function generateBorders(
       line.y = referenceCoordinates.y - i * borderSpacing;
     }
     line.resize(borderWidth, 0);
+    linesNode.push(line);
+  }
+  if (header && borderType === "Horizontal") {
+    const line = figma.createLine();
+    line.resize(borderWidth, 0);
+    line.y =
+      referenceCoordinates.y - headerHeight - borderCount * borderSpacing;
     linesNode.push(line);
   }
   const linesGroup: GroupNode = Figma.groupNodes(
@@ -38,12 +60,16 @@ export function generateRowBackground(
   rowHeight: number,
   rowWidth: number,
   alternateBackgrounds: boolean,
+  header: boolean,
   referenceCoordinates: ReferenceCoordinates
 ): GroupNode {
   const rowBackgroundNode: SceneNode[] = [];
   const rowSpacing = rowHeight * 2;
   let computedRowCount = 0;
   let startingPoint = 0;
+  if (header) {
+    rowCount -= 1;
+  }
   if (rowBackgroundType === "Odd") {
     computedRowCount = Math.round(rowCount / 2);
     startingPoint = referenceCoordinates.y - rowHeight;
@@ -54,7 +80,11 @@ export function generateRowBackground(
   for (let i = 0; i < computedRowCount; i++) {
     const background = figma.createRectangle();
     const backgroundFills = Figma.clone(background.fills);
-    if (alternateBackgrounds && rowBackgroundType === "Odd") {
+    if (
+      alternateBackgrounds &&
+      ((!header && rowBackgroundType === "Even") ||
+        (header && rowBackgroundType === "Odd"))
+    ) {
       backgroundFills[0].color.r = 247 / 255;
       backgroundFills[0].color.g = 247 / 255;
       backgroundFills[0].color.b = 247 / 255;
@@ -81,9 +111,13 @@ export function generateTableTexts(
   rowHeight: number,
   columnCount: number,
   columnWidth: number,
+  header: boolean,
   referenceCoordinates: ReferenceCoordinates
 ) {
   const tableTextsNode: SceneNode[] = [];
+  if (header) {
+    rowCount -= 1;
+  }
   for (let i = 0; i < columnCount; i++) {
     const columnTextsNode: SceneNode[] = [];
     const columnTextsStartingPosition =
@@ -104,15 +138,74 @@ export function generateTableTexts(
       columnTextsNode,
       Figma.getCurrentPage()
     );
-    columnTextsGroup.name = "Column " + (columnCount - i);
+    columnTextsGroup.name = "Column " + i;
     tableTextsNode.push(columnTextsGroup);
   }
-  const tableTextsGroup = Figma.groupNodes(
+  const tableTextsGroup: GroupNode = Figma.groupNodes(
     tableTextsNode,
     Figma.getCurrentPage()
   );
   tableTextsGroup.name = "Table Texts";
   return tableTextsGroup;
+}
+
+export function generateTableHeader(
+  rowCount: number,
+  rowHeight: number,
+  columnCount: number,
+  columnWidth: number,
+  header: boolean,
+  headerHeight: number,
+  referenceCoordinates: ReferenceCoordinates
+): GroupNode {
+  if (header) {
+    // Background
+    const tableHeaderNode: SceneNode[] = [];
+    const rowWidth = columnWidth * columnCount;
+    const background = figma.createRectangle();
+    const backgroundFills = Figma.clone(background.fills);
+    backgroundFills[0].color.r = 247 / 255;
+    backgroundFills[0].color.g = 247 / 255;
+    backgroundFills[0].color.b = 247 / 255;
+    background.fills = backgroundFills;
+    background.resize(rowWidth, headerHeight);
+    background.y =
+      referenceCoordinates.y - headerHeight - (rowCount - 1) * rowHeight;
+    tableHeaderNode.push(background);
+    // Texts
+    const tableHeaderTextsNode: SceneNode[] = [];
+    for (let i = 0; i < columnCount; i++) {
+      const columnTextsStartingPosition =
+        referenceCoordinates.x + i * columnWidth;
+      const text = figma.createText();
+      const fontName: FontName = { family: "Roboto", style: "Bold" };
+      loadNodeFont(fontName).then(_ => {
+        text.name = "Column Header " + i;
+        text.characters = "SAMPLE";
+        text.fontName = fontName;
+        text.x = columnTextsStartingPosition;
+        text.y =
+          referenceCoordinates.y - headerHeight - (rowCount - 1) * rowHeight;
+        text.resize(columnWidth, headerHeight);
+        text.textAlignVertical = "CENTER";
+      });
+      tableHeaderTextsNode.push(text);
+    }
+    const tableHeaderTextsGroup = Figma.groupNodes(
+      tableHeaderTextsNode,
+      Figma.getCurrentPage()
+    );
+    tableHeaderTextsGroup.name = "Column Headers";
+    tableHeaderNode.push(tableHeaderTextsGroup);
+    const tableHeaderGroup: GroupNode = Figma.groupNodes(
+      tableHeaderNode,
+      Figma.getCurrentPage()
+    );
+    tableHeaderGroup.name = "Table Header";
+    return tableHeaderGroup;
+  } else {
+    return null;
+  }
 }
 
 async function loadNodeFont(fontName: FontName): Promise<void> {

@@ -2,7 +2,8 @@ import { CreateMessage, ReferenceCoordinates } from "./interfaces/interfaces";
 import {
   generateRowBackground,
   generateBorders,
-  generateTableTexts
+  generateTableTexts,
+  generateTableHeader
 } from "./generators/generators";
 import * as Figma from "./utils/utils";
 const referenceCoordinates: ReferenceCoordinates = { x: 0, y: 0 };
@@ -30,6 +31,7 @@ function processMessage(message: CreateMessage): void {
       message.rowHeight,
       message.columnWidth * message.columns,
       message.alternateBackgrounds,
+      message.header,
       referenceCoordinates
     );
     const evenRowBackgroundGroup: GroupNode = generateRowBackground(
@@ -38,6 +40,7 @@ function processMessage(message: CreateMessage): void {
       message.rowHeight,
       message.columnWidth * message.columns,
       message.alternateBackgrounds,
+      message.header,
       referenceCoordinates
     );
     const rowBackgroundNode: SceneNode[] = [
@@ -50,13 +53,37 @@ function processMessage(message: CreateMessage): void {
     );
     rowBackgroundGroup.name = "Row Background";
 
+    /* Generate Texts */
+    const columnTextsGroup: GroupNode = generateTableTexts(
+      message.rows,
+      message.rowHeight,
+      message.columns,
+      message.columnWidth,
+      message.header,
+      referenceCoordinates
+    );
+
+    /* Generate Headers */
+    const tableHeaderGroup: GroupNode = generateTableHeader(
+      message.rows,
+      message.rowHeight,
+      message.columns,
+      message.columnWidth,
+      message.header,
+      message.headerHeight,
+      referenceCoordinates
+    );
+
     /* Generate Borders */
     const verticalLinesGroup: GroupNode = generateBorders(
       "Vertical",
       message.borders,
       message.columns,
       message.columnWidth,
-      message.rowHeight * message.rows,
+      message.rows,
+      message.rowHeight,
+      message.header,
+      message.headerHeight,
       referenceCoordinates
     );
     const horizontalLinesGroup: GroupNode = generateBorders(
@@ -64,7 +91,10 @@ function processMessage(message: CreateMessage): void {
       message.borders,
       message.rows,
       message.rowHeight,
-      message.columnWidth * message.columns,
+      message.columns,
+      message.columnWidth,
+      message.header,
+      message.headerHeight,
       referenceCoordinates
     );
     const borderLinesNode: SceneNode[] = [
@@ -77,21 +107,16 @@ function processMessage(message: CreateMessage): void {
     );
     borderLinesGroup.name = "Borders";
 
-    /* Generate Texts */
-    const columnTextsGroup: GroupNode = generateTableTexts(
-      message.rows,
-      message.rowHeight,
-      message.columns,
-      message.columnWidth,
-      referenceCoordinates
-    );
-
     /* Sort Group Nodes */
     const tableGroup = Figma.groupNodes(
-      [columnTextsGroup, borderLinesGroup, rowBackgroundGroup],
+      [rowBackgroundGroup],
       figma.currentPage
     );
-
+    tableGroup.appendChild(columnTextsGroup);
+    if (tableHeaderGroup !== null) {
+      tableGroup.appendChild(tableHeaderGroup);
+    }
+    tableGroup.appendChild(borderLinesGroup);
     tableGroup.name = "Table";
     figma.currentPage.selection = [tableGroup];
     figma.viewport.scrollAndZoomIntoView([tableGroup]);

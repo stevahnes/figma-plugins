@@ -7,6 +7,7 @@ export interface CreateMessage {
   borders?: boolean;
   alternateBackgrounds?: boolean;
   header?: boolean;
+  headerHeight?: number;
   floatingFilters?: boolean;
 }
 

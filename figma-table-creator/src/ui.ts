@@ -82,6 +82,9 @@ document.getElementById("create").onclick = () => {
     "alternateBackgrounds"
   ) as HTMLInputElement;
   const headerInput = document.getElementById("header") as HTMLInputElement;
+  const headerHeightInput = document.getElementById(
+    "headerHeight"
+  ) as HTMLInputElement;
   const floatingFiltersInput = document.getElementById(
     "floatingFilter"
   ) as HTMLInputElement;
@@ -92,6 +95,7 @@ document.getElementById("create").onclick = () => {
   const borders = bordersInput.checked;
   const alternateBackgrounds = alternateBackgroundsInput.checked;
   const header = headerInput.checked;
+  const headerHeight = parseInt(headerHeightInput.value, 10);
   const floatingFilters = floatingFiltersInput.checked;
   parent.postMessage(
     {
@@ -104,6 +108,7 @@ document.getElementById("create").onclick = () => {
         borders: borders,
         alternateBackgrounds: alternateBackgrounds,
         header: header,
+        headerHeight: headerHeight,
         floatingFilters: floatingFilters
       }
     },
