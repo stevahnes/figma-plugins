@@ -1,6 +1,22 @@
-<p>Columns: <input id="columns" value="5" /></p>
-<p>Column Width (px): <input id="columnWidth" value="100" /></p>
-<p>Rows: <input id="rows" value="8" /></p>
-<p>Row Height (px): <input id="rowHeight" value="30" /></p>
-<button id="create">Create</button>
-<button id="cancel">Cancel</button>
+<body>
+  <div class="row">
+    <div class="column left"><p>Columns:</p></div>
+    <div class="column right"><input id="columns" value="5" autofocus /></div>
+  </div>
+  <div class="row">
+    <div class="column left"><p>Column Width (px):</p></div>
+    <div class="column right"><input id="columnWidth" value="100" /></div>
+  </div>
+  <div class="row">
+    <div class="column left"><p>Rows</p></div>
+    <div class="column right"><input id="rows" value="8" /></div>
+  </div>
+  <div class="row">
+    <div class="column left"><p>Row Height (px):</p></div>
+    <div class="column right"><input id="rowHeight" value="30" /></div>
+  </div>
+  <div class="row">
+    <div class="column"><button id="create">Create</button></div>
+    <div class="column"><button id="cancel">Cancel</button></div>
+  </div>
+</body>

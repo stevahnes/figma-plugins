@@ -1,5 +1,43 @@
 import "./ui.css";
 
+/* Constants */
+let isShiftHeld: boolean = false;
+
+document.onkeydown = keyDown => {
+  let value: number = parseInt(
+    (document.activeElement as HTMLInputElement).value
+  );
+  if (keyDown.key === "Shift") {
+    isShiftHeld = true;
+  }
+  if (isShiftHeld === false) {
+    switch (keyDown.key) {
+      case "ArrowUp":
+        value += 1;
+        break;
+      case "ArrowDown":
+        value -= 1;
+        break;
+    }
+  } else {
+    switch (keyDown.key) {
+      case "ArrowUp":
+        value += 10;
+        break;
+      case "ArrowDown":
+        value -= 10;
+        break;
+    }
+  }
+  (document.activeElement as HTMLInputElement).value = value.toString();
+};
+
+document.onkeyup = keyUp => {
+  if (keyUp.key === "Shift") {
+    isShiftHeld = false;
+  }
+};
+
 document.getElementById("create").onclick = () => {
   const columnsInput = document.getElementById("columns") as HTMLInputElement;
   const columnsWidthInput = document.getElementById(

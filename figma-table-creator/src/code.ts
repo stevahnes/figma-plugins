@@ -90,9 +90,9 @@ function processMessage(message: CreateMessage): void {
     tableGroup.name = "Table";
     figma.currentPage.selection = [tableGroup];
     figma.viewport.scrollAndZoomIntoView([tableGroup]);
-  }
 
-  /* Notify Success to User */
-  figma.notify("Table created!");
-  return null;
+    /* Notify Success to User */
+    figma.notify("Table created!");
+    return null;
+  }
 }
