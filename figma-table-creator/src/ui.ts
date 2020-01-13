@@ -4,32 +4,42 @@ import "./ui.css";
 let isShiftHeld: boolean = false;
 
 document.onkeydown = keyDown => {
-  let value: number = parseInt(
-    (document.activeElement as HTMLInputElement).value
-  );
+  let activeElement = document.activeElement as HTMLInputElement;
   if (keyDown.key === "Shift") {
     isShiftHeld = true;
-  }
-  if (isShiftHeld === false) {
-    switch (keyDown.key) {
-      case "ArrowUp":
-        value += 1;
-        break;
-      case "ArrowDown":
-        value -= 1;
-        break;
+  } else if (keyDown.key.match(/Arrow\w +/g)) {
+    if (activeElement.type === "text") {
+      let value: number = parseInt(activeElement.value);
+      if (isShiftHeld === false) {
+        switch (keyDown.key) {
+          case "ArrowUp":
+            value += 1;
+            break;
+          case "ArrowDown":
+            value -= 1;
+            break;
+        }
+      } else {
+        switch (keyDown.key) {
+          case "ArrowUp":
+            value += 10;
+            break;
+          case "ArrowDown":
+            value -= 10;
+            break;
+        }
+      }
+      (document.activeElement as HTMLInputElement).value = value.toString();
     }
-  } else {
-    switch (keyDown.key) {
-      case "ArrowUp":
-        value += 10;
-        break;
-      case "ArrowDown":
-        value -= 10;
-        break;
+  } else if (keyDown.key === "Tab") {
+    if (activeElement.id === "cancel" && isShiftHeld === false) {
+      document.getElementById("columns").focus();
+      keyDown.preventDefault();
+    } else if (activeElement.id === "columns" && isShiftHeld === true) {
+      document.getElementById("cancel").focus();
+      keyDown.preventDefault();
     }
   }
-  (document.activeElement as HTMLInputElement).value = value.toString();
 };
 
 document.onkeyup = keyUp => {
