@@ -1,5 +1,5 @@
 {
-  "name": "Table Creator",
+  "name": "Table Generator",
   "id": "796759972238579874",
   "api": "1.0.0",
   "main": "dist/code.js",

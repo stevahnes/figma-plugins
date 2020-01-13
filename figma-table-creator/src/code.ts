@@ -9,7 +9,7 @@ import * as Figma from "./utils/utils";
 const referenceCoordinates: ReferenceCoordinates = { x: 0, y: 0 };
 const showUIOptions: ShowUIOptions = {
   width: 300,
-  height: 350
+  height: 320
 };
 // This shows the HTML page in "ui.html".
 figma.showUI(__html__, showUIOptions);
