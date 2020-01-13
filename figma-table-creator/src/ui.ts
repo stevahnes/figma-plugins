@@ -1,9 +1,5 @@
 import "./ui.css";
 
-/* Constants */
-const floatingFilterHTMLTag: string = document.getElementById(
-  "floating-filter-checkbox"
-).outerHTML;
 /* State Changes */
 let isShiftHeld: boolean = false;
 

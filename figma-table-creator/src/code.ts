@@ -22,7 +22,6 @@ figma.ui.onmessage = msg => {
 };
 
 function processMessage(message: CreateMessage): void {
-  console.log(message);
   if (message.type === "create-table") {
     /* Generate Background */
     const oddRowBackgroundGroup: GroupNode = generateRowBackground(
