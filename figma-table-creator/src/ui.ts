@@ -82,7 +82,7 @@ document.onkeydown = keyDown => {
   let activeElement = document.activeElement as HTMLInputElement;
   if (keyDown.key === "Shift") {
     isShiftHeld = true;
-  } else if (keyDown.key.match(/Arrow\w +/g)) {
+  } else if (keyDown.key.match(/Arrow\w+/g)) {
     if (activeElement.type === "text") {
       let value: number = parseInt(activeElement.value);
       if (isShiftHeld === false) {
