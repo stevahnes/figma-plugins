@@ -178,19 +178,60 @@ document.onkeyup = keyUp => {
 
 /* Create and Cancel Button Actions */
 document.getElementById("create").onclick = () => {
-  const columns = Figma.getValue("columns", "number");
-  const columnWidth = Figma.getValue("columnWidth", "number");
-  const rows = Figma.getValue("rows", "number");
-  const rowHeight = Figma.getValue("rowHeight", "number");
+  // Selected Mode
+  const mode: string = Figma.getValue("count-and-table-size", "boolean")
+    ? "count-and-table-size"
+    : Figma.getValue("count-and-cell-size", "boolean")
+    ? "count-and-cell-size"
+    : "cell-and-table-size";
+  // Header Info
+  const header = Figma.getValue("header", "boolean");
+  const headerHeight = Figma.getValue("headerHeight", "number");
+  const floatingFilter = Figma.getValue("floatingFilter", "boolean");
+  const floatingFilterHeight = Figma.getValue("floatingFilterHeight", "number");
+  // Constraints Processing
+  // FIXME by adding header info to calculations
+  let columns: number = 0;
+  let columnWidth: number = 0;
+  let rows: number = 0;
+  let rowHeight: number = 0;
+  let referenceCoordinates: ReferenceCoordinates = { x: 0, y: 0 };
+  switch (mode) {
+    case "count-and-table-size":
+      columns = Figma.getValue("columns", "number") as number;
+      rows = Figma.getValue("rows", "number") as number;
+      columnWidth =
+        (Figma.getValue("tableWidth", "number") as number) / columns;
+      rowHeight = (Figma.getValue("tableHeight", "number") as number) / rows;
+      break;
+    case "count-and-cell-size":
+      columns = Figma.getValue("columns", "number") as number;
+      rows = Figma.getValue("rows", "number") as number;
+      columnWidth = Figma.getValue("columnWidth", "number") as number;
+      rowHeight = Figma.getValue("rowHeight", "number") as number;
+      break;
+    case "cell-and-table-size": // FIXME reference coordinates messes up border
+      const tableWidth: number = Figma.getValue(
+        "tableWidth",
+        "number"
+      ) as number;
+      const tableHeight: number = Figma.getValue(
+        "tableHeight",
+        "number"
+      ) as number;
+      columnWidth = Figma.getValue("columnWidth", "number") as number;
+      rowHeight = Figma.getValue("rowHeight", "number") as number;
+      columns = Math.floor(tableWidth / columnWidth);
+      rows = Math.floor(tableHeight / rowHeight);
+      referenceCoordinates.y = tableHeight % rowHeight;
+      break;
+  }
+  // Properties and Customisations
   const borders = Figma.getValue("borders", "boolean");
   const alternateBackgrounds = Figma.getValue(
     "alternateBackgrounds",
     "boolean"
   );
-  const header = Figma.getValue("header", "boolean");
-  const headerHeight = Figma.getValue("headerHeight", "number");
-  const floatingFilter = Figma.getValue("floatingFilter", "boolean");
-  const floatingFilterHeight = Figma.getValue("floatingFilterHeight", "number");
   const primarybackgroundColor = Figma.getValue(
     "primarybackgroundColor",
     "string"
@@ -200,7 +241,6 @@ document.getElementById("create").onclick = () => {
     "string"
   );
   const borderColor = Figma.getValue("borderColor", "string");
-  const referenceCoordinates: ReferenceCoordinates = { x: 0, y: 0 };
   parent.postMessage(
     {
       pluginMessage: {

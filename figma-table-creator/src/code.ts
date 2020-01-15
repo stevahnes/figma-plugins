@@ -17,6 +17,7 @@ figma.showUI(__html__, showUIOptions);
 // callback. The callback will be passed the "pluginMessage" property of the
 // posted message.
 figma.ui.onmessage = msg => {
+  console.log(msg);
   processMessage(msg);
   figma.closePlugin();
 };
