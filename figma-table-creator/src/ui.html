@@ -4,40 +4,24 @@
   </div>
   <div class="row">
     <div class="options-radio-buttons-wrapper">
-      <input
-        type="radio"
-        class="options-radio-button"
-        name="options-radio-buttons"
-        id="count-and-table-size"
-      />
+      <input type="radio" class="options-radio-button" name="options-radio-buttons" id="count-and-table-size" />
       <label for="count-and-table-size">Count &<br />Table Size</label>
-      <input
-        type="radio"
-        class="options-radio-button"
-        name="options-radio-buttons"
-        id="count-and-cell-size"
-        checked
-      />
+      <input type="radio" class="options-radio-button" name="options-radio-buttons" id="count-and-cell-size" checked />
       <label for="count-and-cell-size">Count &<br />Cell Size</label>
-      <input
-        type="radio"
-        class="options-radio-button"
-        name="options-radio-buttons"
-        id="cell-and-table-size"
-      />
+      <input type="radio" class="options-radio-button" name="options-radio-buttons" id="cell-and-table-size" />
       <label for="cell-and-table-size">Cell &<br />Table Size</label>
     </div>
   </div>
   <div class="row">
     <h4>Table Properties</h4>
   </div>
-  <div class="row">
+  <div id="table-size" class="row">
     <div class="column half">
       <div class="column third">
         <p>Width</p>
       </div>
       <div class="column" style="width: 45%;">
-        <input type="text" id="tableWidth" value="" disabled />
+        <input type="text" id="tableWidth" value="" />
       </div>
       <div class="column one-sixth">
         <p>px</p>
@@ -48,14 +32,14 @@
         <p>Height</p>
       </div>
       <div class="column" style="width: 45%;">
-        <input type="text" id="tableHeight" value="" disabled />
+        <input type="text" id="tableHeight" value="" />
       </div>
       <div class="column one-sixth">
         <p>px</p>
       </div>
     </div>
   </div>
-  <div class="row">
+  <div id="row-column-count" class="row">
     <div class="column half">
       <div class="column half">
         <p>Columns</p>
@@ -65,7 +49,9 @@
       </div>
     </div>
     <div class="column half">
-      <div class="column third"><p>Rows</p></div>
+      <div class="column third">
+        <p>Rows</p>
+      </div>
       <div class="column third">
         <input type="text" id="rows" value="8" />
       </div>
@@ -82,7 +68,7 @@
   <div class="row">
     <h4>Cell Properties</h4>
   </div>
-  <div class="row">
+  <div id="cell-size" class="row">
     <div class="column half">
       <div class="column third">
         <p>Width</p>
@@ -143,7 +129,9 @@
         <div class="column third">
           <input type="text" id="floatingFilterHeight" value="" disabled />
         </div>
-        <div class="column third"><p>px</p></div>
+        <div class="column third">
+          <p>px</p>
+        </div>
       </div>
     </div>
   </div>
@@ -162,7 +150,7 @@
           </label>
         </div>
         <div class="column three-fourths">
-          <input type="text" id="stripedBackgroundColor" value="#FFFFFF" />
+          <input type="text" id="stripedbackgroundColor" value="#FFFFFF" />
         </div>
       </div>
     </div>

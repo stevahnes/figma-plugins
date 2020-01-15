@@ -6,7 +6,6 @@ import {
   generateTableHeader
 } from "./generators/generators";
 import * as Figma from "./utils/utils";
-const referenceCoordinates: ReferenceCoordinates = { x: 0, y: 0 };
 const showUIOptions: ShowUIOptions = {
   width: 300,
   height: 500
@@ -34,7 +33,7 @@ function processMessage(message: CreateMessage): void {
       message.header,
       message.primarybackgroundColor,
       message.stripedbackgroundColor,
-      referenceCoordinates
+      message.referenceCoordinates
     );
     const evenRowBackgroundGroup: GroupNode = generateRowBackground(
       "Even",
@@ -45,7 +44,7 @@ function processMessage(message: CreateMessage): void {
       message.header,
       message.primarybackgroundColor,
       message.stripedbackgroundColor,
-      referenceCoordinates
+      message.referenceCoordinates
     );
     const rowBackgroundNode: SceneNode[] = [
       oddRowBackgroundGroup,
@@ -64,7 +63,7 @@ function processMessage(message: CreateMessage): void {
       message.columns,
       message.columnWidth,
       message.header,
-      referenceCoordinates
+      message.referenceCoordinates
     );
 
     /* Generate Headers */
@@ -78,7 +77,7 @@ function processMessage(message: CreateMessage): void {
       message.floatingFilter,
       message.floatingFilterHeight,
       message.primarybackgroundColor,
-      referenceCoordinates
+      message.referenceCoordinates
     );
 
     /* Generate Borders */
@@ -92,7 +91,7 @@ function processMessage(message: CreateMessage): void {
       message.header,
       message.headerHeight,
       message.borderColor,
-      referenceCoordinates
+      message.referenceCoordinates
     );
     const horizontalLinesGroup: GroupNode = generateBorders(
       "Horizontal",
@@ -104,7 +103,7 @@ function processMessage(message: CreateMessage): void {
       message.header,
       message.headerHeight,
       message.borderColor,
-      referenceCoordinates
+      message.referenceCoordinates
     );
     const borderLinesNode: SceneNode[] = [
       verticalLinesGroup,

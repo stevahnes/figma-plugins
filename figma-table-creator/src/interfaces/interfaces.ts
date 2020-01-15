@@ -13,6 +13,7 @@ export interface CreateMessage {
   primarybackgroundColor?: string;
   stripedbackgroundColor?: string;
   borderColor?: string;
+  referenceCoordinates?: ReferenceCoordinates;
 }
 
 export interface ReferenceCoordinates {

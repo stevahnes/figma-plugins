@@ -1,4 +1,6 @@
 import "./ui.css";
+import { ReferenceCoordinates } from "./interfaces/interfaces";
+import * as Figma from "./utils/utils";
 
 /* State Changes Variable */
 let isShiftHeld: boolean = false;
@@ -30,8 +32,42 @@ function toggleEditable(
   return null;
 }
 // Detect radio buttons state change
-document.getElementById("count-and-table-size").onchange = () => {
-  //TODO
+document.getElementById("count-and-table-size").onclick = () => {
+  if (
+    (document.getElementById("count-and-table-size") as HTMLInputElement)
+      .checked
+  ) {
+    toggleEditable("columnWidth", false, "100");
+    toggleEditable("rowHeight", false, "30");
+    toggleEditable("tableWidth", true, "1024");
+    toggleEditable("tableHeight", true, "768");
+    toggleEditable("columns", true, "5");
+    toggleEditable("rows", true, "8");
+  }
+};
+document.getElementById("count-and-cell-size").onclick = () => {
+  if (
+    (document.getElementById("count-and-cell-size") as HTMLInputElement).checked
+  ) {
+    toggleEditable("columnWidth", true, "100");
+    toggleEditable("rowHeight", true, "30");
+    toggleEditable("tableWidth", false, "1024");
+    toggleEditable("tableHeight", false, "768");
+    toggleEditable("columns", true, "5");
+    toggleEditable("rows", true, "8");
+  }
+};
+document.getElementById("cell-and-table-size").onclick = () => {
+  if (
+    (document.getElementById("cell-and-table-size") as HTMLInputElement).checked
+  ) {
+    toggleEditable("columnWidth", true, "100");
+    toggleEditable("rowHeight", true, "30");
+    toggleEditable("tableWidth", true, "1024");
+    toggleEditable("tableHeight", true, "768");
+    toggleEditable("columns", false, "5");
+    toggleEditable("rows", false, "8");
+  }
 };
 // Detect header checkbox state change
 document.getElementById("header").onchange = () => {
@@ -142,50 +178,29 @@ document.onkeyup = keyUp => {
 
 /* Create and Cancel Button Actions */
 document.getElementById("create").onclick = () => {
-  const columnsInput = document.getElementById("columns") as HTMLInputElement;
-  const columnsWidthInput = document.getElementById(
-    "columnWidth"
-  ) as HTMLInputElement;
-  const rowsInput = document.getElementById("rows") as HTMLInputElement;
-  const rowHeightInput = document.getElementById(
-    "rowHeight"
-  ) as HTMLInputElement;
-  const bordersInput = document.getElementById("borders") as HTMLInputElement;
-  const alternateBackgroundsInput = document.getElementById(
-    "alternateBackgrounds"
-  ) as HTMLInputElement;
-  const headerInput = document.getElementById("header") as HTMLInputElement;
-  const headerHeightInput = document.getElementById(
-    "headerHeight"
-  ) as HTMLInputElement;
-  const floatingFilterInput = document.getElementById(
-    "floatingFilter"
-  ) as HTMLInputElement;
-  const floatingFilterHeightInput = document.getElementById(
-    "floatingFilterHeight"
-  ) as HTMLInputElement;
-  const primarybackgroundColorInput = document.getElementById(
-    "primarybackgroundColor"
-  ) as HTMLInputElement;
-  const stripedbackgroundColorInput = document.getElementById(
-    "stripedBackgroundColor"
-  ) as HTMLInputElement;
-  const borderColorInput = document.getElementById(
-    "borderColor"
-  ) as HTMLInputElement;
-  const columns = parseInt(columnsInput.value, 10);
-  const columnWidth = parseInt(columnsWidthInput.value, 10);
-  const rows = parseInt(rowsInput.value, 10);
-  const rowHeight = parseInt(rowHeightInput.value, 10);
-  const borders = bordersInput.checked;
-  const alternateBackgrounds = alternateBackgroundsInput.checked;
-  const header = headerInput.checked;
-  const headerHeight = parseInt(headerHeightInput.value, 10);
-  const floatingFilters = floatingFilterInput.checked;
-  const floatingFilterHeight = parseInt(floatingFilterHeightInput.value, 10);
-  const primarybackgroundColor = primarybackgroundColorInput.value;
-  const stripedbackgroundColor = stripedbackgroundColorInput.value;
-  const borderColor = borderColorInput.value;
+  const columns = Figma.getValue("columns", "number");
+  const columnWidth = Figma.getValue("columnWidth", "number");
+  const rows = Figma.getValue("rows", "number");
+  const rowHeight = Figma.getValue("rowHeight", "number");
+  const borders = Figma.getValue("borders", "boolean");
+  const alternateBackgrounds = Figma.getValue(
+    "alternateBackgrounds",
+    "boolean"
+  );
+  const header = Figma.getValue("header", "boolean");
+  const headerHeight = Figma.getValue("headerHeight", "number");
+  const floatingFilter = Figma.getValue("floatingFilter", "boolean");
+  const floatingFilterHeight = Figma.getValue("floatingFilterHeight", "number");
+  const primarybackgroundColor = Figma.getValue(
+    "primarybackgroundColor",
+    "string"
+  );
+  const stripedbackgroundColor = Figma.getValue(
+    "stripedbackgroundColor",
+    "string"
+  );
+  const borderColor = Figma.getValue("borderColor", "string");
+  const referenceCoordinates: ReferenceCoordinates = { x: 0, y: 0 };
   parent.postMessage(
     {
       pluginMessage: {
@@ -198,11 +213,12 @@ document.getElementById("create").onclick = () => {
         alternateBackgrounds: alternateBackgrounds,
         header: header,
         headerHeight: headerHeight,
-        floatingFilter: floatingFilters,
+        floatingFilter: floatingFilter,
         floatingFilterHeight: floatingFilterHeight,
         primarybackgroundColor: primarybackgroundColor,
         stripedbackgroundColor: stripedbackgroundColor,
-        borderColor: borderColor
+        borderColor: borderColor,
+        referenceCoordinates: referenceCoordinates
       }
     },
     "*"

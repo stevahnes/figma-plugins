@@ -63,3 +63,22 @@ export function hexToRgb(hex: string): RGB {
       }
     : null;
 }
+
+/* Extract Inputs */
+export function getValue(
+  htmlTagId: string,
+  inputType: string
+): number | boolean | string {
+  const input = document.getElementById(htmlTagId) as HTMLInputElement;
+  switch (inputType) {
+    case "number":
+      return parseInt(input.value, 10);
+      break;
+    case "boolean":
+      return input.checked;
+      break;
+    case "string":
+      return input.value;
+      break;
+  }
+}
