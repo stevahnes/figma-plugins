@@ -1,72 +1,163 @@
 <body>
   <div class="row">
-    <div class="column label"><p>Number of Columns</p></div>
-    <div class="column input-column">
-      <input id="columns" value="5" autofocus />
-    </div>
-    <div class="column label"><p>Number of Rows</p></div>
-    <div class="column input-column"><input id="rows" value="8" /></div>
+    <h4>Constraints</h4>
   </div>
   <div class="row">
-    <div class="column label">
-      <p>Cell Width (px)</p>
-    </div>
-    <div class="column input-column">
-      <input id="columnWidth" value="100" />
-    </div>
-  </div>
-  <div class="row">
-    <div class="column label"><p>Cell Height (px)</p></div>
-    <div class="column input-column">
-      <input id="rowHeight" value="30" />
-    </div>
-  </div>
-  <div class="row">
-    <div class="column label">
-      <p>Borders Visible</p>
-    </div>
-    <div class="column input-column">
-      <label class="container">
-        <input id="borders" type="checkbox" checked />
-      </label>
+    <div class="options-radio-buttons-wrapper">
+      <input
+        type="radio"
+        class="options-radio-button"
+        name="options-radio-buttons"
+        id="count-and-table-size"
+      />
+      <label for="count-and-table-size">Count &<br />Table Size</label>
+      <input
+        type="radio"
+        class="options-radio-button"
+        name="options-radio-buttons"
+        id="count-and-cell-size"
+        checked
+      />
+      <label for="count-and-cell-size">Count &<br />Cell Size</label>
+      <input
+        type="radio"
+        class="options-radio-button"
+        name="options-radio-buttons"
+        id="cell-and-table-size"
+      />
+      <label for="cell-and-table-size">Cell &<br />Table Size</label>
     </div>
   </div>
   <div class="row">
-    <div class="column label">
-      <p>Alternate Backgrounds</p>
+    <h4>Table Properties</h4>
+  </div>
+  <div class="row">
+    <div class="column half">
+      <div class="column half">
+        <p>Columns</p>
+      </div>
+      <div class="column third">
+        <input type="text" id="columns" value="5" />
+      </div>
     </div>
-    <div class="column input-column">
-      <label class="container">
-        <input id="alternateBackgrounds" type="checkbox" checked />
-      </label>
+    <div class="column half">
+      <div class="column third"><p>Rows</p></div>
+      <div class="column third">
+        <input type="text" id="rows" value="8" />
+      </div>
     </div>
+  </div>
+  <div class="row">
+    <div class="column half">
+      <p>Primary table color</p>
+    </div>
+    <div class="column half">
+      <input type="text" id="primarybackgroundColor" value="#F7F7F7" />
+    </div>
+  </div>
+  <div class="row">
+    <h4>Cell Properties</h4>
+  </div>
+  <div class="row">
+    <div class="column half">
+      <div class="column third">
+        <p>Width</p>
+      </div>
+      <div class="column third">
+        <input type="text" id="columnWidth" value="100" />
+      </div>
+      <div class="column third">
+        <p>px</p>
+      </div>
+    </div>
+    <div class="column half">
+      <div class="column third">
+        <p>Height</p>
+      </div>
+      <div class="column third">
+        <input type="text" id="rowHeight" value="30" />
+      </div>
+      <div class="column third">
+        <p>px</p>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <h4>Header Properties</h4>
   </div>
   <div id="headerCheckbox" class="row">
-    <div class="column label">
-      <p>Header</p>
+    <div class="column half">
+      <p>My table has headers</p>
     </div>
-    <div class="column input-column">
-      <label class="container">
-        <input id="header" type="checkbox" checked />
-      </label>
+    <div class="column half">
+      <div class="row zero-padding">
+        <div class="column third">
+          <label class="container">
+            <input id="header" type="checkbox" checked />
+          </label>
+        </div>
+        <div class="column third">
+          <input type="text" id="headerHeight" value="60" />
+        </div>
+        <div class="column third">
+          <p>px</p>
+        </div>
+      </div>
     </div>
   </div>
-  <div id="headerHeightInput" class="row toggle-checkbox is-visible">
-    <div class="column label">
-      <p>Header Height (px)</p>
+  <div id="floatingFiltersCheckbox" class="row toggle-display is-visible">
+    <div class="column half">
+      <p>Include floating filters</p>
     </div>
-    <div class="column input-column">
-      <input id="headerHeight" value="30" />
+    <div class="column half">
+      <div class="row zero-padding">
+        <div class="column third">
+          <label class="container">
+            <input id="floatingFilter" type="checkbox" />
+          </label>
+        </div>
+        <div class="column third">
+          <input type="text" id="floatingFilterHeight" value="" disabled />
+        </div>
+        <div class="column third"><p>px</p></div>
+      </div>
     </div>
   </div>
-  <div id="floatingFiltersCheckbox" class="row toggle-checkbox is-visible">
-    <div class="column label">
-      <p>Floating Filter (WIP)</p>
+  <div class="row">
+    <h4>Customizations</h4>
+  </div>
+  <div class="row">
+    <div class="column half">
+      <p>My table is striped</p>
     </div>
-    <div class="column input-column">
-      <label class="container">
-        <input id="floatingFilter" type="checkbox" disabled />
-      </label>
+    <div class="column half">
+      <div class="row zero-padding">
+        <div class="column quarter">
+          <label class="container">
+            <input id="alternateBackgrounds" type="checkbox" checked />
+          </label>
+        </div>
+        <div class="column three-fourths">
+          <input type="text" id="stripedBackgroundColor" value="#FFFFFF" />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="column half">
+      <p>Borders</p>
+    </div>
+    <div class="column half">
+      <div class="row zero-padding">
+        <div class="column quarter">
+          <label class="container">
+            <input id="borders" type="checkbox" checked />
+          </label>
+        </div>
+        <div class="column three-fourths">
+          <input type="text" id="borderColor" value="#C7C7C7" />
+        </div>
+      </div>
     </div>
   </div>
   <div class="row">

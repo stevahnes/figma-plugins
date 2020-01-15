@@ -8,7 +8,11 @@ export interface CreateMessage {
   alternateBackgrounds?: boolean;
   header?: boolean;
   headerHeight?: number;
-  floatingFilters?: boolean;
+  floatingFilter?: boolean;
+  floatingFilterHeight?: number;
+  primarybackgroundColor?: string;
+  stripedbackgroundColor?: string;
+  borderColor?: string;
 }
 
 export interface ReferenceCoordinates {

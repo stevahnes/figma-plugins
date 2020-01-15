@@ -9,7 +9,7 @@ import * as Figma from "./utils/utils";
 const referenceCoordinates: ReferenceCoordinates = { x: 0, y: 0 };
 const showUIOptions: ShowUIOptions = {
   width: 300,
-  height: 320
+  height: 465
 };
 // This shows the HTML page in "ui.html".
 figma.showUI(__html__, showUIOptions);
@@ -32,6 +32,8 @@ function processMessage(message: CreateMessage): void {
       message.columnWidth * message.columns,
       message.alternateBackgrounds,
       message.header,
+      message.primarybackgroundColor,
+      message.stripedbackgroundColor,
       referenceCoordinates
     );
     const evenRowBackgroundGroup: GroupNode = generateRowBackground(
@@ -41,6 +43,8 @@ function processMessage(message: CreateMessage): void {
       message.columnWidth * message.columns,
       message.alternateBackgrounds,
       message.header,
+      message.primarybackgroundColor,
+      message.stripedbackgroundColor,
       referenceCoordinates
     );
     const rowBackgroundNode: SceneNode[] = [
@@ -71,6 +75,9 @@ function processMessage(message: CreateMessage): void {
       message.columnWidth,
       message.header,
       message.headerHeight,
+      message.floatingFilter,
+      message.floatingFilterHeight,
+      message.primarybackgroundColor,
       referenceCoordinates
     );
 
@@ -84,6 +91,7 @@ function processMessage(message: CreateMessage): void {
       message.rowHeight,
       message.header,
       message.headerHeight,
+      message.borderColor,
       referenceCoordinates
     );
     const horizontalLinesGroup: GroupNode = generateBorders(
@@ -95,6 +103,7 @@ function processMessage(message: CreateMessage): void {
       message.columnWidth,
       message.header,
       message.headerHeight,
+      message.borderColor,
       referenceCoordinates
     );
     const borderLinesNode: SceneNode[] = [

@@ -9,6 +9,12 @@ p {
   text-align: left;
 }
 
+h4 {
+  margin: 0px;
+  padding: 5px 0px;
+  text-align: left;
+}
+
 /* --- Buttons --- */
 .btn-standalone button {
   cursor: pointer;
@@ -34,7 +40,16 @@ p {
 }
 
 /* --- Input --- */
-input {
+input[type="text"] {
+  width: 75%;
+  border: none;
+  border-radius: 5px;
+  outline: none;
+  padding: 5px;
+  text-align: left;
+  font-weight: bold;
+}
+input[type="checkbox"] {
   width: 100%;
   border: none;
   border-radius: 5px;
@@ -59,14 +74,26 @@ input:focus {
   vertical-align: middle;
   width: 100%;
 }
+.column .zero-padding {
+  padding: 0 !important;
+}
 .half {
   width: 50% !important;
 }
+.third {
+  width: 33.3% !important;
+}
+.three-fourths {
+  width: 75% !important;
+}
+.quarter {
+  width: 25% !important;
+}
 .label {
-  width: 50% !important;
+  width: 65% !important;
 }
 .input-column {
-  width: 50% !important;
+  width: 35% !important;
 }
 /* Clear floats after the columns */
 .row:after {
@@ -78,7 +105,7 @@ input:focus {
 /* --- Checkbox --- */
 /* The container */
 .container {
-  padding: 2px 0px;
+  padding: 3px 0px;
   display: block;
   position: relative;
   cursor: pointer;
@@ -88,17 +115,46 @@ input:focus {
   -ms-user-select: none;
   user-select: none;
 }
-
 /* Hide the browser's default checkbox */
 .container input {
   vertical-align: middle;
   position: relative;
   cursor: pointer;
 }
-.toggle-checkbox {
+.toggle-display {
   display: none;
 }
 
-.toggle-checkbox.is-visible {
+.toggle-display.is-visible {
   display: block;
+}
+
+/* --- Custom Radio Button --- */
+/* Based on Codepen by Sal */
+.options-radio-buttons-wrapper {
+  clear: both;
+  display: inline-block;
+}
+.options-radio-button {
+  position: absolute;
+  left: -9999em;
+  top: -9999em;
+}
+.options-radio-button + label {
+  float: left;
+  padding: 0.5em 1em;
+  cursor: pointer;
+  border: 1px solid #28608f;
+  margin-right: -1px;
+  color: #fff;
+  background-color: #00a9e0;
+}
+.options-radio-button + label:first-of-type {
+  border-radius: 0.7em 0 0 0.7em;
+}
+.options-radio-button + label:last-of-type {
+  border-radius: 0 0.7em 0.7em 0;
+}
+.options-radio-button:checked + label {
+  background-color: #4b86b4;
 }
