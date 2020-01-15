@@ -81,8 +81,14 @@ input:focus {
 .half {
   width: 50% !important;
 }
+.two-thirds {
+  width: 66.7% !important;
+}
 .third {
   width: 33.3% !important;
+}
+.one-sixth {
+  width: 16.7% !important;
 }
 .three-fourths {
   width: 75% !important;

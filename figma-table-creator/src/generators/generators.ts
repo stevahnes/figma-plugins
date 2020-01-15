@@ -254,7 +254,7 @@ export function generateTableHeader(
         floatingFilterFills[0].color.g = floatingFilterFillsColor.g / 255;
         floatingFilterFills[0].color.b = floatingFilterFillsColor.b / 255;
         floatingFilter.fills = floatingFilterFills;
-        floatingFilter.name = "Floating Filter" + (i + 1);
+        floatingFilter.name = "Floating Filter Placeholder" + (i + 1);
         floatingFilter.resize(
           columnWidth - 1 - 2 * floatingFilterMargin.x,
           floatingFilterHeight - 2 * floatingFilterMargin.y
