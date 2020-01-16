@@ -1,4 +1,4 @@
-import { CreateMessage, ReferenceCoordinates } from "./interfaces/interfaces";
+import { CreateMessage } from "./interfaces/interfaces";
 import {
   generateRowBackground,
   generateBorders,
@@ -18,7 +18,6 @@ figma.showUI(__html__, showUIOptions);
 // posted message.
 figma.ui.onmessage = msg => {
   processMessage(msg);
-  figma.closePlugin();
 };
 
 function processMessage(message: CreateMessage): void {
@@ -131,6 +130,7 @@ function processMessage(message: CreateMessage): void {
 
     /* Notify Success to User */
     figma.notify("👍 GridGen successfully generated your table");
+    figma.closePlugin();
     return null;
   }
 }

@@ -66,6 +66,113 @@ function setDefault(mode: string) {
   }
 }
 
+/* Validate User Input */
+function validateUserInput(
+  mode: string,
+  columns: number,
+  rows: number,
+  columnWidth: number,
+  rowHeight: number
+): boolean {
+  let validInput: boolean = true;
+  // reset invalid CSS
+  document.getElementById("columns").classList.remove("invalid");
+  document.getElementById("rows").classList.remove("invalid");
+  document.getElementById("columnWidth").classList.remove("invalid");
+  document.getElementById("rowHeight").classList.remove("invalid");
+  document.getElementById("tableWidth").classList.remove("invalid");
+  document.getElementById("tableHeight").classList.remove("invalid");
+  // negative value check
+  switch (mode) {
+    case "count-and-table-size":
+      if (columns < 0) {
+        document.getElementById("columns").classList.add("invalid");
+        validInput = false;
+      }
+      if (rows < 0) {
+        document.getElementById("rows").classList.add("invalid");
+        validInput = false;
+      }
+      if (columnWidth < 0) {
+        document.getElementById("columnWidth").classList.add("invalid");
+        validInput = false;
+      }
+      if (rowHeight < 0) {
+        document.getElementById("rowHeight").classList.add("invalid");
+        validInput = false;
+      }
+      break;
+    case "count-and-cell-size":
+      if (columns <= 0) {
+        document.getElementById("columns").classList.add("invalid");
+        validInput = false;
+      }
+      if (rows <= 0) {
+        document.getElementById("rows").classList.add("invalid");
+        validInput = false;
+      }
+      if (columnWidth <= 0) {
+        document.getElementById("tableWidth").classList.add("invalid");
+        validInput = false;
+      }
+      if (rowHeight <= 0) {
+        document.getElementById("tableHeight").classList.add("invalid");
+        validInput = false;
+      }
+      break;
+    case "cell-and-table-size":
+      if (columns <= 0 || (columns > 0 && columnWidth <= 0)) {
+        document.getElementById("tableWidth").classList.add("invalid");
+        validInput = false;
+      }
+      if (rows <= 0 || (rows > 0 && rowHeight <= 0)) {
+        document.getElementById("tableHeight").classList.add("invalid");
+        validInput = false;
+      }
+      if (columnWidth <= 0) {
+        document.getElementById("columnWidth").classList.add("invalid");
+        validInput = false;
+      }
+      if (rowHeight <= 0) {
+        document.getElementById("rowHeight").classList.add("invalid");
+        validInput = false;
+      }
+      break;
+  }
+  // limit check
+  if (validInput) {
+    if (
+      columns * columnWidth > 5000 ||
+      rows * rowHeight > 5000 ||
+      columns > 100 ||
+      rows > 100
+    ) {
+      switch (mode) {
+        case "count-and-table-size":
+          document.getElementById("columns").classList.add("invalid");
+          document.getElementById("rows").classList.add("invalid");
+          document.getElementById("columnWidth").classList.add("invalid");
+          document.getElementById("rowHeight").classList.add("invalid");
+          break;
+        case "count-and-cell-size":
+          document.getElementById("columns").classList.add("invalid");
+          document.getElementById("rows").classList.add("invalid");
+          document.getElementById("tableWidth").classList.add("invalid");
+          document.getElementById("tableHeight").classList.add("invalid");
+          break;
+        case "cell-and-table-size":
+          document.getElementById("tableWidth").classList.add("invalid");
+          document.getElementById("tableHeight").classList.add("invalid");
+          document.getElementById("columnWidth").classList.add("invalid");
+          document.getElementById("rowHeight").classList.add("invalid");
+          break;
+      }
+      validInput = false;
+    }
+  }
+  return validInput;
+}
+
 // Detect radio buttons state change
 document.getElementById("count-and-table-size").onclick = () => {
   if (
@@ -131,6 +238,25 @@ document.getElementById("borders").onchange = () => {
     (document.getElementById("borders") as HTMLInputElement).checked,
     "#C7C7C7"
   );
+};
+// Detect inputs state change
+document.getElementById("columns").onchange = () => {
+  document.getElementById("columns").classList.remove("invalid");
+};
+document.getElementById("rows").onchange = () => {
+  document.getElementById("rows").classList.remove("invalid");
+};
+document.getElementById("tableWidth").onchange = () => {
+  document.getElementById("tableWidth").classList.remove("invalid");
+};
+document.getElementById("tableHeight").onchange = () => {
+  document.getElementById("tableHeight").classList.remove("invalid");
+};
+document.getElementById("columnWidth").onchange = () => {
+  document.getElementById("columnWidth").classList.remove("invalid");
+};
+document.getElementById("rowHeight").onchange = () => {
+  document.getElementById("rowHeight").classList.remove("invalid");
 };
 
 /* Keyboard Navigation */
@@ -250,6 +376,9 @@ document.onkeyup = keyUp => {
 
 /* Create Button Actions */
 document.getElementById("create").onclick = () => {
+  // Disable create button and display loader
+  (document.getElementById("create") as HTMLInputElement).disabled = true;
+  (document.getElementById("lds") as HTMLElement).classList.add("is-visible");
   // Selected Mode
   const mode: string = Figma.getValue("count-and-table-size", "boolean")
     ? "count-and-table-size"
@@ -261,6 +390,21 @@ document.getElementById("create").onclick = () => {
   const headerHeight = Figma.getValue("headerHeight", "number");
   const floatingFilter = Figma.getValue("floatingFilter", "boolean");
   const floatingFilterHeight = Figma.getValue("floatingFilterHeight", "number");
+  // Properties and Customisations
+  const borders = Figma.getValue("borders", "boolean");
+  const alternateBackgrounds = Figma.getValue(
+    "alternateBackgrounds",
+    "boolean"
+  );
+  const primarybackgroundColor = Figma.getValue(
+    "primarybackgroundColor",
+    "string"
+  );
+  const stripedbackgroundColor = Figma.getValue(
+    "stripedbackgroundColor",
+    "string"
+  );
+  const borderColor = Figma.getValue("borderColor", "string");
   // Constraints Processing
   let columns: number = 0;
   let columnWidth: number = 0;
@@ -302,41 +446,42 @@ document.getElementById("create").onclick = () => {
       referenceCoordinates.y = tableHeight % rowHeight;
       break;
   }
-  // Properties and Customisations
-  const borders = Figma.getValue("borders", "boolean");
-  const alternateBackgrounds = Figma.getValue(
-    "alternateBackgrounds",
-    "boolean"
+  // Validation
+  const validWithinLimits: boolean = validateUserInput(
+    mode,
+    columns,
+    rows,
+    columnWidth,
+    rowHeight
   );
-  const primarybackgroundColor = Figma.getValue(
-    "primarybackgroundColor",
-    "string"
-  );
-  const stripedbackgroundColor = Figma.getValue(
-    "stripedbackgroundColor",
-    "string"
-  );
-  const borderColor = Figma.getValue("borderColor", "string");
-  parent.postMessage(
-    {
-      pluginMessage: {
-        type: "create-table",
-        columns: columns,
-        columnWidth: columnWidth,
-        rows: rows,
-        rowHeight: rowHeight,
-        borders: borders,
-        alternateBackgrounds: alternateBackgrounds,
-        header: header,
-        headerHeight: headerHeight,
-        floatingFilter: floatingFilter,
-        floatingFilterHeight: floatingFilterHeight,
-        primarybackgroundColor: primarybackgroundColor,
-        stripedbackgroundColor: stripedbackgroundColor,
-        borderColor: borderColor,
-        referenceCoordinates: referenceCoordinates
-      }
-    },
-    "*"
-  );
+  if (validWithinLimits) {
+    parent.postMessage(
+      {
+        pluginMessage: {
+          type: "create-table",
+          columns: columns,
+          columnWidth: columnWidth,
+          rows: rows,
+          rowHeight: rowHeight,
+          borders: borders,
+          alternateBackgrounds: alternateBackgrounds,
+          header: header,
+          headerHeight: headerHeight,
+          floatingFilter: floatingFilter,
+          floatingFilterHeight: floatingFilterHeight,
+          primarybackgroundColor: primarybackgroundColor,
+          stripedbackgroundColor: stripedbackgroundColor,
+          borderColor: borderColor,
+          referenceCoordinates: referenceCoordinates
+        }
+      },
+      "*"
+    );
+  } else {
+    // Enable create button and hide loader
+    (document.getElementById("create") as HTMLInputElement).disabled = false;
+    (document.getElementById("lds") as HTMLElement).classList.remove(
+      "is-visible"
+    );
+  }
 };
