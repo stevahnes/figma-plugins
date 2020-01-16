@@ -296,7 +296,9 @@ document.getElementById("create").onclick = () => {
       columnWidth = Figma.getValue("columnWidth", "number") as number;
       rowHeight = Figma.getValue("rowHeight", "number") as number;
       columns = Math.floor(tableWidth / columnWidth);
-      rows = Math.floor(tableHeight / rowHeight);
+      rows = Math.floor(
+        (tableHeight - (headerHeight as number)) / rowHeight + 1
+      );
       referenceCoordinates.y = tableHeight % rowHeight;
       break;
   }
