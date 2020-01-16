@@ -33,6 +33,16 @@ function toggleEditable(
   return null;
 }
 
+/* Reset Invalid CSS */
+function resetInvalidInput(): void {
+  document.getElementById("columns").classList.remove("invalid");
+  document.getElementById("rows").classList.remove("invalid");
+  document.getElementById("columnWidth").classList.remove("invalid");
+  document.getElementById("rowHeight").classList.remove("invalid");
+  document.getElementById("tableWidth").classList.remove("invalid");
+  document.getElementById("tableHeight").classList.remove("invalid");
+}
+
 /* Toggle HTML Rendering */
 function setDefault(mode: string) {
   switch (mode) {
@@ -43,6 +53,7 @@ function setDefault(mode: string) {
       toggleEditable("tableHeight", true, "768");
       toggleEditable("columns", true, "5");
       toggleEditable("rows", true, "8");
+      resetInvalidInput();
       (document.getElementById("tableWidth") as HTMLInputElement).select();
       break;
     case "count-and-cell-size":
@@ -52,6 +63,7 @@ function setDefault(mode: string) {
       toggleEditable("tableHeight", false, "768");
       toggleEditable("columns", true, "5");
       toggleEditable("rows", true, "8");
+      resetInvalidInput();
       (document.getElementById("columns") as HTMLInputElement).select();
       break;
     case "cell-and-table-size":
@@ -61,6 +73,7 @@ function setDefault(mode: string) {
       toggleEditable("tableHeight", true, "768");
       toggleEditable("columns", false, "5");
       toggleEditable("rows", false, "8");
+      resetInvalidInput();
       (document.getElementById("tableWidth") as HTMLInputElement).select();
       break;
   }
@@ -76,12 +89,7 @@ function validateUserInput(
 ): boolean {
   let validInput: boolean = true;
   // reset invalid CSS
-  document.getElementById("columns").classList.remove("invalid");
-  document.getElementById("rows").classList.remove("invalid");
-  document.getElementById("columnWidth").classList.remove("invalid");
-  document.getElementById("rowHeight").classList.remove("invalid");
-  document.getElementById("tableWidth").classList.remove("invalid");
-  document.getElementById("tableHeight").classList.remove("invalid");
+  resetInvalidInput();
   // negative value check
   switch (mode) {
     case "count-and-table-size":
@@ -101,6 +109,7 @@ function validateUserInput(
         document.getElementById("rowHeight").classList.add("invalid");
         validInput = false;
       }
+      (document.getElementById("tableWidth") as HTMLInputElement).select();
       break;
     case "count-and-cell-size":
       if (columns <= 0) {
@@ -119,6 +128,7 @@ function validateUserInput(
         document.getElementById("tableHeight").classList.add("invalid");
         validInput = false;
       }
+      (document.getElementById("columns") as HTMLInputElement).select();
       break;
     case "cell-and-table-size":
       if (columns <= 0 || (columns > 0 && columnWidth <= 0)) {
@@ -137,6 +147,7 @@ function validateUserInput(
         document.getElementById("rowHeight").classList.add("invalid");
         validInput = false;
       }
+      (document.getElementById("tableWidth") as HTMLInputElement).select();
       break;
   }
   // limit check
@@ -153,18 +164,21 @@ function validateUserInput(
           document.getElementById("rows").classList.add("invalid");
           document.getElementById("columnWidth").classList.add("invalid");
           document.getElementById("rowHeight").classList.add("invalid");
+          (document.getElementById("tableWidth") as HTMLInputElement).select();
           break;
         case "count-and-cell-size":
           document.getElementById("columns").classList.add("invalid");
           document.getElementById("rows").classList.add("invalid");
-          document.getElementById("tableWidth").classList.add("invalid");
-          document.getElementById("tableHeight").classList.add("invalid");
+          document.getElementById("columnWidth").classList.add("invalid");
+          document.getElementById("rowHeight").classList.add("invalid");
+          (document.getElementById("columns") as HTMLInputElement).select();
           break;
         case "cell-and-table-size":
           document.getElementById("tableWidth").classList.add("invalid");
           document.getElementById("tableHeight").classList.add("invalid");
           document.getElementById("columnWidth").classList.add("invalid");
           document.getElementById("rowHeight").classList.add("invalid");
+          (document.getElementById("tableWidth") as HTMLInputElement).select();
           break;
       }
       validInput = false;
@@ -371,6 +385,8 @@ document.onkeydown = keyDown => {
 document.onkeyup = keyUp => {
   if (keyUp.key === "Shift") {
     isShiftHeld = false;
+  } else if (keyUp.key === "Alt") {
+    isAltHeld = false;
   }
 };
 
