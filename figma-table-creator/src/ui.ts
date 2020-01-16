@@ -171,7 +171,7 @@ document.onkeydown = keyDown => {
       : Figma.getValue("count-and-cell-size", "boolean")
       ? "count-and-cell-size"
       : "cell-and-table-size";
-    if (activeElement.id === "cancel" && isShiftHeld === false) {
+    if (activeElement.id === "create" && isShiftHeld === false) {
       switch (mode) {
         case "count-and-table-size":
           (document.getElementById("tableWidth") as HTMLInputElement).select();
@@ -189,10 +189,10 @@ document.onkeydown = keyDown => {
       activeElement.id === "columns" &&
       isShiftHeld === true
     ) {
-      document.getElementById("cancel").focus();
+      document.getElementById("create").focus();
       keyDown.preventDefault();
     } else if (activeElement.id === "tableWidth" && isShiftHeld === true) {
-      document.getElementById("cancel").focus();
+      document.getElementById("create").focus();
       keyDown.preventDefault();
     }
   } else if (keyDown.key === "Enter") {
@@ -248,7 +248,7 @@ document.onkeyup = keyUp => {
   }
 };
 
-/* Create and Cancel Button Actions */
+/* Create Button Actions */
 document.getElementById("create").onclick = () => {
   // Selected Mode
   const mode: string = Figma.getValue("count-and-table-size", "boolean")
