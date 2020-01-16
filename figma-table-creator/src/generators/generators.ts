@@ -43,7 +43,9 @@ export function generateBorders(
     if (borderType === "Vertical") {
       line.rotation = 90;
       line.x = referenceCoordinates.x + i * borderSpacing;
+      line.y = referenceCoordinates.y;
     } else {
+      line.x = referenceCoordinates.x;
       line.y = referenceCoordinates.y - i * borderSpacing;
     }
     line.resize(borderWidth, 0);
@@ -58,6 +60,7 @@ export function generateBorders(
     lineStrokes[0].color.b = lineStrokesColor.b / 255;
     line.strokes = lineStrokes;
     line.resize(borderWidth, 0);
+    line.x = referenceCoordinates.x;
     line.y =
       referenceCoordinates.y - headerHeight - borderCount * borderSpacing;
     linesNode.push(line);

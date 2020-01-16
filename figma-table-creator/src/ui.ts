@@ -190,7 +190,6 @@ document.getElementById("create").onclick = () => {
   const floatingFilter = Figma.getValue("floatingFilter", "boolean");
   const floatingFilterHeight = Figma.getValue("floatingFilterHeight", "number");
   // Constraints Processing
-  // FIXME by adding header info to calculations
   let columns: number = 0;
   let columnWidth: number = 0;
   let rows: number = 0;
@@ -202,7 +201,10 @@ document.getElementById("create").onclick = () => {
       rows = Figma.getValue("rows", "number") as number;
       columnWidth =
         (Figma.getValue("tableWidth", "number") as number) / columns;
-      rowHeight = (Figma.getValue("tableHeight", "number") as number) / rows;
+      rowHeight =
+        ((Figma.getValue("tableHeight", "number") as number) -
+          (headerHeight as number)) /
+        rows;
       break;
     case "count-and-cell-size":
       columns = Figma.getValue("columns", "number") as number;
@@ -210,7 +212,7 @@ document.getElementById("create").onclick = () => {
       columnWidth = Figma.getValue("columnWidth", "number") as number;
       rowHeight = Figma.getValue("rowHeight", "number") as number;
       break;
-    case "cell-and-table-size": // FIXME reference coordinates messes up border
+    case "cell-and-table-size":
       const tableWidth: number = Figma.getValue(
         "tableWidth",
         "number"
@@ -224,6 +226,7 @@ document.getElementById("create").onclick = () => {
       columns = Math.floor(tableWidth / columnWidth);
       rows = Math.floor(tableHeight / rowHeight);
       referenceCoordinates.y = tableHeight % rowHeight;
+      console.log(referenceCoordinates);
       break;
   }
   // Properties and Customisations
