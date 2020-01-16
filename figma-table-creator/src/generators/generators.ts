@@ -30,7 +30,7 @@ export function generateBorders(
     borderWidth = borderWidthMultiplier * borderWidthIndividual;
   }
   const lineStrokesColor =
-    borderColor === ""
+    borderColor.match(/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i) === null
       ? Figma.hexToRgb(defaultBorderColor)
       : Figma.hexToRgb(borderColor);
   for (let i = 0; i < borderCount + 1; i++) {

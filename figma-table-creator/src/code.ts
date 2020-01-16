@@ -8,7 +8,7 @@ import {
 import * as Figma from "./utils/utils";
 const showUIOptions: ShowUIOptions = {
   width: 300,
-  height: 500
+  height: 485
 };
 // This shows the HTML page in "ui.html".
 figma.showUI(__html__, showUIOptions);
@@ -17,7 +17,6 @@ figma.showUI(__html__, showUIOptions);
 // callback. The callback will be passed the "pluginMessage" property of the
 // posted message.
 figma.ui.onmessage = msg => {
-  console.log(msg);
   processMessage(msg);
   figma.closePlugin();
 };
@@ -131,7 +130,7 @@ function processMessage(message: CreateMessage): void {
     figma.viewport.scrollAndZoomIntoView([tableGroup]);
 
     /* Notify Success to User */
-    figma.notify("Table created!");
+    figma.notify("👍 GridGen successfully generated your table");
     return null;
   }
 }

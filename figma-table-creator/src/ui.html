@@ -4,12 +4,28 @@
   </div>
   <div class="row">
     <div class="options-radio-buttons-wrapper">
-      <input type="radio" class="options-radio-button" name="options-radio-buttons" id="count-and-table-size" />
-      <label for="count-and-table-size">Count &<br />Table Size</label>
-      <input type="radio" class="options-radio-button" name="options-radio-buttons" id="count-and-cell-size" checked />
+      <input
+        type="radio"
+        class="options-radio-button"
+        name="options-radio-buttons"
+        id="cell-and-table-size"
+        checked
+      />
+      <label for="cell-and-table-size">Cell &<br />Table Size</label
+      ><input
+        type="radio"
+        class="options-radio-button"
+        name="options-radio-buttons"
+        id="count-and-cell-size"
+      />
       <label for="count-and-cell-size">Count &<br />Cell Size</label>
-      <input type="radio" class="options-radio-button" name="options-radio-buttons" id="cell-and-table-size" />
-      <label for="cell-and-table-size">Cell &<br />Table Size</label>
+      <input
+        type="radio"
+        class="options-radio-button"
+        name="options-radio-buttons"
+        id="count-and-table-size"
+      />
+      <label for="count-and-table-size">Count &<br />Table Size</label>
     </div>
   </div>
   <div class="row">
@@ -21,7 +37,7 @@
         <p>Width</p>
       </div>
       <div class="column" style="width: 45%;">
-        <input type="text" id="tableWidth" value="" />
+        <input type="text" id="tableWidth" value="1024" />
       </div>
       <div class="column one-sixth">
         <p>px</p>
@@ -32,7 +48,7 @@
         <p>Height</p>
       </div>
       <div class="column" style="width: 45%;">
-        <input type="text" id="tableHeight" value="" />
+        <input type="text" id="tableHeight" value="768" />
       </div>
       <div class="column one-sixth">
         <p>px</p>
@@ -45,7 +61,7 @@
         <p>Columns</p>
       </div>
       <div class="column third">
-        <input type="text" id="columns" value="5" />
+        <input type="text" id="columns" value="N.A." disabled />
       </div>
     </div>
     <div class="column half">
@@ -53,7 +69,7 @@
         <p>Rows</p>
       </div>
       <div class="column third">
-        <input type="text" id="rows" value="8" />
+        <input type="text" id="rows" value="N.A." disabled />
       </div>
     </div>
   </div>
@@ -127,7 +143,7 @@
           </label>
         </div>
         <div class="column third">
-          <input type="text" id="floatingFilterHeight" value="" disabled />
+          <input type="text" id="floatingFilterHeight" value="N.A." disabled />
         </div>
         <div class="column third">
           <p>px</p>
@@ -173,11 +189,8 @@
     </div>
   </div>
   <div class="row">
-    <div class="column half btn-standalone">
+    <div class="column btn-standalone">
       <button id="create">Create</button>
-    </div>
-    <div class="column half btn-standalone">
-      <button id="cancel">Cancel</button>
     </div>
   </div>
 </body>
