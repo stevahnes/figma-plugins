@@ -87,6 +87,7 @@ function validateUserInput(
   columnWidth: number,
   rowHeight: number
 ): boolean {
+  console.log(columns, rows, columnWidth, rowHeight);
   let validInput: boolean = true;
   // reset invalid CSS
   resetInvalidInput();
@@ -400,7 +401,7 @@ function processInputToMessage(isLoading: boolean): void {
     : "cell-and-table-size";
   // Header Info
   const header = Figma.getValue("header", "boolean");
-  const headerHeight = Figma.getValue("headerHeight", "number");
+  const headerHeight = header ? Figma.getValue("headerHeight", "number") : 0;
   const floatingFilter = Figma.getValue("floatingFilter", "boolean");
   const floatingFilterHeight = Figma.getValue("floatingFilterHeight", "number");
   // Properties and Customisations
