@@ -390,11 +390,8 @@ document.onkeyup = keyUp => {
   }
 };
 
-/* Create Button Actions */
-document.getElementById("create").onclick = () => {
-  // Disable create button and display loader
-  (document.getElementById("create") as HTMLInputElement).disabled = true;
-  (document.getElementById("lds") as HTMLElement).classList.add("is-visible");
+/* Process Input */
+function processInputToMessage(isLoading: boolean): void {
   // Selected Mode
   const mode: string = Figma.getValue("count-and-table-size", "boolean")
     ? "count-and-table-size"
@@ -500,4 +497,17 @@ document.getElementById("create").onclick = () => {
       "is-visible"
     );
   }
+}
+
+/* Create Button Actions */
+document.getElementById("create").onclick = () => {
+  // Disable create button and display loader
+  (document.getElementById("create") as HTMLInputElement).disabled = true;
+  (document.getElementById("lds") as HTMLElement).classList.add("is-visible");
+  // FIXME ensures that button is disabled and loader is displayed before processing input
+  setTimeout(() => {
+    processInputToMessage(
+      (document.getElementById("create") as HTMLInputElement).disabled
+    );
+  }, 100);
 };
