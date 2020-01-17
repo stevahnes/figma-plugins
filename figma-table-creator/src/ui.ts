@@ -87,7 +87,6 @@ function validateUserInput(
   columnWidth: number,
   rowHeight: number
 ): boolean {
-  console.log(columns, rows, columnWidth, rowHeight);
   let validInput: boolean = true;
   // reset invalid CSS
   resetInvalidInput();
