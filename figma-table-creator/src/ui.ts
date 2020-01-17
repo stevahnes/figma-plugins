@@ -93,57 +93,57 @@ function validateUserInput(
   // negative value check
   switch (mode) {
     case "count-and-table-size":
-      if (columns < 0) {
+      if (!columns || columns < 0) {
         document.getElementById("columns").classList.add("invalid");
         validInput = false;
       }
-      if (rows < 0) {
+      if (!rows || rows < 0) {
         document.getElementById("rows").classList.add("invalid");
         validInput = false;
       }
-      if (columnWidth < 0) {
+      if (!columnWidth || columnWidth < 0) {
         document.getElementById("columnWidth").classList.add("invalid");
         validInput = false;
       }
-      if (rowHeight < 0) {
+      if (!rowHeight || rowHeight < 0) {
         document.getElementById("rowHeight").classList.add("invalid");
         validInput = false;
       }
       (document.getElementById("tableWidth") as HTMLInputElement).select();
       break;
     case "count-and-cell-size":
-      if (columns <= 0) {
+      if (!columns || columns <= 0) {
         document.getElementById("columns").classList.add("invalid");
         validInput = false;
       }
-      if (rows <= 0) {
+      if (!rows || rows <= 0) {
         document.getElementById("rows").classList.add("invalid");
         validInput = false;
       }
-      if (columnWidth <= 0) {
+      if (!columnWidth || columnWidth <= 0) {
         document.getElementById("tableWidth").classList.add("invalid");
         validInput = false;
       }
-      if (rowHeight <= 0) {
+      if (!rowHeight || rowHeight <= 0) {
         document.getElementById("tableHeight").classList.add("invalid");
         validInput = false;
       }
       (document.getElementById("columns") as HTMLInputElement).select();
       break;
     case "cell-and-table-size":
-      if (columns <= 0 || (columns > 0 && columnWidth <= 0)) {
+      if (!columns || columns <= 0 || (columns > 0 && columnWidth <= 0)) {
         document.getElementById("tableWidth").classList.add("invalid");
         validInput = false;
       }
-      if (rows <= 0 || (rows > 0 && rowHeight <= 0)) {
+      if (!rows || rows <= 0 || (rows > 0 && rowHeight <= 0)) {
         document.getElementById("tableHeight").classList.add("invalid");
         validInput = false;
       }
-      if (columnWidth <= 0) {
+      if (!columnWidth || columnWidth <= 0) {
         document.getElementById("columnWidth").classList.add("invalid");
         validInput = false;
       }
-      if (rowHeight <= 0) {
+      if (!rowHeight || rowHeight <= 0) {
         document.getElementById("rowHeight").classList.add("invalid");
         validInput = false;
       }
@@ -468,28 +468,30 @@ function processInputToMessage(isLoading: boolean): void {
     rowHeight
   );
   if (validWithinLimits) {
-    parent.postMessage(
-      {
-        pluginMessage: {
-          type: "create-table",
-          columns: columns,
-          columnWidth: columnWidth,
-          rows: rows,
-          rowHeight: rowHeight,
-          borders: borders,
-          alternateBackgrounds: alternateBackgrounds,
-          header: header,
-          headerHeight: headerHeight,
-          floatingFilter: floatingFilter,
-          floatingFilterHeight: floatingFilterHeight,
-          primarybackgroundColor: primarybackgroundColor,
-          stripedbackgroundColor: stripedbackgroundColor,
-          borderColor: borderColor,
-          referenceCoordinates: referenceCoordinates
-        }
-      },
-      "*"
-    );
+    setTimeout(() => {
+      parent.postMessage(
+        {
+          pluginMessage: {
+            type: "create-table",
+            columns: columns,
+            columnWidth: columnWidth,
+            rows: rows,
+            rowHeight: rowHeight,
+            borders: borders,
+            alternateBackgrounds: alternateBackgrounds,
+            header: header,
+            headerHeight: headerHeight,
+            floatingFilter: floatingFilter,
+            floatingFilterHeight: floatingFilterHeight,
+            primarybackgroundColor: primarybackgroundColor,
+            stripedbackgroundColor: stripedbackgroundColor,
+            borderColor: borderColor,
+            referenceCoordinates: referenceCoordinates
+          }
+        },
+        "*"
+      );
+    }, 100);
   } else {
     // Enable create button and hide loader
     (document.getElementById("create") as HTMLInputElement).disabled = false;
@@ -505,9 +507,7 @@ document.getElementById("create").onclick = () => {
   (document.getElementById("create") as HTMLInputElement).disabled = true;
   (document.getElementById("lds") as HTMLElement).classList.add("is-visible");
   // FIXME ensures that button is disabled and loader is displayed before processing input
-  setTimeout(() => {
-    processInputToMessage(
-      (document.getElementById("create") as HTMLInputElement).disabled
-    );
-  }, 100);
+  processInputToMessage(
+    (document.getElementById("create") as HTMLInputElement).disabled
+  );
 };
