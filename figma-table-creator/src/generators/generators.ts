@@ -3,6 +3,11 @@ import * as Figma from "../utils/utils";
 
 /* Defaults/Constants */
 const defaultBorderColor = "#C7C7C7";
+const tableFontName: FontName = {
+  family: "Roboto",
+  style: "Regular"
+};
+const tableHeaderFontName: FontName = { family: "Roboto", style: "Bold" };
 
 export function generateBorders(
   borderType: "Horizontal" | "Vertical",
@@ -152,17 +157,9 @@ export function generateTableTexts(
       referenceCoordinates.x + i * columnWidth + textMargin.x;
     for (let j = 0; j < rowCount; j++) {
       const text = figma.createText();
-      loadNodeFont(text.fontName as FontName).then(_ => {
-        text.name = "Row " + (rowCount - j);
-        text.characters = "Sample";
-        text.textAlignVertical = "CENTER";
-        text.resize(
-          columnWidth - 1 - 2 * textMargin.x,
-          rowHeight - 2 * textMargin.y
-        );
-        text.x = columnTextsStartingPosition;
-        text.y = referenceCoordinates.y + textMargin.y - (j + 1) * rowHeight;
-      });
+      text.name = "Row " + (rowCount - j);
+      text.x = columnTextsStartingPosition;
+      text.y = referenceCoordinates.y + textMargin.y - (j + 1) * rowHeight;
       columnTextsNode.push(text);
     }
     const columnTextsGroup = Figma.groupNodes(
@@ -176,6 +173,21 @@ export function generateTableTexts(
     tableTextsNode,
     Figma.getCurrentPage()
   );
+  const allTextsNodesGenerated: SceneNode[] = tableTextsGroup.findAll(
+    node => node.type === "TEXT"
+  );
+  loadNodeFont(tableFontName).then(_ => {
+    for (let textNode of allTextsNodesGenerated) {
+      const text = textNode as TextNode;
+      text.fontName = tableFontName;
+      text.characters = "Sample";
+      text.textAlignVertical = "CENTER";
+      text.resize(
+        columnWidth - 1 - 2 * textMargin.x,
+        rowHeight - 2 * textMargin.y
+      );
+    }
+  });
   tableTextsGroup.name = "Table Texts";
   return tableTextsGroup;
 }
@@ -218,29 +230,34 @@ export function generateTableHeader(
       const columnTextsStartingPosition =
         referenceCoordinates.x + i * columnWidth + headerTextMargin.x;
       const text = figma.createText();
-      const fontName: FontName = { family: "Roboto", style: "Bold" };
-      loadNodeFont(fontName).then(_ => {
-        text.name = "Column Header " + (i + 1);
-        text.characters = "SAMPLE";
-        text.textAlignVertical = "CENTER";
-        text.fontName = fontName;
-        text.resize(
-          columnWidth - 1 - 2 * headerTextMargin.x,
-          textHeight - 2 * headerTextMargin.y
-        );
-        text.x = columnTextsStartingPosition;
-        text.y =
-          referenceCoordinates.y -
-          headerHeight +
-          headerTextMargin.y -
-          (rowCount - 1) * rowHeight;
-      });
+      text.name = "Column Header " + (i + 1);
+      text.x = columnTextsStartingPosition;
+      text.y =
+        referenceCoordinates.y -
+        headerHeight +
+        headerTextMargin.y -
+        (rowCount - 1) * rowHeight;
       tableHeaderTextsNode.push(text);
     }
     const tableHeaderTextsGroup = Figma.groupNodes(
       tableHeaderTextsNode,
       Figma.getCurrentPage()
     );
+    const allTextsNodesGenerated: SceneNode[] = tableHeaderTextsGroup.findAll(
+      node => node.type === "TEXT"
+    );
+    loadNodeFont(tableHeaderFontName).then(_ => {
+      for (let textNode of allTextsNodesGenerated) {
+        const text = textNode as TextNode;
+        text.fontName = tableHeaderFontName;
+        text.characters = "SAMPLE";
+        text.textAlignVertical = "CENTER";
+        text.resize(
+          columnWidth - 1 - 2 * headerTextMargin.x,
+          textHeight - 2 * headerTextMargin.y
+        );
+      }
+    });
     tableHeaderTextsGroup.name = "Column Headers";
     tableHeaderNode.push(tableHeaderTextsGroup);
     // Floating Filters
