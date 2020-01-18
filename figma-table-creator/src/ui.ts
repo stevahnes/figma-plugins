@@ -69,6 +69,14 @@ function resetInvalidInput(): void {
   }
 }
 
+/* Set Invalid CSS by List */
+function setInvalidInputs(mode: string): void {
+  const inputList: string[] = defaultInputsForModes[mode];
+  for (let input of inputList) {
+    document.getElementById(input).classList.add("invalid");
+  }
+}
+
 /* Toggle HTML Rendering */
 function setDefault(mode: string) {
   const inputList: string[] = Object.keys(defaultValuesForInputs);
@@ -160,26 +168,15 @@ function validateUserInput(
       columns > 100 ||
       rows > 100
     ) {
+      setInvalidInputs(mode);
       switch (mode) {
         case "count-and-table-size":
-          document.getElementById("columns").classList.add("invalid");
-          document.getElementById("rows").classList.add("invalid");
-          document.getElementById("columnWidth").classList.add("invalid");
-          document.getElementById("rowHeight").classList.add("invalid");
           (document.getElementById("tableWidth") as HTMLInputElement).select();
           break;
         case "count-and-cell-size":
-          document.getElementById("columns").classList.add("invalid");
-          document.getElementById("rows").classList.add("invalid");
-          document.getElementById("columnWidth").classList.add("invalid");
-          document.getElementById("rowHeight").classList.add("invalid");
           (document.getElementById("columns") as HTMLInputElement).select();
           break;
         case "cell-and-table-size":
-          document.getElementById("tableWidth").classList.add("invalid");
-          document.getElementById("tableHeight").classList.add("invalid");
-          document.getElementById("columnWidth").classList.add("invalid");
-          document.getElementById("rowHeight").classList.add("invalid");
           (document.getElementById("tableWidth") as HTMLInputElement).select();
           break;
       }
@@ -367,18 +364,21 @@ document.onkeydown = keyDown => {
             "cell-and-table-size"
           ) as HTMLInputElement).checked = true;
           setDefault("cell-and-table-size");
+          keyDown.preventDefault();
           break;
         case "2":
           (document.getElementById(
             "count-and-cell-size"
           ) as HTMLInputElement).checked = true;
           setDefault("count-and-cell-size");
+          keyDown.preventDefault();
           break;
         case "3":
           (document.getElementById(
             "count-and-table-size"
           ) as HTMLInputElement).checked = true;
           setDefault("count-and-table-size");
+          keyDown.preventDefault();
           break;
       }
     }
