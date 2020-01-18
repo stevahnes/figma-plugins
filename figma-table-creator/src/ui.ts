@@ -2,6 +2,26 @@ import "./ui.css";
 import { ReferenceCoordinates } from "./interfaces/interfaces";
 import * as Figma from "./utils/utils";
 
+/* Constants */
+const defaultInputsForModes: { [key: string]: string[] } = {
+  "count-and-table-size": ["tableWidth", "tableHeight", "columns", "rows"],
+  "count-and-cell-size": ["columnWidth", "rowHeight", "columns", "rows"],
+  "cell-and-table-size": [
+    "tableWidth",
+    "tableHeight",
+    "columnWidth",
+    "rowHeight"
+  ]
+};
+const defaultValuesForInputs: { [key: string]: string } = {
+  tableWidth: "1024",
+  tableHeight: "768",
+  columnWidth: "100",
+  rowHeight: "30",
+  columns: "5",
+  rows: "8"
+};
+
 /* State Changes Variable */
 let isShiftHeld: boolean = false;
 let isAltHeld: boolean = false;
@@ -17,11 +37,9 @@ function toggleEditable(
   isPrerequisiteSelected: boolean,
   defaultValue: string
 ): void {
-  const htmlTagById: HTMLInputElement = document.getElementById(
-    htmlTagId
-  ) as HTMLInputElement;
-  if ((htmlTagById as HTMLInputElement).checked) {
-    (htmlTagById as HTMLInputElement).checked = false;
+  const htmlTagById: HTMLInputElement = getHTMLInputElementById(htmlTagId);
+  if (htmlTagById.checked) {
+    htmlTagById.checked = false;
   }
   if (isPrerequisiteSelected) {
     htmlTagById.disabled = false;
@@ -33,49 +51,33 @@ function toggleEditable(
   return null;
 }
 
+/* Select HTML Elements */
+// Generic HTML Element
+function getHTMLElementById(htmlElement: string): HTMLElement {
+  return document.getElementById(htmlElement) as HTMLElement;
+}
+// HTML Input Element
+function getHTMLInputElementById(htmlElement: string): HTMLInputElement {
+  return document.getElementById(htmlElement) as HTMLInputElement;
+}
+
 /* Reset Invalid CSS */
 function resetInvalidInput(): void {
-  document.getElementById("columns").classList.remove("invalid");
-  document.getElementById("rows").classList.remove("invalid");
-  document.getElementById("columnWidth").classList.remove("invalid");
-  document.getElementById("rowHeight").classList.remove("invalid");
-  document.getElementById("tableWidth").classList.remove("invalid");
-  document.getElementById("tableHeight").classList.remove("invalid");
+  const inputList: string[] = Object.keys(defaultValuesForInputs);
+  for (let input of inputList) {
+    getHTMLElementById(input).classList.remove("invalid");
+  }
 }
 
 /* Toggle HTML Rendering */
 function setDefault(mode: string) {
-  switch (mode) {
-    case "count-and-table-size":
-      toggleEditable("columnWidth", false, "100");
-      toggleEditable("rowHeight", false, "30");
-      toggleEditable("tableWidth", true, "1024");
-      toggleEditable("tableHeight", true, "768");
-      toggleEditable("columns", true, "5");
-      toggleEditable("rows", true, "8");
-      resetInvalidInput();
-      (document.getElementById("tableWidth") as HTMLInputElement).select();
-      break;
-    case "count-and-cell-size":
-      toggleEditable("columnWidth", true, "100");
-      toggleEditable("rowHeight", true, "30");
-      toggleEditable("tableWidth", false, "1024");
-      toggleEditable("tableHeight", false, "768");
-      toggleEditable("columns", true, "5");
-      toggleEditable("rows", true, "8");
-      resetInvalidInput();
-      (document.getElementById("columns") as HTMLInputElement).select();
-      break;
-    case "cell-and-table-size":
-      toggleEditable("columnWidth", true, "100");
-      toggleEditable("rowHeight", true, "30");
-      toggleEditable("tableWidth", true, "1024");
-      toggleEditable("tableHeight", true, "768");
-      toggleEditable("columns", false, "5");
-      toggleEditable("rows", false, "8");
-      resetInvalidInput();
-      (document.getElementById("tableWidth") as HTMLInputElement).select();
-      break;
+  const inputList: string[] = Object.keys(defaultValuesForInputs);
+  for (let input of inputList) {
+    if (defaultInputsForModes[mode].indexOf(input) > -1) {
+      toggleEditable(input, true, defaultValuesForInputs[input]);
+    } else {
+      toggleEditable(input, false, defaultValuesForInputs[input]);
+    }
   }
 }
 
@@ -94,60 +96,60 @@ function validateUserInput(
   switch (mode) {
     case "count-and-table-size":
       if (!columns || columns < 0) {
-        document.getElementById("columns").classList.add("invalid");
+        getHTMLInputElementById("columns").classList.add("invalid");
         validInput = false;
       }
       if (!rows || rows < 0) {
-        document.getElementById("rows").classList.add("invalid");
+        getHTMLInputElementById("rows").classList.add("invalid");
         validInput = false;
       }
       if (!columnWidth || columnWidth < 0) {
-        document.getElementById("columnWidth").classList.add("invalid");
+        getHTMLInputElementById("columnWidth").classList.add("invalid");
         validInput = false;
       }
       if (!rowHeight || rowHeight < 0) {
-        document.getElementById("rowHeight").classList.add("invalid");
+        getHTMLInputElementById("rowHeight").classList.add("invalid");
         validInput = false;
       }
-      (document.getElementById("tableWidth") as HTMLInputElement).select();
+      getHTMLInputElementById("tableWidth").select();
       break;
     case "count-and-cell-size":
       if (!columns || columns <= 0) {
-        document.getElementById("columns").classList.add("invalid");
+        getHTMLInputElementById("columns").classList.add("invalid");
         validInput = false;
       }
       if (!rows || rows <= 0) {
-        document.getElementById("rows").classList.add("invalid");
+        getHTMLInputElementById("rows").classList.add("invalid");
         validInput = false;
       }
       if (!columnWidth || columnWidth <= 0) {
-        document.getElementById("tableWidth").classList.add("invalid");
+        getHTMLInputElementById("tableWidth").classList.add("invalid");
         validInput = false;
       }
       if (!rowHeight || rowHeight <= 0) {
-        document.getElementById("tableHeight").classList.add("invalid");
+        getHTMLInputElementById("tableHeight").classList.add("invalid");
         validInput = false;
       }
-      (document.getElementById("columns") as HTMLInputElement).select();
+      getHTMLInputElementById("columns").select();
       break;
     case "cell-and-table-size":
       if (!columns || columns <= 0 || (columns > 0 && columnWidth <= 0)) {
-        document.getElementById("tableWidth").classList.add("invalid");
+        getHTMLInputElementById("tableWidth").classList.add("invalid");
         validInput = false;
       }
       if (!rows || rows <= 0 || (rows > 0 && rowHeight <= 0)) {
-        document.getElementById("tableHeight").classList.add("invalid");
+        getHTMLInputElementById("tableHeight").classList.add("invalid");
         validInput = false;
       }
       if (!columnWidth || columnWidth <= 0) {
-        document.getElementById("columnWidth").classList.add("invalid");
+        getHTMLInputElementById("columnWidth").classList.add("invalid");
         validInput = false;
       }
       if (!rowHeight || rowHeight <= 0) {
-        document.getElementById("rowHeight").classList.add("invalid");
+        getHTMLInputElementById("rowHeight").classList.add("invalid");
         validInput = false;
       }
-      (document.getElementById("tableWidth") as HTMLInputElement).select();
+      getHTMLInputElementById("tableWidth").select();
       break;
   }
   // limit check
