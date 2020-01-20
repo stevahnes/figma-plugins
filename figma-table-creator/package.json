@@ -1,7 +1,7 @@
 {
   "name": "figma-table-creator",
   "version": "1.1.2",
-  "description": "Figma plugin to assist in the creation of table component",
+  "description": "Utilizes built-in Figma rectangles, lines, and texts to generate tables with neatly organized layers",
   "main": "code.js",
   "scripts": {
     "start": "webpack --mode=development --watch",
@@ -13,9 +13,13 @@
     "url": "https://github.com/gnawx/figma-plugins.git"
   },
   "keywords": [
-    "figma",
-    "table",
-    "plugin"
+    "automatic",
+    "filters",
+    "generator",
+    "grid",
+    "header",
+    "striped",
+    "table"
   ],
   "author": "Stevanus Satria",
   "license": "MIT",
