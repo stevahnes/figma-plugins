@@ -124,10 +124,10 @@ function validateInput(
       rows > 100
     ) {
       setInvalidInputs(mode);
-      Figma.getHTMLInputElementById(defaultInputsForModes[mode][0]).select();
       validInput = false;
     }
   }
+  Figma.getHTMLInputElementById(defaultInputsForModes[mode][0]).select();
   return validInput;
 }
 
