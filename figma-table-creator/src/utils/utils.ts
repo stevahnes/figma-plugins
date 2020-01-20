@@ -64,15 +64,25 @@ export function hexToRgb(hex: string): RGB {
     : null;
 }
 
+/* Select HTML Elements */
+// Generic HTML Element
+export function getHTMLElementById(htmlElement: string): HTMLElement {
+  return document.getElementById(htmlElement) as HTMLElement;
+}
+// HTML Input Element
+export function getHTMLInputElementById(htmlElement: string): HTMLInputElement {
+  return document.getElementById(htmlElement) as HTMLInputElement;
+}
+
 /* Extract Inputs */
 export function getValue(
   htmlTagId: string,
   inputType: string
 ): number | boolean | string {
-  const input = document.getElementById(htmlTagId) as HTMLInputElement;
+  const input = getHTMLInputElementById(htmlTagId);
   switch (inputType) {
     case "number":
-      return parseInt(input.value, 10);
+      return parseInt(input.value, 10) ? parseInt(input.value, 10) : 0;
       break;
     case "boolean":
       return input.checked;

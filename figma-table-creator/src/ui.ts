@@ -4,8 +4,9 @@ import * as Figma from "./utils/utils";
 
 /* Constants */
 const defaultInputsForModes: { [key: string]: string[] } = {
+  // first on list is the default selected
   "count-and-table-size": ["tableWidth", "tableHeight", "columns", "rows"],
-  "count-and-cell-size": ["columnWidth", "rowHeight", "columns", "rows"],
+  "count-and-cell-size": ["columns", "rows", "columnWidth", "rowHeight"],
   "cell-and-table-size": [
     "tableWidth",
     "tableHeight",
@@ -20,6 +21,17 @@ const defaultValuesForInputs: { [key: string]: string } = {
   rowHeight: "30",
   columns: "5",
   rows: "8"
+};
+const modeIndependentInputs: { [key: string]: string } = {
+  primarybackgroundColor: "string",
+  alternateBackgrounds: "boolean",
+  stripedbackgroundColor: "string",
+  header: "boolean",
+  headerHeight: "number",
+  floatingFilter: "boolean",
+  floatingFilterHeight: "number",
+  borders: "boolean",
+  borderColor: "string"
 };
 
 /* State Changes Variable */
@@ -37,7 +49,9 @@ function toggleEditable(
   isPrerequisiteSelected: boolean,
   defaultValue: string
 ): void {
-  const htmlTagById: HTMLInputElement = getHTMLInputElementById(htmlTagId);
+  const htmlTagById: HTMLInputElement = Figma.getHTMLInputElementById(
+    htmlTagId
+  );
   if (htmlTagById.checked) {
     htmlTagById.checked = false;
   }
@@ -51,21 +65,11 @@ function toggleEditable(
   return null;
 }
 
-/* Select HTML Elements */
-// Generic HTML Element
-function getHTMLElementById(htmlElement: string): HTMLElement {
-  return document.getElementById(htmlElement) as HTMLElement;
-}
-// HTML Input Element
-function getHTMLInputElementById(htmlElement: string): HTMLInputElement {
-  return document.getElementById(htmlElement) as HTMLInputElement;
-}
-
 /* Reset Invalid CSS */
 function resetInvalidInput(): void {
   const inputList: string[] = Object.keys(defaultValuesForInputs);
   for (let input of inputList) {
-    getHTMLElementById(input).classList.remove("invalid");
+    Figma.getHTMLElementById(input).classList.remove("invalid");
   }
 }
 
@@ -73,7 +77,7 @@ function resetInvalidInput(): void {
 function setInvalidInputs(mode: string): void {
   const inputList: string[] = defaultInputsForModes[mode];
   for (let input of inputList) {
-    document.getElementById(input).classList.add("invalid");
+    Figma.getHTMLElementById(input).classList.add("invalid");
   }
 }
 
@@ -87,10 +91,12 @@ function setDefault(mode: string) {
       toggleEditable(input, false, defaultValuesForInputs[input]);
     }
   }
+  resetInvalidInput();
+  Figma.getHTMLInputElementById(defaultInputsForModes[mode][0]).select();
 }
 
 /* Validate User Input */
-function validateUserInput(
+function validateInput(
   mode: string,
   columns: number,
   rows: number,
@@ -100,65 +106,14 @@ function validateUserInput(
   let validInput: boolean = true;
   // reset invalid CSS
   resetInvalidInput();
-  // negative value check
-  switch (mode) {
-    case "count-and-table-size":
-      if (!columns || columns < 0) {
-        getHTMLInputElementById("columns").classList.add("invalid");
-        validInput = false;
-      }
-      if (!rows || rows < 0) {
-        getHTMLInputElementById("rows").classList.add("invalid");
-        validInput = false;
-      }
-      if (!columnWidth || columnWidth < 0) {
-        getHTMLInputElementById("columnWidth").classList.add("invalid");
-        validInput = false;
-      }
-      if (!rowHeight || rowHeight < 0) {
-        getHTMLInputElementById("rowHeight").classList.add("invalid");
-        validInput = false;
-      }
-      getHTMLInputElementById("tableWidth").select();
-      break;
-    case "count-and-cell-size":
-      if (!columns || columns <= 0) {
-        getHTMLInputElementById("columns").classList.add("invalid");
-        validInput = false;
-      }
-      if (!rows || rows <= 0) {
-        getHTMLInputElementById("rows").classList.add("invalid");
-        validInput = false;
-      }
-      if (!columnWidth || columnWidth <= 0) {
-        getHTMLInputElementById("tableWidth").classList.add("invalid");
-        validInput = false;
-      }
-      if (!rowHeight || rowHeight <= 0) {
-        getHTMLInputElementById("tableHeight").classList.add("invalid");
-        validInput = false;
-      }
-      getHTMLInputElementById("columns").select();
-      break;
-    case "cell-and-table-size":
-      if (!columns || columns <= 0 || (columns > 0 && columnWidth <= 0)) {
-        getHTMLInputElementById("tableWidth").classList.add("invalid");
-        validInput = false;
-      }
-      if (!rows || rows <= 0 || (rows > 0 && rowHeight <= 0)) {
-        getHTMLInputElementById("tableHeight").classList.add("invalid");
-        validInput = false;
-      }
-      if (!columnWidth || columnWidth <= 0) {
-        getHTMLInputElementById("columnWidth").classList.add("invalid");
-        validInput = false;
-      }
-      if (!rowHeight || rowHeight <= 0) {
-        getHTMLInputElementById("rowHeight").classList.add("invalid");
-        validInput = false;
-      }
-      getHTMLInputElementById("tableWidth").select();
-      break;
+  // negative and invalid value check
+  const inputsForMode: string[] = defaultInputsForModes[mode];
+  for (let input of inputsForMode) {
+    const inputValue: number = Figma.getValue(input, "number") as number;
+    if (!inputValue || inputValue < 0) {
+      Figma.getHTMLInputElementById(input).classList.add("invalid");
+      validInput = false;
+    }
   }
   // limit check
   if (validInput) {
@@ -169,61 +124,45 @@ function validateUserInput(
       rows > 100
     ) {
       setInvalidInputs(mode);
-      switch (mode) {
-        case "count-and-table-size":
-          (document.getElementById("tableWidth") as HTMLInputElement).select();
-          break;
-        case "count-and-cell-size":
-          (document.getElementById("columns") as HTMLInputElement).select();
-          break;
-        case "cell-and-table-size":
-          (document.getElementById("tableWidth") as HTMLInputElement).select();
-          break;
-      }
+      Figma.getHTMLInputElementById(defaultInputsForModes[mode][0]).select();
       validInput = false;
     }
   }
   return validInput;
 }
 
+/* Document OnChange Actions */
+// Detect inputs state change
+const inputList: string[] = Object.keys(defaultValuesForInputs);
+for (let input of inputList) {
+  document.getElementById(input).onchange = () => {
+    Figma.getHTMLInputElementById(input).classList.remove("invalid");
+  };
+}
 // Detect radio buttons state change
-document.getElementById("count-and-table-size").onclick = () => {
-  if (
-    (document.getElementById("count-and-table-size") as HTMLInputElement)
-      .checked
-  ) {
-    setDefault("count-and-table-size");
-  }
-};
-document.getElementById("count-and-cell-size").onclick = () => {
-  if (
-    (document.getElementById("count-and-cell-size") as HTMLInputElement).checked
-  ) {
-    setDefault("count-and-cell-size");
-  }
-};
-document.getElementById("cell-and-table-size").onclick = () => {
-  if (
-    (document.getElementById("cell-and-table-size") as HTMLInputElement).checked
-  ) {
-    setDefault("cell-and-table-size");
-  }
-};
+const modes: string[] = Object.keys(defaultInputsForModes);
+for (let mode of modes) {
+  document.getElementById(mode).onclick = () => {
+    if (Figma.getHTMLInputElementById(mode).checked) {
+      setDefault(mode);
+    }
+  };
+}
 // Detect header checkbox state change
 document.getElementById("header").onchange = () => {
   toggleEditable(
     "floatingFilter",
-    (document.getElementById("header") as HTMLInputElement).checked,
+    Figma.getHTMLInputElementById("header").checked,
     ""
   );
   toggleEditable(
     "headerHeight",
-    (document.getElementById("header") as HTMLInputElement).checked,
+    Figma.getHTMLInputElementById("header").checked,
     "60"
   );
   toggleEditable(
     "floatingFilterHeight",
-    (document.getElementById("floatingFilter") as HTMLInputElement).checked,
+    Figma.getHTMLInputElementById("floatingFilter").checked,
     ""
   );
 };
@@ -231,7 +170,7 @@ document.getElementById("header").onchange = () => {
 document.getElementById("floatingFilter").onchange = () => {
   toggleEditable(
     "floatingFilterHeight",
-    (document.getElementById("floatingFilter") as HTMLInputElement).checked,
+    Figma.getHTMLInputElementById("floatingFilter").checked,
     "30"
   );
 };
@@ -239,8 +178,7 @@ document.getElementById("floatingFilter").onchange = () => {
 document.getElementById("alternateBackgrounds").onchange = () => {
   toggleEditable(
     "stripedbackgroundColor",
-    (document.getElementById("alternateBackgrounds") as HTMLInputElement)
-      .checked,
+    Figma.getHTMLInputElementById("alternateBackgrounds").checked,
     "#FFFFFF"
   );
 };
@@ -248,28 +186,17 @@ document.getElementById("alternateBackgrounds").onchange = () => {
 document.getElementById("borders").onchange = () => {
   toggleEditable(
     "borderColor",
-    (document.getElementById("borders") as HTMLInputElement).checked,
+    Figma.getHTMLInputElementById("borders").checked,
     "#C7C7C7"
   );
 };
-// Detect inputs state change
-document.getElementById("columns").onchange = () => {
-  document.getElementById("columns").classList.remove("invalid");
-};
-document.getElementById("rows").onchange = () => {
-  document.getElementById("rows").classList.remove("invalid");
-};
-document.getElementById("tableWidth").onchange = () => {
-  document.getElementById("tableWidth").classList.remove("invalid");
-};
-document.getElementById("tableHeight").onchange = () => {
-  document.getElementById("tableHeight").classList.remove("invalid");
-};
-document.getElementById("columnWidth").onchange = () => {
-  document.getElementById("columnWidth").classList.remove("invalid");
-};
-document.getElementById("rowHeight").onchange = () => {
-  document.getElementById("rowHeight").classList.remove("invalid");
+// Create Button Actions
+document.getElementById("create").onclick = () => {
+  // Disable create button and display loader
+  Figma.getHTMLInputElementById("create").disabled = true;
+  Figma.getHTMLElementById("lds").classList.add("is-visible");
+  // FIXME ensures that button is disabled and loader is displayed before processing input
+  processInputToMessage();
 };
 
 /* Keyboard Navigation */
@@ -280,8 +207,8 @@ document.onkeydown = keyDown => {
   } else if (keyDown.key === "Alt") {
     isAltHeld = true;
   } else if (keyDown.key.match(/Arrow\w+/g)) {
-    if (activeElement.type === "text") {
-      let value: number = parseInt(activeElement.value);
+    let value: number = parseInt(activeElement.value, 10);
+    if (activeElement.type === "text" && value) {
       if (isShiftHeld === false) {
         switch (keyDown.key) {
           case "ArrowUp":
@@ -301,7 +228,9 @@ document.onkeydown = keyDown => {
             break;
         }
       }
-      (document.activeElement as HTMLInputElement).value = value.toString();
+      activeElement.value = value.toString();
+      activeElement.select();
+      keyDown.preventDefault();
     }
   } else if (keyDown.key === "Tab") {
     // Selected Mode
@@ -311,26 +240,13 @@ document.onkeydown = keyDown => {
       ? "count-and-cell-size"
       : "cell-and-table-size";
     if (activeElement.id === "create" && isShiftHeld === false) {
-      switch (mode) {
-        case "count-and-table-size":
-          (document.getElementById("tableWidth") as HTMLInputElement).select();
-          break;
-        case "count-and-cell-size":
-          (document.getElementById("columns") as HTMLInputElement).select();
-          break;
-        case "cell-and-table-size":
-          (document.getElementById("tableWidth") as HTMLInputElement).select();
-          break;
-      }
+      Figma.getHTMLInputElementById(defaultInputsForModes[mode][0]).select();
       keyDown.preventDefault();
     } else if (
-      mode === "count-and-cell-size" &&
-      activeElement.id === "columns" &&
+      activeElement ===
+        Figma.getHTMLInputElementById(defaultInputsForModes[mode][0]) &&
       isShiftHeld === true
     ) {
-      document.getElementById("create").focus();
-      keyDown.preventDefault();
-    } else if (activeElement.id === "tableWidth" && isShiftHeld === true) {
       document.getElementById("create").focus();
       keyDown.preventDefault();
     }
@@ -360,23 +276,17 @@ document.onkeydown = keyDown => {
     if (isAltHeld) {
       switch (keyDown.key) {
         case "1":
-          (document.getElementById(
-            "cell-and-table-size"
-          ) as HTMLInputElement).checked = true;
+          Figma.getHTMLInputElementById("cell-and-table-size").checked = true;
           setDefault("cell-and-table-size");
           keyDown.preventDefault();
           break;
         case "2":
-          (document.getElementById(
-            "count-and-cell-size"
-          ) as HTMLInputElement).checked = true;
+          Figma.getHTMLInputElementById("count-and-cell-size").checked = true;
           setDefault("count-and-cell-size");
           keyDown.preventDefault();
           break;
         case "3":
-          (document.getElementById(
-            "count-and-table-size"
-          ) as HTMLInputElement).checked = true;
+          Figma.getHTMLInputElementById("count-and-table-size").checked = true;
           setDefault("count-and-table-size");
           keyDown.preventDefault();
           break;
@@ -393,7 +303,7 @@ document.onkeyup = keyUp => {
 };
 
 /* Process Input */
-function processInputToMessage(isLoading: boolean): void {
+function processInputToMessage(): void {
   // Selected Mode
   const mode: string = Figma.getValue("count-and-table-size", "boolean")
     ? "count-and-table-size"
@@ -402,7 +312,7 @@ function processInputToMessage(isLoading: boolean): void {
     : "cell-and-table-size";
   // Header Info
   const header = Figma.getValue("header", "boolean");
-  const headerHeight = header ? Figma.getValue("headerHeight", "number") : 0;
+  const headerHeight = Figma.getValue("headerHeight", "number");
   const floatingFilter = Figma.getValue("floatingFilter", "boolean");
   const floatingFilterHeight = Figma.getValue("floatingFilterHeight", "number");
   // Properties and Customisations
@@ -462,7 +372,7 @@ function processInputToMessage(isLoading: boolean): void {
       break;
   }
   // Validation
-  const validWithinLimits: boolean = validateUserInput(
+  const validWithinLimits: boolean = validateInput(
     mode,
     columns,
     rows,
@@ -496,20 +406,7 @@ function processInputToMessage(isLoading: boolean): void {
     }, 100);
   } else {
     // Enable create button and hide loader
-    (document.getElementById("create") as HTMLInputElement).disabled = false;
-    (document.getElementById("lds") as HTMLElement).classList.remove(
-      "is-visible"
-    );
+    Figma.getHTMLInputElementById("create").disabled = false;
+    Figma.getHTMLElementById("lds").classList.remove("is-visible");
   }
 }
-
-/* Create Button Actions */
-document.getElementById("create").onclick = () => {
-  // Disable create button and display loader
-  (document.getElementById("create") as HTMLInputElement).disabled = true;
-  (document.getElementById("lds") as HTMLElement).classList.add("is-visible");
-  // FIXME ensures that button is disabled and loader is displayed before processing input
-  processInputToMessage(
-    (document.getElementById("create") as HTMLInputElement).disabled
-  );
-};
