@@ -1,4 +1,4 @@
-# figma-plugins [![Figma Plugins](https://img.shields.io/badge/figma-%40stevanussatria-0066B3)(https://figma.com/@stevanussatria)]
+# Figma Plugins [![Figma Plugins](https://img.shields.io/badge/figma-%40stevanussatria-0066B3)](https://figma.com/@stevanussatria)
 
 > Single repository containing all my Figma plugins
 
