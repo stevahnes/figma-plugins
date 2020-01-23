@@ -2,6 +2,7 @@
   "name": "root",
   "private": true,
   "scripts": {
+    "start": "lerna run start",
     "build": "lerna run build",
     "lint": "concurrently 'npm:lint-ts' 'npm:lint-css'",
     "lint-ts": "npx eslint --no-eslintrc -c .eslintrc packages/*/src/**/*.ts",
