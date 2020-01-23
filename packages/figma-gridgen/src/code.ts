@@ -3,11 +3,11 @@ import {
   generateBorders,
   generateTableTexts,
   generateTableHeader,
-} from './generators/generators';
-import * as Figma from './utils/utils';
+} from "./generators/generators";
+import * as Figma from "./utils/utils";
 
 /* Objects */
-type CreateMessage = import('./interfaces/interfaces').CreateMessage;
+type CreateMessage = import("./interfaces/interfaces").CreateMessage;
 
 /* Constants */
 const showUIOptions: ShowUIOptions = {
@@ -26,10 +26,10 @@ figma.ui.onmessage = msg => {
 };
 
 function processMessage(message: CreateMessage): void {
-  if (message.type === 'create-table') {
+  if (message.type === "create-table") {
     /* Generate Background */
     const oddRowBackgroundGroup: GroupNode = generateRowBackground(
-      'Odd',
+      "Odd",
       message.rows,
       message.rowHeight,
       message.columnWidth * message.columns,
@@ -40,7 +40,7 @@ function processMessage(message: CreateMessage): void {
       message.referenceCoordinates,
     );
     const evenRowBackgroundGroup: GroupNode = generateRowBackground(
-      'Even',
+      "Even",
       message.rows,
       message.rowHeight,
       message.columnWidth * message.columns,
@@ -52,7 +52,7 @@ function processMessage(message: CreateMessage): void {
     );
     const rowBackgroundNode: SceneNode[] = [oddRowBackgroundGroup, evenRowBackgroundGroup];
     const rowBackgroundGroup: GroupNode = Figma.groupNodes(rowBackgroundNode, figma.currentPage);
-    rowBackgroundGroup.name = 'Row Background';
+    rowBackgroundGroup.name = "Row Background";
 
     /* Generate Texts */
     const columnTextsGroup: GroupNode = generateTableTexts(
@@ -80,7 +80,7 @@ function processMessage(message: CreateMessage): void {
 
     /* Generate Borders */
     const verticalLinesGroup: GroupNode = generateBorders(
-      'Vertical',
+      "Vertical",
       message.borders,
       message.columns,
       message.columnWidth,
@@ -92,7 +92,7 @@ function processMessage(message: CreateMessage): void {
       message.referenceCoordinates,
     );
     const horizontalLinesGroup: GroupNode = generateBorders(
-      'Horizontal',
+      "Horizontal",
       message.borders,
       message.rows,
       message.rowHeight,
@@ -105,7 +105,7 @@ function processMessage(message: CreateMessage): void {
     );
     const borderLinesNode: SceneNode[] = [verticalLinesGroup, horizontalLinesGroup];
     const borderLinesGroup: GroupNode = Figma.groupNodes(borderLinesNode, figma.currentPage);
-    borderLinesGroup.name = 'Borders';
+    borderLinesGroup.name = "Borders";
 
     /* Sort Group Nodes */
     const tableGroup = Figma.groupNodes([rowBackgroundGroup], figma.currentPage);
@@ -114,12 +114,12 @@ function processMessage(message: CreateMessage): void {
       tableGroup.appendChild(tableHeaderGroup);
     }
     tableGroup.appendChild(borderLinesGroup);
-    tableGroup.name = 'Table';
+    tableGroup.name = "Table";
     figma.currentPage.selection = [tableGroup];
     figma.viewport.scrollAndZoomIntoView([tableGroup]);
 
     /* Notify Success to User */
-    figma.notify('👍 GridGen successfully generated your table');
+    figma.notify("👍 GridGen successfully generated your table");
     figma.closePlugin();
     return null;
   }

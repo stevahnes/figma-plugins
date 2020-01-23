@@ -1,18 +1,18 @@
-import * as Figma from '../utils/utils';
+import * as Figma from "../utils/utils";
 
 /* Objects */
-type ReferenceCoordinates = import('../interfaces/interfaces').ReferenceCoordinates;
+type ReferenceCoordinates = import("../interfaces/interfaces").ReferenceCoordinates;
 
 /* Defaults/Constants */
-const defaultBorderColor = '#C7C7C7';
+const defaultBorderColor = "#C7C7C7";
 const tableFontName: FontName = {
-  family: 'Roboto',
-  style: 'Regular',
+  family: "Roboto",
+  style: "Regular",
 };
-const tableHeaderFontName: FontName = { family: 'Roboto', style: 'Bold' };
+const tableHeaderFontName: FontName = { family: "Roboto", style: "Bold" };
 
 export function generateBorders(
-  borderType: 'Horizontal' | 'Vertical',
+  borderType: "Horizontal" | "Vertical",
   visible: boolean = true,
   borderCount: number,
   borderSpacing: number,
@@ -26,7 +26,7 @@ export function generateBorders(
   const linesNode: SceneNode[] = [];
   let borderWidth: number;
   if (header) {
-    if (borderType === 'Vertical') {
+    if (borderType === "Vertical") {
       borderWidth = (borderWidthMultiplier - 1) * borderWidthIndividual + headerHeight;
     } else {
       borderCount -= 1;
@@ -46,7 +46,7 @@ export function generateBorders(
     lineStrokes[0].color.g = lineStrokesColor.g / 255;
     lineStrokes[0].color.b = lineStrokesColor.b / 255;
     line.strokes = lineStrokes;
-    if (borderType === 'Vertical') {
+    if (borderType === "Vertical") {
       line.rotation = 90;
       line.x = referenceCoordinates.x + i * borderSpacing;
       line.y = referenceCoordinates.y;
@@ -58,7 +58,7 @@ export function generateBorders(
     linesNode.push(line);
   }
   // create top line if header is included
-  if (header && borderType === 'Horizontal') {
+  if (header && borderType === "Horizontal") {
     const line = figma.createLine();
     const lineStrokes = Figma.clone(line.strokes);
     lineStrokes[0].color.r = lineStrokesColor.r / 255;
@@ -79,7 +79,7 @@ export function generateBorders(
 }
 
 export function generateRowBackground(
-  rowBackgroundType: 'Odd' | 'Even',
+  rowBackgroundType: "Odd" | "Even",
   rowCount: number,
   rowHeight: number,
   rowWidth: number,
@@ -96,7 +96,7 @@ export function generateRowBackground(
   if (header) {
     rowCount -= 1;
   }
-  if (rowBackgroundType === 'Odd') {
+  if (rowBackgroundType === "Odd") {
     computedRowCount = Math.round(rowCount / 2);
     startingPoint = referenceCoordinates.y - rowHeight;
   } else {
@@ -108,7 +108,7 @@ export function generateRowBackground(
     const backgroundFills = Figma.clone(background.fills);
     let backgroundFillsColor: RGB;
     if (alternateBackgrounds) {
-      if ((rowCount % 2 === 0 && rowBackgroundType === 'Odd') || (rowCount % 2 !== 0 && rowBackgroundType === 'Even')) {
+      if ((rowCount % 2 === 0 && rowBackgroundType === "Odd") || (rowCount % 2 !== 0 && rowBackgroundType === "Even")) {
         backgroundFillsColor = Figma.hexToRgb(stripedBackgroundColor);
       } else {
         backgroundFillsColor = Figma.hexToRgb(primaryBackgroundColor);
@@ -147,27 +147,27 @@ export function generateTableTexts(
     const columnTextsStartingPosition = referenceCoordinates.x + i * columnWidth + textMargin.x;
     for (let j = 0; j < rowCount; j++) {
       const text = figma.createText();
-      text.name = 'Row ' + (rowCount - j);
+      text.name = "Row " + (rowCount - j);
       text.x = columnTextsStartingPosition;
       text.y = referenceCoordinates.y + textMargin.y - (j + 1) * rowHeight;
       columnTextsNode.push(text);
     }
     const columnTextsGroup = Figma.groupNodes(columnTextsNode, Figma.getCurrentPage());
-    columnTextsGroup.name = 'Column ' + (i + 1);
+    columnTextsGroup.name = "Column " + (i + 1);
     tableTextsNode.push(columnTextsGroup);
   }
   const tableTextsGroup: GroupNode = Figma.groupNodes(tableTextsNode, Figma.getCurrentPage());
-  const allTextsNodesGenerated: SceneNode[] = tableTextsGroup.findAll(node => node.type === 'TEXT');
+  const allTextsNodesGenerated: SceneNode[] = tableTextsGroup.findAll(node => node.type === "TEXT");
   loadNodeFont(tableFontName).then(() => {
     for (let textNode of allTextsNodesGenerated) {
       const text = textNode as TextNode;
       text.fontName = tableFontName;
-      text.characters = 'Sample';
-      text.textAlignVertical = 'CENTER';
+      text.characters = "Sample";
+      text.textAlignVertical = "CENTER";
       text.resize(columnWidth - 1 - 2 * textMargin.x, rowHeight - 2 * textMargin.y);
     }
   });
-  tableTextsGroup.name = 'Table Texts';
+  tableTextsGroup.name = "Table Texts";
   return tableTextsGroup;
 }
 
@@ -196,7 +196,7 @@ export function generateTableHeader(
     background.fills = backgroundFills;
     background.resize(rowWidth, headerHeight);
     background.y = referenceCoordinates.y - headerHeight - (rowCount - 1) * rowHeight;
-    background.name = 'Header Background';
+    background.name = "Header Background";
     tableHeaderNode.push(background);
     // Texts
     const tableHeaderTextsNode: SceneNode[] = [];
@@ -205,23 +205,23 @@ export function generateTableHeader(
     for (let i = 0; i < columnCount; i++) {
       const columnTextsStartingPosition = referenceCoordinates.x + i * columnWidth + headerTextMargin.x;
       const text = figma.createText();
-      text.name = 'Column Header ' + (i + 1);
+      text.name = "Column Header " + (i + 1);
       text.x = columnTextsStartingPosition;
       text.y = referenceCoordinates.y - headerHeight + headerTextMargin.y - (rowCount - 1) * rowHeight;
       tableHeaderTextsNode.push(text);
     }
     const tableHeaderTextsGroup = Figma.groupNodes(tableHeaderTextsNode, Figma.getCurrentPage());
-    const allTextsNodesGenerated: SceneNode[] = tableHeaderTextsGroup.findAll(node => node.type === 'TEXT');
+    const allTextsNodesGenerated: SceneNode[] = tableHeaderTextsGroup.findAll(node => node.type === "TEXT");
     loadNodeFont(tableHeaderFontName).then(() => {
       for (let textNode of allTextsNodesGenerated) {
         const text = textNode as TextNode;
         text.fontName = tableHeaderFontName;
-        text.characters = 'SAMPLE';
-        text.textAlignVertical = 'CENTER';
+        text.characters = "SAMPLE";
+        text.textAlignVertical = "CENTER";
         text.resize(columnWidth - 1 - 2 * headerTextMargin.x, textHeight - 2 * headerTextMargin.y);
       }
     });
-    tableHeaderTextsGroup.name = 'Column Headers';
+    tableHeaderTextsGroup.name = "Column Headers";
     tableHeaderNode.push(tableHeaderTextsGroup);
     // Floating Filters
     if (floatingFilter) {
@@ -231,12 +231,12 @@ export function generateTableHeader(
         const columnFloatingFiltersStartingPosition = referenceCoordinates.x + i * columnWidth + floatingFilterMargin.x;
         const floatingFilter = figma.createRectangle();
         const floatingFilterFills = Figma.clone(floatingFilter.fills);
-        const floatingFilterFillsColor: RGB = Figma.hexToRgb('#FFFFFF');
+        const floatingFilterFillsColor: RGB = Figma.hexToRgb("#FFFFFF");
         floatingFilterFills[0].color.r = floatingFilterFillsColor.r / 255;
         floatingFilterFills[0].color.g = floatingFilterFillsColor.g / 255;
         floatingFilterFills[0].color.b = floatingFilterFillsColor.b / 255;
         floatingFilter.fills = floatingFilterFills;
-        floatingFilter.name = 'Floating Filter Placeholder' + (i + 1);
+        floatingFilter.name = "Floating Filter Placeholder" + (i + 1);
         floatingFilter.resize(
           columnWidth - 1 - 2 * floatingFilterMargin.x,
           floatingFilterHeight - 2 * floatingFilterMargin.y,
@@ -247,11 +247,11 @@ export function generateTableHeader(
         floatingFiltersNode.push(floatingFilter);
       }
       const tableFloatingFiltersGroup = Figma.groupNodes(floatingFiltersNode, Figma.getCurrentPage());
-      tableFloatingFiltersGroup.name = 'Floating Filters';
+      tableFloatingFiltersGroup.name = "Floating Filters";
       tableHeaderNode.push(tableFloatingFiltersGroup);
     }
     const tableHeaderGroup: GroupNode = Figma.groupNodes(tableHeaderNode, Figma.getCurrentPage());
-    tableHeaderGroup.name = 'Table Header';
+    tableHeaderGroup.name = "Table Header";
     return tableHeaderGroup;
   } else {
     return null;

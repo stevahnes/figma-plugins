@@ -26,9 +26,9 @@ export function clone(val) {
   const type = typeof val;
   if (val === null) {
     return null;
-  } else if (type === 'undefined' || type === 'number' || type === 'string' || type === 'boolean') {
+  } else if (type === "undefined" || type === "number" || type === "string" || type === "boolean") {
     return val;
-  } else if (type === 'object') {
+  } else if (type === "object") {
     if (val instanceof Array) {
       return val.map(x => clone(x));
     } else if (val instanceof Uint8Array) {
@@ -41,7 +41,7 @@ export function clone(val) {
       return o;
     }
   }
-  throw 'unknown';
+  throw "unknown";
 }
 
 /* HEX to RGB Conversion */
@@ -70,13 +70,13 @@ export function getHTMLInputElementById(htmlElement: string): HTMLInputElement {
 export function getValue(htmlTagId: string, inputType: string): number | boolean | string {
   const input = getHTMLInputElementById(htmlTagId);
   switch (inputType) {
-    case 'number':
+    case "number":
       return parseInt(input.value, 10) ? parseInt(input.value, 10) : 0;
       break;
-    case 'boolean':
+    case "boolean":
       return input.checked;
       break;
-    case 'string':
+    case "string":
       return input.value;
       break;
   }
