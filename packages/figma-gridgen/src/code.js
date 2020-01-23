@@ -1,12 +1,22 @@
-const referenceCoordinates = { x: 0, y: 0 };
+import {
+  generateRowBackground,
+  generateBorders,
+  generateTableTexts,
+  generateTableHeader,
+} from "./generators/generators";
+import * as Figma from "./utils/utils";
+/* Constants */
+const showUIOptions = {
+  width: 300,
+  height: 485,
+};
 // This shows the HTML page in "ui.html".
-figma.showUI(__html__);
+figma.showUI(__html__, showUIOptions);
 // Calls to "parent.postMessage" from within the HTML page will trigger this
 // callback. The callback will be passed the "pluginMessage" property of the
 // posted message.
 figma.ui.onmessage = msg => {
   processMessage(msg);
-  figma.closePlugin();
 };
 function processMessage(message) {
   if (message.type === "create-table") {
@@ -16,87 +26,89 @@ function processMessage(message) {
       message.rows,
       message.rowHeight,
       message.columnWidth * message.columns,
+      message.alternateBackgrounds,
+      message.header,
+      message.primarybackgroundColor,
+      message.stripedbackgroundColor,
+      message.referenceCoordinates,
     );
     const evenRowBackgroundGroup = generateRowBackground(
       "Even",
       message.rows,
       message.rowHeight,
       message.columnWidth * message.columns,
+      message.alternateBackgrounds,
+      message.header,
+      message.primarybackgroundColor,
+      message.stripedbackgroundColor,
+      message.referenceCoordinates,
     );
     const rowBackgroundNode = [oddRowBackgroundGroup, evenRowBackgroundGroup];
-    const rowBackgroundGroup = groupNodes(rowBackgroundNode, figma.currentPage);
+    const rowBackgroundGroup = Figma.groupNodes(rowBackgroundNode, figma.currentPage);
     rowBackgroundGroup.name = "Row Background";
+    /* Generate Texts */
+    const columnTextsGroup = generateTableTexts(
+      message.rows,
+      message.rowHeight,
+      message.columns,
+      message.columnWidth,
+      message.header,
+      message.referenceCoordinates,
+    );
+    /* Generate Headers */
+    const tableHeaderGroup = generateTableHeader(
+      message.rows,
+      message.rowHeight,
+      message.columns,
+      message.columnWidth,
+      message.header,
+      message.headerHeight,
+      message.floatingFilter,
+      message.floatingFilterHeight,
+      message.primarybackgroundColor,
+      message.referenceCoordinates,
+    );
     /* Generate Borders */
     const verticalLinesGroup = generateBorders(
       "Vertical",
-      true,
+      message.borders,
       message.columns,
       message.columnWidth,
-      message.rowHeight * message.rows,
+      message.rows,
+      message.rowHeight,
+      message.header,
+      message.headerHeight,
+      message.borderColor,
+      message.referenceCoordinates,
     );
     const horizontalLinesGroup = generateBorders(
       "Horizontal",
-      true,
+      message.borders,
       message.rows,
       message.rowHeight,
-      message.columnWidth * message.columns,
+      message.columns,
+      message.columnWidth,
+      message.header,
+      message.headerHeight,
+      message.borderColor,
+      message.referenceCoordinates,
     );
     const borderLinesNode = [verticalLinesGroup, horizontalLinesGroup];
-    const borderLinesGroup = groupNodes(borderLinesNode, figma.currentPage);
+    const borderLinesGroup = Figma.groupNodes(borderLinesNode, figma.currentPage);
     borderLinesGroup.name = "Borders";
     /* Sort Group Nodes */
-    const tableGroup = groupNodes([borderLinesGroup, rowBackgroundGroup], figma.currentPage);
+    const tableGroup = Figma.groupNodes([rowBackgroundGroup], figma.currentPage);
+    tableGroup.appendChild(columnTextsGroup);
+    if (tableHeaderGroup !== null) {
+      tableGroup.appendChild(tableHeaderGroup);
+    }
+    tableGroup.appendChild(borderLinesGroup);
     tableGroup.name = "Table";
     figma.currentPage.selection = [tableGroup];
     figma.viewport.scrollAndZoomIntoView([tableGroup]);
+    /* Notify Success to User */
+    figma.notify("👍 GridGen successfully generated your table");
+    figma.closePlugin();
+    return null;
   }
-  /* Notify Success to User */
-  figma.notify("Table created!");
-  return null;
-}
-function generateBorders(borderType, visible = true, borderCount, borderSpacing, borderWidth) {
-  const linesNode = [];
-  for (let i = 0; i < borderCount + 1; i++) {
-    const line = figma.createLine();
-    if (borderType === "Vertical") {
-      line.rotation = 90;
-      line.x = referenceCoordinates.x + i * borderSpacing;
-    } else {
-      line.y = referenceCoordinates.y - i * borderSpacing;
-    }
-    line.resize(borderWidth, 0);
-    linesNode.push(line);
-  }
-  const linesGroup = groupNodes(linesNode, figma.currentPage);
-  if (!visible) {
-    linesGroup.visible = false;
-  }
-  linesGroup.name = borderType;
-  return linesGroup;
-}
-function generateRowBackground(rowBackgroundType, rowCount, rowHeight, rowWidth) {
-  const rowBackgroundNode = [];
-  const rowSpacing = rowHeight * 2;
-  let computedRowCount = 0;
-  let startingPoint = 0;
-  if (rowBackgroundType === "Odd") {
-    computedRowCount = Math.round(rowCount / 2);
-    startingPoint = referenceCoordinates.y - rowHeight;
-  } else {
-    computedRowCount = Math.floor(rowCount / 2);
-    startingPoint = referenceCoordinates.y - rowSpacing;
-  }
-  for (let i = 0; i < computedRowCount; i++) {
-    const background = figma.createRectangle();
-    background.resize(rowWidth, rowHeight);
-    background.y = startingPoint - i * rowSpacing;
-    rowBackgroundNode.push(background);
-  }
-  const rowBackgroundGroup = groupNodes(rowBackgroundNode, figma.currentPage);
-  rowBackgroundGroup.name = rowBackgroundType;
-  return rowBackgroundGroup;
-}
-/* API Function Abstraction */
-function groupNodes(nodes, parent) {
-  return figma.group(nodes, parent);
 }

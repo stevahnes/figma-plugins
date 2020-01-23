@@ -35,7 +35,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "tsc --noEmit && lint-staged"
+      "pre-commit": "tsc -p ./tsconfig.json --noEmit && lint-staged"
     }
   },
   "lint-staged": {

@@ -1,0 +1,7 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "typeRoots": ["./packages/*/src/**/*"]
+  },
+  "exclude": ["./node_modules", "./packages/*/node_modules"]
+}
