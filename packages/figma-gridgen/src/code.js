@@ -9,44 +9,59 @@ figma.ui.onmessage = msg => {
     figma.closePlugin();
 };
 function processMessage(message) {
-    if (message.type === "create-table") {
+    if (message.type === 'create-table') {
         /* Generate Background */
-        const oddRowBackgroundGroup = generateRowBackground("Odd", message.rows, message.rowHeight, message.columnWidth * message.columns);
-        const evenRowBackgroundGroup = generateRowBackground("Even", message.rows, message.rowHeight, message.columnWidth * message.columns);
-        const rowBackgroundNode = [
-            oddRowBackgroundGroup,
-            evenRowBackgroundGroup
-        ];
+        const oddRowBackgroundGroup = generateRowBackground(
+            'Odd',
+            message.rows,
+            message.rowHeight,
+            message.columnWidth * message.columns,
+        );
+        const evenRowBackgroundGroup = generateRowBackground(
+            'Even',
+            message.rows,
+            message.rowHeight,
+            message.columnWidth * message.columns,
+        );
+        const rowBackgroundNode = [oddRowBackgroundGroup, evenRowBackgroundGroup];
         const rowBackgroundGroup = groupNodes(rowBackgroundNode, figma.currentPage);
-        rowBackgroundGroup.name = "Row Background";
+        rowBackgroundGroup.name = 'Row Background';
         /* Generate Borders */
-        const verticalLinesGroup = generateBorders("Vertical", true, message.columns, message.columnWidth, message.rowHeight * message.rows);
-        const horizontalLinesGroup = generateBorders("Horizontal", true, message.rows, message.rowHeight, message.columnWidth * message.columns);
-        const borderLinesNode = [
-            verticalLinesGroup,
-            horizontalLinesGroup
-        ];
+        const verticalLinesGroup = generateBorders(
+            'Vertical',
+            true,
+            message.columns,
+            message.columnWidth,
+            message.rowHeight * message.rows,
+        );
+        const horizontalLinesGroup = generateBorders(
+            'Horizontal',
+            true,
+            message.rows,
+            message.rowHeight,
+            message.columnWidth * message.columns,
+        );
+        const borderLinesNode = [verticalLinesGroup, horizontalLinesGroup];
         const borderLinesGroup = groupNodes(borderLinesNode, figma.currentPage);
-        borderLinesGroup.name = "Borders";
+        borderLinesGroup.name = 'Borders';
         /* Sort Group Nodes */
         const tableGroup = groupNodes([borderLinesGroup, rowBackgroundGroup], figma.currentPage);
-        tableGroup.name = "Table";
+        tableGroup.name = 'Table';
         figma.currentPage.selection = [tableGroup];
         figma.viewport.scrollAndZoomIntoView([tableGroup]);
     }
     /* Notify Success to User */
-    figma.notify("Table created!");
+    figma.notify('Table created!');
     return null;
 }
 function generateBorders(borderType, visible = true, borderCount, borderSpacing, borderWidth) {
     const linesNode = [];
     for (let i = 0; i < borderCount + 1; i++) {
         const line = figma.createLine();
-        if (borderType === "Vertical") {
+        if (borderType === 'Vertical') {
             line.rotation = 90;
             line.x = referenceCoordinates.x + i * borderSpacing;
-        }
-        else {
+        } else {
             line.y = referenceCoordinates.y - i * borderSpacing;
         }
         line.resize(borderWidth, 0);
@@ -64,11 +79,10 @@ function generateRowBackground(rowBackgroundType, rowCount, rowHeight, rowWidth)
     const rowSpacing = rowHeight * 2;
     let computedRowCount = 0;
     let startingPoint = 0;
-    if (rowBackgroundType === "Odd") {
+    if (rowBackgroundType === 'Odd') {
         computedRowCount = Math.round(rowCount / 2);
         startingPoint = referenceCoordinates.y - rowHeight;
-    }
-    else {
+    } else {
         computedRowCount = Math.floor(rowCount / 2);
         startingPoint = referenceCoordinates.y - rowSpacing;
     }
