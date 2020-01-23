@@ -1,6 +1,8 @@
 import "./ui.css";
-import { ReferenceCoordinates } from "./interfaces/interfaces";
 import * as Figma from "./utils/utils";
+
+/* Objects */
+type ReferenceCoordinates = import("./interfaces/interfaces").ReferenceCoordinates;
 
 /* Constants */
 const defaultInputsForModes: { [key: string]: string[] } = {
@@ -21,17 +23,6 @@ const defaultValuesForInputs: { [key: string]: string } = {
   rowHeight: "30",
   columns: "5",
   rows: "8"
-};
-const modeIndependentInputs: { [key: string]: string } = {
-  primarybackgroundColor: "string",
-  alternateBackgrounds: "boolean",
-  stripedbackgroundColor: "string",
-  header: "boolean",
-  headerHeight: "number",
-  floatingFilter: "boolean",
-  floatingFilterHeight: "number",
-  borders: "boolean",
-  borderColor: "string"
 };
 
 /* State Changes Variable */
@@ -335,6 +326,8 @@ function processInputToMessage(): void {
   let columnWidth: number = 0;
   let rows: number = 0;
   let rowHeight: number = 0;
+  let tableWidth: number = 0;
+  let tableHeight: number = 0;
   let referenceCoordinates: ReferenceCoordinates = { x: 0, y: 0 };
   switch (mode) {
     case "count-and-table-size":
@@ -354,14 +347,8 @@ function processInputToMessage(): void {
       rowHeight = Figma.getValue("rowHeight", "number") as number;
       break;
     case "cell-and-table-size":
-      const tableWidth: number = Figma.getValue(
-        "tableWidth",
-        "number"
-      ) as number;
-      const tableHeight: number = Figma.getValue(
-        "tableHeight",
-        "number"
-      ) as number;
+      tableWidth = Figma.getValue("tableWidth", "number") as number;
+      tableHeight = Figma.getValue("tableHeight", "number") as number;
       columnWidth = Figma.getValue("columnWidth", "number") as number;
       rowHeight = Figma.getValue("rowHeight", "number") as number;
       columns = Math.floor(tableWidth / columnWidth);

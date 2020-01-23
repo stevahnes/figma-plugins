@@ -1,5 +1,7 @@
-import { ReferenceCoordinates } from "../interfaces/interfaces";
 import * as Figma from "../utils/utils";
+
+/* Objects */
+type ReferenceCoordinates = import("../interfaces/interfaces").ReferenceCoordinates;
 
 /* Defaults/Constants */
 const defaultBorderColor = "#C7C7C7";
@@ -176,7 +178,7 @@ export function generateTableTexts(
   const allTextsNodesGenerated: SceneNode[] = tableTextsGroup.findAll(
     node => node.type === "TEXT"
   );
-  loadNodeFont(tableFontName).then(_ => {
+  loadNodeFont(tableFontName).then(() => {
     for (let textNode of allTextsNodesGenerated) {
       const text = textNode as TextNode;
       text.fontName = tableFontName;
@@ -246,7 +248,7 @@ export function generateTableHeader(
     const allTextsNodesGenerated: SceneNode[] = tableHeaderTextsGroup.findAll(
       node => node.type === "TEXT"
     );
-    loadNodeFont(tableHeaderFontName).then(_ => {
+    loadNodeFont(tableHeaderFontName).then(() => {
       for (let textNode of allTextsNodesGenerated) {
         const text = textNode as TextNode;
         text.fontName = tableHeaderFontName;

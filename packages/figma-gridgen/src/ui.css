@@ -3,15 +3,16 @@ body {
   margin: 10px 15px;
   text-align: center;
 }
+
 p {
-  margin: 0px;
-  padding: 5px 0px;
+  margin: 0;
+  padding: 5px 0;
   text-align: left;
 }
 
 h4 {
-  margin: 0px;
-  padding: 5px 0px;
+  margin: 0;
+  padding: 5px 0;
   text-align: left;
 }
 
@@ -23,13 +24,15 @@ h4 {
   color: black;
   border: none;
   padding: 8px 100px;
-  margin: 5px 0px;
+  margin: 5px 0;
   box-shadow: inset 0 0 0 1px black;
   outline: none;
 }
+
 .btn-standalone button:focus {
   box-shadow: inset 0 0 0 2px #18a0fb;
 }
+
 .btn-standalone button:disabled {
   color: #bebebe;
   box-shadow: inset 0 0 0 1px #bebebe;
@@ -46,6 +49,7 @@ input[type="text"] {
   font-size: 12px;
   float: left;
 }
+
 input[type="checkbox"] {
   width: 100%;
   border: none;
@@ -54,22 +58,28 @@ input[type="checkbox"] {
   padding: 5px;
   text-align: left;
 }
+
 input[type="text"]:hover {
   box-shadow: inset 0 0 0 1px #f2f2f2;
 }
+
 input:focus {
   border-radius: 3px;
   box-shadow: inset 0 0 0 2px #18a0fb;
 }
-input:focus::selection {
-  background: #b9e2fe;
-}
+
 input::selection {
   background: #c8c8c8;
 }
+
+input:focus::selection {
+  background: #b9e2fe;
+}
+
 input:disabled {
   color: #bebebe;
 }
+
 .invalid {
   box-shadow: inset 0 0 0 1px #ef5533;
 }
@@ -78,49 +88,61 @@ input:disabled {
 .row {
   padding: 2px 3px;
 }
+
 .column {
   float: left;
   vertical-align: middle;
   width: 100%;
 }
+
 .column .zero-padding {
   padding: 0 !important;
 }
+
 .half {
   width: 50% !important;
 }
+
 .two-thirds {
   width: 66.7% !important;
 }
+
 .third {
   width: 33.3% !important;
 }
+
 .one-sixth {
   width: 16.7% !important;
 }
+
 .three-fourths {
   width: 75% !important;
 }
+
 .quarter {
   width: 25% !important;
 }
+
 .label {
   width: 65% !important;
 }
+
 .input-column {
   width: 35% !important;
 }
+
 /* Clear floats after the columns */
-.row:after {
+.row::after {
   content: "";
   display: table;
   clear: both;
 }
 
 /* --- Checkbox --- */
+
 /* The container */
 .container {
-  padding: 3px 0px;
+  padding: 3px 0;
   display: block;
   position: relative;
   cursor: pointer;
@@ -130,12 +152,14 @@ input:disabled {
   -ms-user-select: none;
   user-select: none;
 }
+
 /* Hide the browser's default checkbox */
 .container input {
   vertical-align: middle;
   position: relative;
   cursor: pointer;
 }
+
 .toggle-display {
   display: none;
 }
@@ -145,42 +169,50 @@ input:disabled {
 }
 
 /* --- Custom Radio Button --- */
+
 /* Based on Codepen by Sal */
 .options-radio-buttons-wrapper {
   clear: both;
   display: flex;
 }
+
 .options-radio-button {
   position: absolute;
   left: -9999em;
   top: -9999em;
 }
+
 .options-radio-button + label {
   width: 33.3%;
   float: left;
   padding: 0.5em 1em;
   cursor: pointer;
-  border: 0px;
+  border: 0;
   color: #bebebe;
   font-weight: 300;
   margin-right: -1px;
 }
+
 .options-radio-button + label:first-of-type {
   border-radius: 0.7em 0 0 0.7em;
 }
+
 .options-radio-button + label:last-of-type {
   border-radius: 0 0.7em 0.7em 0;
 }
+
 .options-radio-button:hover + label {
-  color: #000000;
+  color: #000;
   font-weight: 300;
 }
+
 .options-radio-button:checked + label {
-  color: #000000;
+  color: #000;
   font-weight: 550;
 }
 
 /* --- Animated Loader --- */
+
 /* Based on loading.io */
 .lds-container {
   position: fixed; /* Sit on top of the page content */
@@ -194,16 +226,19 @@ input:disabled {
   background-color: rgba(0, 0, 0, 0.5); /* Black background with opacity */
   z-index: 100 !important; /* Specify a stack order in case you're using a different order for other elements */
 }
+
 .lds-container.is-visible {
   display: block;
 }
+
 .lds-dual-ring {
   display: inline-block;
-  padding: 200px 0px;
+  padding: 200px 0;
   width: 80px;
   height: 80px;
 }
-.lds-dual-ring:after {
+
+.lds-dual-ring::after {
   content: " ";
   display: block;
   width: 30px;
@@ -214,10 +249,12 @@ input:disabled {
   border-color: #fff transparent #fff transparent;
   animation: lds-dual-ring 1.2s linear infinite;
 }
+
 @keyframes lds-dual-ring {
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(360deg);
   }

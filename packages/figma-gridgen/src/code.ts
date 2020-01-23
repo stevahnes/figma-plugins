@@ -1,4 +1,3 @@
-import { CreateMessage } from "./interfaces/interfaces";
 import {
   generateRowBackground,
   generateBorders,
@@ -6,10 +5,16 @@ import {
   generateTableHeader
 } from "./generators/generators";
 import * as Figma from "./utils/utils";
+
+/* Objects */
+type CreateMessage = import("./interfaces/interfaces").CreateMessage;
+
+/* Constants */
 const showUIOptions: ShowUIOptions = {
   width: 300,
   height: 485
 };
+
 // This shows the HTML page in "ui.html".
 figma.showUI(__html__, showUIOptions);
 
