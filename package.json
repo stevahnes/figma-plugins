@@ -4,8 +4,8 @@
   "scripts": {
     "build": "lerna run build",
     "lint": "concurrently 'npm:lint-ts' 'npm:lint-css'",
-    "lint-ts": "npx eslint --no-eslintrc -c .eslintrc.json packages/*/src/**/*.ts --fix-dry-run",
-    "lint-css": "npx stylelint --config .stylelintrc.json packages/*/src/*.css --fix",
+    "lint-ts": "npx eslint --no-eslintrc -c .eslintrc.json packages/*/src/**/*.ts --fix",
+    "lint-css": "npx stylelint --config .stylelintrc.json packages/*/src/**/*.css --fix",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {
