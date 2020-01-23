@@ -41,16 +41,13 @@
   },
   "lint-staged": {
     "*.{ts,css,json,md}": [
-      "prettier --write",
-      "git add"
+      "prettier --write"
     ],
     "*.{ts}": [
-      "eslint --no-eslintrc -c .eslintrc --fix",
-      "git add"
+      "eslint --no-eslintrc -c .eslintrc --fix"
     ],
     "*.css": [
-      "stylelint --config .stylelintrc --fix",
-      "git add"
+      "stylelint --config .stylelintrc --fix"
     ]
   }
 }
