@@ -14,6 +14,7 @@
     "@typescript-eslint/eslint-plugin": "^2.17.0",
     "@typescript-eslint/parser": "^2.17.0",
     "css-loader": "^3.4.1",
+    "concurrently": "^5.0.2",
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.9.0",
     "eslint-plugin-prettier": "^3.1.2",
@@ -24,17 +25,13 @@
     "lint-staged": "^10.0.2",
     "prettier": "1.19.1",
     "style-loader": "^1.1.2",
+    "stylelint": "^13.0.0",
     "stylelint-config-standard": "^19.0.0",
     "ts-loader": "^6.2.1",
     "typescript": "^3.7.4",
     "url-loader": "^3.0.0",
     "webpack": "^4.41.5",
     "webpack-cli": "^3.3.10"
-  },
-  "dependencies": {
-    "concurrently": "^5.0.2",
-    "figma-gridgen": "file:packages\\figma-gridgen",
-    "stylelint": "^13.0.0"
   },
   "husky": {
     "hooks": {
