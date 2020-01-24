@@ -19,5 +19,11 @@
     "sourceType": "module"
   },
   "plugins": ["@typescript-eslint"],
-  "rules": { "curly": "error", "quotes": ["error", "double"] }
+  "rules": {
+    "curly": "error",
+    "quotes": ["error", "double"]
+  },
+  "overrides": [{
+    "excludedFiles": "*.d.ts"
+  }]
 }
