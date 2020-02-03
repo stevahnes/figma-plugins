@@ -1,22 +1,51 @@
-This plugin template uses Typescript. If you are familiar with Javascript, Typescript will
-look very familiar. In fact, valid Javascript code is already valid Typescript code.
+![Figma GridGen][logo]
 
-Typescript adds type annotations to variables. This allows code editors such as Visual Studio Code
-to provide information about the Figma API while you are writing code, as well as help catch bugs
-you previously didn't notice.
+[logo]: (media/icon.svg) "GridGen"
 
-For more information, visit https://www.typescriptlang.org/
+# GridGen [![Figma Plugins](https://img.shields.io/badge/figma-@gridgen-blueviolet)](https://www.figma.com/c/plugin/796759972238579874/GridGen)
 
-Using Typescript requires a compiler to convert Typescript (code.ts) into Javascript (code.js)
-for the browser to run.
+Utilizes built-in Figma rectangles, lines, and texts to generate tables with neatly organized layers.
 
-To get the TypeScript compiler working:
+## How-To Use:
 
-1. Download Visual Studio Code if you haven't already: https://code.visualstudio.com/.
-2. Install the TypeScript compiler globally: `sudo npm install -g typescript`.
-3. Open this directory in Visual Studio Code.
-4. Compile TypeScript to JavaScript: Run the "Terminal > Run Build Task..." menu item,
-    then select "tsc: watch - tsconfig.json". You will have to do this again every time
-    you reopen Visual Studio Code.
+- Select one of three constraint modes (keyboard shortcuts added):
+  - Cell and table size ("Alt + 1")
+  - Count and cell size ("Alt + 2")
+  - Count and table size ("Alt + 3")
+- Modify the values in the textbox and the checkboxes
+- "Create" to generate table, or "Cancel" to exit
+- Supports both mouse and keyboard navigations:
+  - "Tab" to go to next input
+  - "Shift + Tab" to go to previous input
+  - "Arrow" keys on textboxes to increase/decrease by 1
+  - "Shift + Arrow" keys on textboxes to increaes/decrease by 10
+  - "Enter" on checkboxes to toggle
+  - "Enter" on buttons to click
+  - Shortcuts to switch between constraint modes (see above)
 
-That's it! Visual Studio Code will regenerate the JavaScript file every time you save.
+## Current capabilites:
+
+- Supports up to 100 rows and columns
+- Supports table up to 5000px by 5000px (width by height)
+- Supports 3 constraint modes (with keyboard shortcuts)
+  - Cell and table size
+  - Count and cell size
+  - Count and table size
+- Enhanced UI experience with validations and loader
+- With/without headers
+- Specify header height
+- When header is included, specify with/without floating filters
+- Supports striped tables
+- Ability to select both primary and striped colors of the table
+- With/without borders, and ability to define border color
+- Automated population of content and header texts
+
+## Work-in-Progress:
+
+- Specify fonts based on list of available font names
+- Specify font sizes
+- Other units besides pixel
+- Ability to specify font size
+- Caching of last inputs
+
+Other feature suggestions are welcome!
