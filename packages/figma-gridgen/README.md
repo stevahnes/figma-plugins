@@ -1,6 +1,6 @@
 ![Figma GridGen][logo]
 
-[logo]: (media/icon.svg) "GridGen"
+[logo]: media/icon.svg "GridGen"
 
 # GridGen [![Figma Plugins](https://img.shields.io/badge/figma-@gridgen-blueviolet)](https://www.figma.com/c/plugin/796759972238579874/GridGen)
 
