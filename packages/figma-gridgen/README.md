@@ -47,5 +47,3 @@ Utilizes built-in Figma rectangles, lines, and texts to generate tables with nea
 - Other units besides pixel
 - Ability to specify font size
 - Caching of last inputs
-
-Other feature suggestions are welcome!
