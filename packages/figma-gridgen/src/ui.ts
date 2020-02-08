@@ -26,8 +26,17 @@ let isAltHeld: boolean = false;
 
 /* Run after onLoad */
 window.addEventListener("load", function() {
-  (document.getElementById("tableWidth") as HTMLInputElement).select();
+  Figma.getHTMLInputElementById("tableWidth").select();
 });
+
+/* Receive message from plugin code */
+onmessage = fontOptions => {
+  const pluginFontOptions: string = fontOptions.data.pluginMessage as string;
+  Figma.getHTMLElementById("tableFontOptions").innerHTML = pluginFontOptions;
+  Figma.getHTMLElementById("headerFontOptions").innerHTML = pluginFontOptions;
+  Figma.getHTMLInputElementById("tableFont").value = "Roboto";
+  Figma.getHTMLInputElementById("headerFont").value = "Roboto";
+};
 
 /* Toggle HTML Rendering */
 function toggleEditable(htmlTagId: string, isPrerequisiteSelected: boolean, defaultValue: string): void {
@@ -146,86 +155,88 @@ document.getElementById("create").onclick = () => {
 
 /* Keyboard Navigation */
 document.onkeydown = keyDown => {
-  let activeElement = document.activeElement as HTMLInputElement;
-  if (keyDown.key === "Shift") {
-    isShiftHeld = true;
-  } else if (keyDown.key === "Alt") {
-    isAltHeld = true;
-  } else if (keyDown.key.match(/Arrow\w+/g)) {
-    let value: number = parseInt(activeElement.value, 10);
-    if (activeElement.type === "text" && value) {
-      if (isShiftHeld === false) {
-        switch (keyDown.key) {
-          case "ArrowUp":
-            value += 1;
-            break;
-          case "ArrowDown":
-            value -= 1;
-            break;
+  if (keyDown.key) {
+    let activeElement = document.activeElement as HTMLInputElement;
+    if (keyDown.key === "Shift") {
+      isShiftHeld = true;
+    } else if (keyDown.key === "Alt") {
+      isAltHeld = true;
+    } else if (keyDown.key.match(/Arrow\w+/g)) {
+      let value: number = parseInt(activeElement.value, 10);
+      if (activeElement.type === "text" && value) {
+        if (isShiftHeld === false) {
+          switch (keyDown.key) {
+            case "ArrowUp":
+              value += 1;
+              break;
+            case "ArrowDown":
+              value -= 1;
+              break;
+          }
+        } else {
+          switch (keyDown.key) {
+            case "ArrowUp":
+              value += 10;
+              break;
+            case "ArrowDown":
+              value -= 10;
+              break;
+          }
         }
-      } else {
-        switch (keyDown.key) {
-          case "ArrowUp":
-            value += 10;
-            break;
-          case "ArrowDown":
-            value -= 10;
-            break;
+        activeElement.value = value.toString();
+        activeElement.select();
+        keyDown.preventDefault();
+      }
+    } else if (keyDown.key === "Tab") {
+      // Selected Mode
+      const mode: string = Figma.getValue("count-and-table-size", "boolean")
+        ? "count-and-table-size"
+        : Figma.getValue("count-and-cell-size", "boolean")
+        ? "count-and-cell-size"
+        : "cell-and-table-size";
+      if (activeElement.id === "create" && isShiftHeld === false) {
+        Figma.getHTMLInputElementById(defaultInputsForModes[mode][0]).select();
+        keyDown.preventDefault();
+      } else if (
+        activeElement === Figma.getHTMLInputElementById(defaultInputsForModes[mode][0]) &&
+        isShiftHeld === true
+      ) {
+        document.getElementById("create").focus();
+        keyDown.preventDefault();
+      }
+    } else if (keyDown.key === "Enter") {
+      if (activeElement.type === "checkbox") {
+        activeElement.checked = !activeElement.checked;
+        if (activeElement.id === "header") {
+          toggleEditable("floatingFilter", activeElement.checked, "");
+          toggleEditable("headerHeight", activeElement.checked, "60");
+        } else if (activeElement.id === "floatingFilter") {
+          toggleEditable("floatingFilterHeight", activeElement.checked, "30");
+        } else if (activeElement.id === "alternateBackgrounds") {
+          toggleEditable("stripedbackgroundColor", activeElement.checked, "#FFFFFF");
+        } else if (activeElement.id === "borders") {
+          toggleEditable("borderColor", activeElement.checked, "#C7C7C7");
         }
       }
-      activeElement.value = value.toString();
-      activeElement.select();
-      keyDown.preventDefault();
-    }
-  } else if (keyDown.key === "Tab") {
-    // Selected Mode
-    const mode: string = Figma.getValue("count-and-table-size", "boolean")
-      ? "count-and-table-size"
-      : Figma.getValue("count-and-cell-size", "boolean")
-      ? "count-and-cell-size"
-      : "cell-and-table-size";
-    if (activeElement.id === "create" && isShiftHeld === false) {
-      Figma.getHTMLInputElementById(defaultInputsForModes[mode][0]).select();
-      keyDown.preventDefault();
-    } else if (
-      activeElement === Figma.getHTMLInputElementById(defaultInputsForModes[mode][0]) &&
-      isShiftHeld === true
-    ) {
-      document.getElementById("create").focus();
-      keyDown.preventDefault();
-    }
-  } else if (keyDown.key === "Enter") {
-    if (activeElement.type === "checkbox") {
-      activeElement.checked = !activeElement.checked;
-      if (activeElement.id === "header") {
-        toggleEditable("floatingFilter", activeElement.checked, "");
-        toggleEditable("headerHeight", activeElement.checked, "60");
-      } else if (activeElement.id === "floatingFilter") {
-        toggleEditable("floatingFilterHeight", activeElement.checked, "30");
-      } else if (activeElement.id === "alternateBackgrounds") {
-        toggleEditable("stripedbackgroundColor", activeElement.checked, "#FFFFFF");
-      } else if (activeElement.id === "borders") {
-        toggleEditable("borderColor", activeElement.checked, "#C7C7C7");
-      }
-    }
-  } else if (keyDown.key === "1" || keyDown.key === "2" || keyDown.key === "3") {
-    if (isAltHeld) {
-      switch (keyDown.key) {
-        case "1":
-          Figma.getHTMLInputElementById("cell-and-table-size").checked = true;
-          setDefault("cell-and-table-size");
-          keyDown.preventDefault();
-          break;
-        case "2":
-          Figma.getHTMLInputElementById("count-and-cell-size").checked = true;
-          setDefault("count-and-cell-size");
-          keyDown.preventDefault();
-          break;
-        case "3":
-          Figma.getHTMLInputElementById("count-and-table-size").checked = true;
-          setDefault("count-and-table-size");
-          keyDown.preventDefault();
-          break;
+    } else if (keyDown.key === "1" || keyDown.key === "2" || keyDown.key === "3") {
+      if (isAltHeld) {
+        switch (keyDown.key) {
+          case "1":
+            Figma.getHTMLInputElementById("cell-and-table-size").checked = true;
+            setDefault("cell-and-table-size");
+            keyDown.preventDefault();
+            break;
+          case "2":
+            Figma.getHTMLInputElementById("count-and-cell-size").checked = true;
+            setDefault("count-and-cell-size");
+            keyDown.preventDefault();
+            break;
+          case "3":
+            Figma.getHTMLInputElementById("count-and-table-size").checked = true;
+            setDefault("count-and-table-size");
+            keyDown.preventDefault();
+            break;
+        }
       }
     }
   }
@@ -246,9 +257,12 @@ function processInputToMessage(): void {
     : Figma.getValue("count-and-cell-size", "boolean")
     ? "count-and-cell-size"
     : "cell-and-table-size";
+  // Table Font Info
+  const tableFont = Figma.getValue("tableFont", "string");
   // Header Info
   const header = Figma.getValue("header", "boolean");
   const headerHeight = Figma.getValue("headerHeight", "number");
+  const headerFont = Figma.getValue("headerFont", "string");
   const floatingFilter = Figma.getValue("floatingFilter", "boolean");
   const floatingFilterHeight = Figma.getValue("floatingFilterHeight", "number");
   // Properties and Customisations
@@ -300,10 +314,12 @@ function processInputToMessage(): void {
             columnWidth: columnWidth,
             rows: rows,
             rowHeight: rowHeight,
+            tableFont: tableFont,
             borders: borders,
             alternateBackgrounds: alternateBackgrounds,
             header: header,
             headerHeight: headerHeight,
+            headerFont: headerFont,
             floatingFilter: floatingFilter,
             floatingFilterHeight: floatingFilterHeight,
             primarybackgroundColor: primarybackgroundColor,

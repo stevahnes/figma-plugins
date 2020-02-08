@@ -5,11 +5,6 @@ type ReferenceCoordinates = import("../interfaces/interfaces").ReferenceCoordina
 
 /* Defaults/Constants */
 const defaultBorderColor = "#C7C7C7";
-const tableFontName: FontName = {
-  family: "Roboto",
-  style: "Regular",
-};
-const tableHeaderFontName: FontName = { family: "Roboto", style: "Bold" };
 
 export function generateBorders(
   borderType: "Horizontal" | "Vertical",
@@ -134,10 +129,15 @@ export function generateTableTexts(
   rowHeight: number,
   columnCount: number,
   columnWidth: number,
+  tableFont: string,
   header: boolean,
   referenceCoordinates: ReferenceCoordinates,
 ) {
   const tableTextsNode: SceneNode[] = [];
+  const tableFontName: FontName = {
+    family: tableFont,
+    style: "Regular",
+  };
   if (header) {
     rowCount -= 1;
   }
@@ -178,6 +178,7 @@ export function generateTableHeader(
   columnWidth: number,
   header: boolean,
   headerHeight: number,
+  headerFont: string,
   floatingFilter: boolean,
   floatingFilterHeight: number,
   primaryBackgroundColor: string,
@@ -186,6 +187,7 @@ export function generateTableHeader(
   if (header) {
     // Background
     const tableHeaderNode: SceneNode[] = [];
+    const tableHeaderFontName: FontName = { family: headerFont, style: "Regular" };
     const rowWidth = columnWidth * columnCount;
     const background = figma.createRectangle();
     const backgroundFills = Figma.clone(background.fills);
@@ -258,6 +260,12 @@ export function generateTableHeader(
   }
 }
 
+// Function to load selected font
 async function loadNodeFont(fontName: FontName): Promise<void> {
   await figma.loadFontAsync(fontName);
+}
+
+// Function to list all available fonts on Figma
+export async function listAvailableFontsAsync(): Promise<Font[]> {
+  return await figma.listAvailableFontsAsync();
 }

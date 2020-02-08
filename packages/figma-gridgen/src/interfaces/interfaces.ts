@@ -4,10 +4,12 @@ export interface CreateMessage {
   columnWidth?: number;
   rows?: number;
   rowHeight?: number;
+  tableFont?: string;
   borders?: boolean;
   alternateBackgrounds?: boolean;
   header?: boolean;
   headerHeight?: number;
+  headerFont?: string;
   floatingFilter?: boolean;
   floatingFilterHeight?: number;
   primarybackgroundColor?: string;

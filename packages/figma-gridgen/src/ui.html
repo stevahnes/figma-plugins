@@ -7,27 +7,11 @@
   </div>
   <div class="row">
     <div class="options-radio-buttons-wrapper">
-      <input
-        type="radio"
-        class="options-radio-button"
-        name="options-radio-buttons"
-        id="cell-and-table-size"
-        checked
-      />
-      <label for="cell-and-table-size">Cell &<br />Table Size</label
-      ><input
-        type="radio"
-        class="options-radio-button"
-        name="options-radio-buttons"
-        id="count-and-cell-size"
-      />
+      <input type="radio" class="options-radio-button" name="options-radio-buttons" id="cell-and-table-size" checked />
+      <label for="cell-and-table-size">Cell &<br />Table Size</label><input type="radio" class="options-radio-button"
+        name="options-radio-buttons" id="count-and-cell-size" />
       <label for="count-and-cell-size">Count &<br />Cell Size</label>
-      <input
-        type="radio"
-        class="options-radio-button"
-        name="options-radio-buttons"
-        id="count-and-table-size"
-      />
+      <input type="radio" class="options-radio-button" name="options-radio-buttons" id="count-and-table-size" />
       <label for="count-and-table-size">Count &<br />Table Size</label>
     </div>
   </div>
@@ -85,6 +69,15 @@
     </div>
   </div>
   <div class="row">
+    <div class="column half">
+      <p>Table font</p>
+    </div>
+    <div class="column half">
+      <input id="tableFont" list="tableFontOptions" />
+      <datalist id="tableFontOptions"></datalist>
+    </div>
+  </div>
+  <div class="row">
     <h4>Cell Properties</h4>
   </div>
   <div id="cell-size" class="row">
@@ -132,6 +125,15 @@
           <p>px</p>
         </div>
       </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="column half">
+      <p>Header font</p>
+    </div>
+    <div class="column half">
+      <input id="headerFont" list="headerFontOptions" />
+      <datalist id="headerFontOptions"></datalist>
     </div>
   </div>
   <div id="floatingFiltersCheckbox" class="row toggle-display is-visible">

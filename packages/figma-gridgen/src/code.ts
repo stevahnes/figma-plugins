@@ -3,6 +3,7 @@ import {
   generateBorders,
   generateTableTexts,
   generateTableHeader,
+  listAvailableFontsAsync,
 } from "./generators/generators";
 import * as Figma from "./utils/utils";
 
@@ -12,11 +13,27 @@ type CreateMessage = import("./interfaces/interfaces").CreateMessage;
 /* Constants */
 const showUIOptions: ShowUIOptions = {
   width: 300,
-  height: 485,
+  height: 545,
+  visible: false,
 };
 
 // This shows the HTML page in "ui.html".
 figma.showUI(__html__, showUIOptions);
+
+// Generate available font options
+listAvailableFontsAsync().then(fonts => {
+  let fontOptions: string = "";
+  let previousFont: string = "";
+  fonts.forEach(font => {
+    console.log(font.fontName);
+    if (font.fontName.family !== previousFont) {
+      fontOptions += `<option value="${font.fontName.family}" />`;
+      previousFont = font.fontName.family;
+    }
+  });
+  figma.ui.postMessage(fontOptions);
+  figma.ui.show();
+});
 
 // Calls to "parent.postMessage" from within the HTML page will trigger this
 // callback. The callback will be passed the "pluginMessage" property of the
@@ -60,6 +77,7 @@ function processMessage(message: CreateMessage): void {
       message.rowHeight,
       message.columns,
       message.columnWidth,
+      message.tableFont,
       message.header,
       message.referenceCoordinates,
     );
@@ -72,6 +90,7 @@ function processMessage(message: CreateMessage): void {
       message.columnWidth,
       message.header,
       message.headerHeight,
+      message.headerFont,
       message.floatingFilter,
       message.floatingFilterHeight,
       message.primarybackgroundColor,
