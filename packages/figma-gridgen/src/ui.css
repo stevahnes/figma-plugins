@@ -38,6 +38,18 @@ h4 {
   box-shadow: inset 0 0 0 1px #bebebe;
 }
 
+/* --- Select --- */
+select {
+  width: 100%;
+  border: none;
+  border-radius: 3px;
+  outline: none;
+  padding: 5px;
+  text-align: left;
+  font-size: 12px;
+  float: left;
+}
+
 /* --- Input --- */
 input[type="text"] {
   width: 75%;
