@@ -205,7 +205,7 @@ document.onkeydown = keyDown => {
       isAltHeld = true;
     } else if (keyDown.key.match(/Arrow\w+/g)) {
       let value: number = parseInt(activeElement.value, 10);
-      if (activeElement.type === "text" && value) {
+      if (activeElement.type === "text" && !activeElement.list && value) {
         if (isShiftHeld === false) {
           switch (keyDown.key) {
             case "ArrowUp":
@@ -301,10 +301,14 @@ function processInputToMessage(): void {
     : "cell-and-table-size";
   // Table Font Info
   const tableFontFamily = Figma.getValue("tableFontFamily", "string");
+  const tableFontStyle = Figma.getValue("tableFontStyle", "string");
+  const tableFontSize = Figma.getValue("tableFontSize", "number");
   // Header Info
   const header = Figma.getValue("header", "boolean");
   const headerHeight = Figma.getValue("headerHeight", "number");
   const headerFontFamily = Figma.getValue("headerFontFamily", "string");
+  const headerFontStyle = Figma.getValue("headerFontStyle", "string");
+  const headerFontSize = Figma.getValue("headerFontSize", "number");
   const floatingFilter = Figma.getValue("floatingFilter", "boolean");
   const floatingFilterHeight = Figma.getValue("floatingFilterHeight", "number");
   // Properties and Customisations
@@ -357,11 +361,15 @@ function processInputToMessage(): void {
             rows: rows,
             rowHeight: rowHeight,
             tableFontFamily: tableFontFamily,
+            tableFontStyle: tableFontStyle,
+            tableFontSize: tableFontSize,
             borders: borders,
             alternateBackgrounds: alternateBackgrounds,
             header: header,
             headerHeight: headerHeight,
             headerFontFamily: headerFontFamily,
+            headerFontStyle: headerFontStyle,
+            headerFontSize: headerFontSize,
             floatingFilter: floatingFilter,
             floatingFilterHeight: floatingFilterHeight,
             primarybackgroundColor: primarybackgroundColor,

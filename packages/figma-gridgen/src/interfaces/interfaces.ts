@@ -5,11 +5,15 @@ export interface CreateMessage {
   rows?: number;
   rowHeight?: number;
   tableFontFamily?: string;
+  tableFontStyle?: string;
+  tableFontSize?: number;
   borders?: boolean;
   alternateBackgrounds?: boolean;
   header?: boolean;
   headerHeight?: number;
   headerFontFamily?: string;
+  headerFontStyle?: string;
+  headerFontSize?: number;
   floatingFilter?: boolean;
   floatingFilterHeight?: number;
   primarybackgroundColor?: string;

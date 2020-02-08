@@ -13,7 +13,7 @@ type CreateMessage = import("./interfaces/interfaces").CreateMessage;
 /* Constants */
 const showUIOptions: ShowUIOptions = {
   width: 300,
-  height: 550,
+  height: 600,
   visible: false,
 };
 
@@ -79,6 +79,8 @@ function processMessage(message: CreateMessage): void {
       message.columns,
       message.columnWidth,
       message.tableFontFamily,
+      message.tableFontStyle,
+      message.tableFontSize,
       message.header,
       message.referenceCoordinates,
     );
@@ -92,6 +94,8 @@ function processMessage(message: CreateMessage): void {
       message.header,
       message.headerHeight,
       message.headerFontFamily,
+      message.headerFontStyle,
+      message.headerFontSize,
       message.floatingFilter,
       message.floatingFilterHeight,
       message.primarybackgroundColor,
