@@ -78,7 +78,7 @@ function processMessage(message: CreateMessage): void {
       message.rowHeight,
       message.columns,
       message.columnWidth,
-      message.tableFont,
+      message.tableFontFamily,
       message.header,
       message.referenceCoordinates,
     );
@@ -91,7 +91,7 @@ function processMessage(message: CreateMessage): void {
       message.columnWidth,
       message.header,
       message.headerHeight,
-      message.headerFont,
+      message.headerFontFamily,
       message.floatingFilter,
       message.floatingFilterHeight,
       message.primarybackgroundColor,

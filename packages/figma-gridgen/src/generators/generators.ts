@@ -129,13 +129,13 @@ export function generateTableTexts(
   rowHeight: number,
   columnCount: number,
   columnWidth: number,
-  tableFont: string,
+  tableFontFamily: string,
   header: boolean,
   referenceCoordinates: ReferenceCoordinates,
 ) {
   const tableTextsNode: SceneNode[] = [];
   const tableFontName: FontName = {
-    family: tableFont,
+    family: tableFontFamily,
     style: "Regular",
   };
   if (header) {
@@ -178,7 +178,7 @@ export function generateTableHeader(
   columnWidth: number,
   header: boolean,
   headerHeight: number,
-  headerFont: string,
+  headerFontFamily: string,
   floatingFilter: boolean,
   floatingFilterHeight: number,
   primaryBackgroundColor: string,
@@ -187,7 +187,7 @@ export function generateTableHeader(
   if (header) {
     // Background
     const tableHeaderNode: SceneNode[] = [];
-    const tableHeaderFontName: FontName = { family: headerFont, style: "Regular" };
+    const tableHeaderFontName: FontName = { family: headerFontFamily, style: "Regular" };
     const rowWidth = columnWidth * columnCount;
     const background = figma.createRectangle();
     const backgroundFills = Figma.clone(background.fills);

@@ -24,6 +24,9 @@ const defaultValuesForInputs: { [key: string]: string } = {
 let isShiftHeld: boolean = false;
 let isAltHeld: boolean = false;
 
+/* Store Font Options */
+let processedFontOptions: { [key: string]: string[] } = {};
+
 /* Run after onLoad */
 window.addEventListener("load", function() {
   Figma.getHTMLInputElementById("tableWidth").select();
@@ -31,20 +34,35 @@ window.addEventListener("load", function() {
 
 /* Receive message from plugin code */
 onmessage = fontOptions => {
-  constructFontOptions(fontOptions);
+  processedFontOptions = fontOptions.data.pluginMessage;
+  constructInitialFontOptions(processedFontOptions);
 };
 
 /* Construct Font Options */
-function constructFontOptions(fontOptions: MessageEvent) {
-  const pluginFontOptions: { [key: string]: string[] } = fontOptions.data.pluginMessage;
-  let dataListHTML: string = "";
+function constructInitialFontOptions(fontOptions: { [key: string]: string[] }) {
+  const overallDefaultFont: string = "Roboto";
+  const fontFamilyOptionsHTML = constructFontFamilyOptions(fontOptions);
+  const fontStyleOptionsHTML = constructFontStyleOptions(fontOptions, overallDefaultFont);
+  Figma.getHTMLElementById("tableFontFamilyOptions").innerHTML = fontFamilyOptionsHTML;
+  Figma.getHTMLElementById("headerFontFamilyOptions").innerHTML = fontFamilyOptionsHTML;
+  Figma.getHTMLElementById("tableFontStyle").innerHTML = fontStyleOptionsHTML;
+  Figma.getHTMLElementById("headerFontStyle").innerHTML = fontStyleOptionsHTML;
+  Figma.getHTMLInputElementById("tableFontFamily").value = overallDefaultFont;
+  Figma.getHTMLInputElementById("headerFontFamily").value = overallDefaultFont;
+}
+function constructFontFamilyOptions(pluginFontOptions: { [key: string]: string[] }): string {
+  let fontFamilyOptionsHTML: string = "";
   Object.keys(pluginFontOptions).forEach(fontFamily => {
-    dataListHTML += `<option value="${fontFamily}" />`;
+    fontFamilyOptionsHTML += `<option value="${fontFamily}" />`;
   });
-  Figma.getHTMLElementById("tableFontOptions").innerHTML = dataListHTML;
-  Figma.getHTMLElementById("headerFontOptions").innerHTML = dataListHTML;
-  Figma.getHTMLInputElementById("tableFont").value = "Arial";
-  Figma.getHTMLInputElementById("headerFont").value = "Roboto";
+  return fontFamilyOptionsHTML;
+}
+function constructFontStyleOptions(pluginFontOptions: { [key: string]: string[] }, selectedFontFamily: string): string {
+  let fontStyleOptionsHTML: string = "";
+  pluginFontOptions[selectedFontFamily].forEach(fontStyle => {
+    fontStyleOptionsHTML += `<option value="${fontStyle}">${fontStyle}</option>`;
+  });
+  return fontStyleOptionsHTML;
 }
 
 /* Toggle HTML Rendering */
@@ -153,6 +171,21 @@ document.getElementById("alternateBackgrounds").onchange = () => {
 document.getElementById("borders").onchange = () => {
   toggleEditable("borderColor", Figma.getHTMLInputElementById("borders").checked, "#C7C7C7");
 };
+// Detect table font family dropdown state change
+document.getElementById("tableFontFamily").onchange = () => {
+  Figma.getHTMLElementById("tableFontStyle").innerHTML = constructFontStyleOptions(
+    processedFontOptions,
+    Figma.getValue("tableFontFamily", "string") as string,
+  );
+};
+// Detect header font family dropdown state change
+document.getElementById("headerFontFamily").onchange = () => {
+  Figma.getHTMLElementById("headerFontStyle").innerHTML = constructFontStyleOptions(
+    processedFontOptions,
+    Figma.getValue("headerFontFamily", "string") as string,
+  );
+};
+
 // Create Button Actions
 document.getElementById("create").onclick = () => {
   // Disable create button and display loader
@@ -267,11 +300,11 @@ function processInputToMessage(): void {
     ? "count-and-cell-size"
     : "cell-and-table-size";
   // Table Font Info
-  const tableFont = Figma.getValue("tableFont", "string");
+  const tableFontFamily = Figma.getValue("tableFontFamily", "string");
   // Header Info
   const header = Figma.getValue("header", "boolean");
   const headerHeight = Figma.getValue("headerHeight", "number");
-  const headerFont = Figma.getValue("headerFont", "string");
+  const headerFontFamily = Figma.getValue("headerFontFamily", "string");
   const floatingFilter = Figma.getValue("floatingFilter", "boolean");
   const floatingFilterHeight = Figma.getValue("floatingFilterHeight", "number");
   // Properties and Customisations
@@ -323,12 +356,12 @@ function processInputToMessage(): void {
             columnWidth: columnWidth,
             rows: rows,
             rowHeight: rowHeight,
-            tableFont: tableFont,
+            tableFontFamily: tableFontFamily,
             borders: borders,
             alternateBackgrounds: alternateBackgrounds,
             header: header,
             headerHeight: headerHeight,
-            headerFont: headerFont,
+            headerFontFamily: headerFontFamily,
             floatingFilter: floatingFilter,
             floatingFilterHeight: floatingFilterHeight,
             primarybackgroundColor: primarybackgroundColor,
