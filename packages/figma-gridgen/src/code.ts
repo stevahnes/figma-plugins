@@ -13,7 +13,7 @@ type CreateMessage = import("./interfaces/interfaces").CreateMessage;
 /* Constants */
 const showUIOptions: ShowUIOptions = {
   width: 300,
-  height: 545,
+  height: 550,
   visible: false,
 };
 
@@ -22,12 +22,14 @@ figma.showUI(__html__, showUIOptions);
 
 // Generate available font options
 listAvailableFontsAsync().then(fonts => {
-  let fontOptions: string = "";
+  let fontOptions: { [key: string]: string[] } = {};
   let previousFont: string = "";
   fonts.forEach(font => {
     if (font.fontName.family !== previousFont) {
-      fontOptions += `<option value="${font.fontName.family}" />`;
+      fontOptions[font.fontName.family] = [font.fontName.style];
       previousFont = font.fontName.family;
+    } else {
+      fontOptions[font.fontName.family].push(font.fontName.style);
     }
   });
   figma.ui.postMessage(fontOptions);

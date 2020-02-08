@@ -31,12 +31,21 @@ window.addEventListener("load", function() {
 
 /* Receive message from plugin code */
 onmessage = fontOptions => {
-  const pluginFontOptions: string = fontOptions.data.pluginMessage as string;
-  Figma.getHTMLElementById("tableFontOptions").innerHTML = pluginFontOptions;
-  Figma.getHTMLElementById("headerFontOptions").innerHTML = pluginFontOptions;
-  Figma.getHTMLInputElementById("tableFont").value = "Roboto";
-  Figma.getHTMLInputElementById("headerFont").value = "Roboto";
+  constructFontOptions(fontOptions);
 };
+
+/* Construct Font Options */
+function constructFontOptions(fontOptions: MessageEvent) {
+  const pluginFontOptions: { [key: string]: string[] } = fontOptions.data.pluginMessage;
+  let dataListHTML: string = "";
+  Object.keys(pluginFontOptions).forEach(fontFamily => {
+    dataListHTML += `<option value="${fontFamily}" />`;
+  });
+  Figma.getHTMLElementById("tableFontOptions").innerHTML = dataListHTML;
+  Figma.getHTMLElementById("headerFontOptions").innerHTML = dataListHTML;
+  Figma.getHTMLInputElementById("tableFont").value = "Arial";
+  Figma.getHTMLInputElementById("headerFont").value = "Roboto";
+}
 
 /* Toggle HTML Rendering */
 function toggleEditable(htmlTagId: string, isPrerequisiteSelected: boolean, defaultValue: string): void {
