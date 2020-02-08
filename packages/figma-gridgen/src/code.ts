@@ -25,7 +25,6 @@ listAvailableFontsAsync().then(fonts => {
   let fontOptions: string = "";
   let previousFont: string = "";
   fonts.forEach(font => {
-    console.log(font.fontName);
     if (font.fontName.family !== previousFont) {
       fontOptions += `<option value="${font.fontName.family}" />`;
       previousFont = font.fontName.family;

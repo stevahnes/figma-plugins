@@ -262,6 +262,7 @@ export function generateTableHeader(
 
 // Function to load selected font
 async function loadNodeFont(fontName: FontName): Promise<void> {
+  console.log(fontName);
   await figma.loadFontAsync(fontName);
 }
 
