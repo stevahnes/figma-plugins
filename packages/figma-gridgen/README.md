@@ -28,18 +28,16 @@ Utilizes built-in Figma rectangles, lines, and texts to generate tables with nea
   - Count and cell size
   - Count and table size
 - Enhanced UI experience with validations and loader
-- With/without headers
-- Specify header height
+- With/without headers, and ability to specify header height
 - When header is included, specify with/without floating filters
 - Supports striped tables
 - Ability to select both primary and striped colors of the table
 - With/without borders, and ability to define border color
 - Automated population of content and header texts
+- Specify table and header font sizes
 
 ## Work-in-Progress:
 
-- Specify fonts based on list of available font names
-- Specify font sizes
+- Specify fonts family and style based on list of installed fonts
 - Other units besides pixel
-- Ability to specify font size
 - Caching of last inputs
