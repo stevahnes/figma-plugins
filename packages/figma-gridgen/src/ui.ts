@@ -66,14 +66,28 @@ function constructFontStyleOptions(pluginFontOptions: { [key: string]: string[] 
 }
 
 /* Toggle HTML Rendering */
-function toggleEditable(htmlTagId: string, isPrerequisiteSelected: boolean, defaultValue: string): void {
-  const htmlTagById: HTMLInputElement = Figma.getHTMLInputElementById(htmlTagId);
+function toggleEditable(
+  htmlTagType: string,
+  htmlTagId: string,
+  isPrerequisiteSelected: boolean,
+  defaultValue: string,
+): void {
+  let htmlTagById;
+  if (htmlTagType === "input") {
+    htmlTagById = Figma.getHTMLInputElementById(htmlTagId) as HTMLInputElement;
+  } else if (htmlTagType === "select") {
+    htmlTagById = Figma.getHTMLElementById(htmlTagId) as HTMLSelectElement;
+  }
   if (htmlTagById.checked) {
     htmlTagById.checked = false;
   }
   if (isPrerequisiteSelected) {
     htmlTagById.disabled = false;
-    htmlTagById.value = defaultValue;
+    if (htmlTagType === "input") {
+      htmlTagById.value = defaultValue;
+    } else if (htmlTagType === "select") {
+      htmlTagById.innerHTML = defaultValue;
+    }
   } else {
     htmlTagById.disabled = true;
     htmlTagById.value = "N.A.";
@@ -102,9 +116,9 @@ function setDefault(mode: string) {
   const inputList: string[] = Object.keys(defaultValuesForInputs);
   for (let input of inputList) {
     if (defaultInputsForModes[mode].indexOf(input) > -1) {
-      toggleEditable(input, true, defaultValuesForInputs[input]);
+      toggleEditable("input", input, true, defaultValuesForInputs[input]);
     } else {
-      toggleEditable(input, false, defaultValuesForInputs[input]);
+      toggleEditable("input", input, false, defaultValuesForInputs[input]);
     }
   }
   resetInvalidInput();
@@ -178,21 +192,34 @@ for (let mode of modes) {
 }
 // Detect header checkbox state change
 document.getElementById("header").onchange = () => {
-  toggleEditable("floatingFilter", Figma.getHTMLInputElementById("header").checked, "");
-  toggleEditable("headerHeight", Figma.getHTMLInputElementById("header").checked, "60");
-  toggleEditable("floatingFilterHeight", Figma.getHTMLInputElementById("floatingFilter").checked, "");
+  toggleEditable("input", "floatingFilter", Figma.getHTMLInputElementById("header").checked, "");
+  toggleEditable("input", "headerHeight", Figma.getHTMLInputElementById("header").checked, "60");
+  toggleEditable("input", "headerFontFamily", Figma.getHTMLInputElementById("header").checked, "Roboto");
+  toggleEditable(
+    "select",
+    "headerFontStyle",
+    Figma.getHTMLInputElementById("header").checked,
+    constructFontStyleOptions(processedFontOptions, "Roboto"),
+  );
+  toggleEditable("input", "headerFontSize", Figma.getHTMLInputElementById("header").checked, "12");
+  toggleEditable("input", "floatingFilterHeight", Figma.getHTMLInputElementById("floatingFilter").checked, "");
 };
 // Detect floating filter checkbox state change
 document.getElementById("floatingFilter").onchange = () => {
-  toggleEditable("floatingFilterHeight", Figma.getHTMLInputElementById("floatingFilter").checked, "30");
+  toggleEditable("input", "floatingFilterHeight", Figma.getHTMLInputElementById("floatingFilter").checked, "30");
 };
 // Detect striped/alternate background checkbox state change
 document.getElementById("alternateBackgrounds").onchange = () => {
-  toggleEditable("stripedbackgroundColor", Figma.getHTMLInputElementById("alternateBackgrounds").checked, "#FFFFFF");
+  toggleEditable(
+    "input",
+    "stripedbackgroundColor",
+    Figma.getHTMLInputElementById("alternateBackgrounds").checked,
+    "#FFFFFF",
+  );
 };
 // Detect borders checkbox state change
 document.getElementById("borders").onchange = () => {
-  toggleEditable("borderColor", Figma.getHTMLInputElementById("borders").checked, "#C7C7C7");
+  toggleEditable("input", "borderColor", Figma.getHTMLInputElementById("borders").checked, "#C7C7C7");
 };
 // Detect table font family dropdown state change
 document.getElementById("tableFontFamily").onchange = () => {
@@ -273,14 +300,23 @@ document.onkeydown = keyDown => {
       if (activeElement.type === "checkbox") {
         activeElement.checked = !activeElement.checked;
         if (activeElement.id === "header") {
-          toggleEditable("floatingFilter", activeElement.checked, "");
-          toggleEditable("headerHeight", activeElement.checked, "60");
+          toggleEditable("input", "floatingFilter", Figma.getHTMLInputElementById("header").checked, "");
+          toggleEditable("input", "headerHeight", Figma.getHTMLInputElementById("header").checked, "60");
+          toggleEditable("input", "headerFontFamily", Figma.getHTMLInputElementById("header").checked, "Roboto");
+          toggleEditable(
+            "select",
+            "headerFontStyle",
+            Figma.getHTMLInputElementById("header").checked,
+            constructFontStyleOptions(processedFontOptions, "Roboto"),
+          );
+          toggleEditable("input", "headerFontSize", Figma.getHTMLInputElementById("header").checked, "12");
+          toggleEditable("input", "floatingFilterHeight", Figma.getHTMLInputElementById("floatingFilter").checked, "");
         } else if (activeElement.id === "floatingFilter") {
-          toggleEditable("floatingFilterHeight", activeElement.checked, "30");
+          toggleEditable("input", "floatingFilterHeight", activeElement.checked, "30");
         } else if (activeElement.id === "alternateBackgrounds") {
-          toggleEditable("stripedbackgroundColor", activeElement.checked, "#FFFFFF");
+          toggleEditable("input", "stripedbackgroundColor", activeElement.checked, "#FFFFFF");
         } else if (activeElement.id === "borders") {
-          toggleEditable("borderColor", activeElement.checked, "#C7C7C7");
+          toggleEditable("input", "borderColor", activeElement.checked, "#C7C7C7");
         }
       }
     } else if (keyDown.key === "1" || keyDown.key === "2" || keyDown.key === "3") {
