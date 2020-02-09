@@ -194,13 +194,13 @@ for (let mode of modes) {
 document.getElementById("header").onchange = () => {
   toggleEditable("input", "floatingFilter", Figma.getHTMLInputElementById("header").checked, "");
   toggleEditable("input", "headerHeight", Figma.getHTMLInputElementById("header").checked, "60");
-  toggleEditable("input", "headerFontFamily", Figma.getHTMLInputElementById("header").checked, "Roboto");
-  toggleEditable(
-    "select",
-    "headerFontStyle",
-    Figma.getHTMLInputElementById("header").checked,
-    constructFontStyleOptions(processedFontOptions, "Roboto"),
-  );
+  // toggleEditable("input", "headerFontFamily", Figma.getHTMLInputElementById("header").checked, "Roboto");
+  // toggleEditable(
+  //   "select",
+  //   "headerFontStyle",
+  //   Figma.getHTMLInputElementById("header").checked,
+  //   constructFontStyleOptions(processedFontOptions, "Roboto"),
+  // );
   toggleEditable("input", "headerFontSize", Figma.getHTMLInputElementById("header").checked, "12");
   toggleEditable("input", "floatingFilterHeight", Figma.getHTMLInputElementById("floatingFilter").checked, "");
 };
@@ -302,13 +302,13 @@ document.onkeydown = keyDown => {
         if (activeElement.id === "header") {
           toggleEditable("input", "floatingFilter", Figma.getHTMLInputElementById("header").checked, "");
           toggleEditable("input", "headerHeight", Figma.getHTMLInputElementById("header").checked, "60");
-          toggleEditable("input", "headerFontFamily", Figma.getHTMLInputElementById("header").checked, "Roboto");
-          toggleEditable(
-            "select",
-            "headerFontStyle",
-            Figma.getHTMLInputElementById("header").checked,
-            constructFontStyleOptions(processedFontOptions, "Roboto"),
-          );
+          // toggleEditable("input", "headerFontFamily", Figma.getHTMLInputElementById("header").checked, "Roboto");
+          // toggleEditable(
+          //   "select",
+          //   "headerFontStyle",
+          //   Figma.getHTMLInputElementById("header").checked,
+          //   constructFontStyleOptions(processedFontOptions, "Roboto"),
+          // );
           toggleEditable("input", "headerFontSize", Figma.getHTMLInputElementById("header").checked, "12");
           toggleEditable("input", "floatingFilterHeight", Figma.getHTMLInputElementById("floatingFilter").checked, "");
         } else if (activeElement.id === "floatingFilter") {

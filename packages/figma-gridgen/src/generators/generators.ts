@@ -138,7 +138,7 @@ export function generateTableTexts(
   const tableTextsNode: SceneNode[] = [];
   const tableFontName: FontName = {
     family: tableFontFamily,
-    style: tableFontStyle,
+    style: "Regular",
   };
   if (header) {
     rowCount -= 1;
@@ -192,7 +192,7 @@ export function generateTableHeader(
   if (header) {
     // Background
     const tableHeaderNode: SceneNode[] = [];
-    const tableHeaderFontName: FontName = { family: headerFontFamily, style: headerFontStyle };
+    const tableHeaderFontName: FontName = { family: headerFontFamily, style: "Bold" };
     const rowWidth = columnWidth * columnCount;
     const background = figma.createRectangle();
     const backgroundFills = Figma.clone(background.fills);
