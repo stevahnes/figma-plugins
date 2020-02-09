@@ -112,16 +112,36 @@ function setDefault(mode: string) {
 }
 
 /* Validate User Input */
-function validateInput(mode: string, columns: number, rows: number, columnWidth: number, rowHeight: number): boolean {
+function validateInput(
+  mode: string,
+  columns: number,
+  rows: number,
+  columnWidth: number,
+  rowHeight: number,
+  hasHeader: boolean,
+  hasFloatingFilter: boolean,
+): boolean {
   let validInput: boolean = true;
-  // reset invalid CSS
+  // reset invalid CSS and validators
   resetInvalidInput();
+  Figma.getHTMLElementById("validValidator").classList.add("show");
+  Figma.getHTMLElementById("negativeValidator").classList.remove("show");
+  Figma.getHTMLElementById("constraintValidator").classList.remove("show");
   // negative and invalid value check
-  const inputsForMode: string[] = defaultInputsForModes[mode];
-  for (let input of inputsForMode) {
+  let inputsToValidate: string[] = defaultInputsForModes[mode].concat(["tableFontSize"]);
+  if (hasHeader) {
+    inputsToValidate = inputsToValidate.concat(["headerHeight", "headerFontSize"]);
+  }
+  if (hasFloatingFilter) {
+    inputsToValidate = inputsToValidate.concat(["floatingFilterHeight"]);
+  }
+  for (let input of inputsToValidate) {
     const inputValue: number = Figma.getValue(input, "number") as number;
-    if (!inputValue || inputValue < 0) {
+    if (!inputValue || inputValue < 1) {
       Figma.getHTMLInputElementById(input).classList.add("invalid");
+      Figma.getHTMLElementById("validValidator").classList.remove("show");
+      Figma.getHTMLElementById("negativeValidator").classList.add("show");
+      Figma.getHTMLElementById("constraintValidator").classList.remove("show");
       validInput = false;
     }
   }
@@ -129,6 +149,9 @@ function validateInput(mode: string, columns: number, rows: number, columnWidth:
   if (validInput) {
     if (columns * columnWidth > 5000 || rows * rowHeight > 5000 || columns > 100 || rows > 100) {
       setInvalidInputs(mode);
+      Figma.getHTMLElementById("validValidator").classList.remove("show");
+      Figma.getHTMLElementById("negativeValidator").classList.remove("show");
+      Figma.getHTMLElementById("constraintValidator").classList.add("show");
       validInput = false;
     }
   }
@@ -304,12 +327,12 @@ function processInputToMessage(): void {
   const tableFontStyle = Figma.getValue("tableFontStyle", "string");
   const tableFontSize = Figma.getValue("tableFontSize", "number");
   // Header Info
-  const header = Figma.getValue("header", "boolean");
+  const header = Figma.getValue("header", "boolean") as boolean;
   const headerHeight = Figma.getValue("headerHeight", "number");
   const headerFontFamily = Figma.getValue("headerFontFamily", "string");
   const headerFontStyle = Figma.getValue("headerFontStyle", "string");
   const headerFontSize = Figma.getValue("headerFontSize", "number");
-  const floatingFilter = Figma.getValue("floatingFilter", "boolean");
+  const floatingFilter = Figma.getValue("floatingFilter", "boolean") as boolean;
   const floatingFilterHeight = Figma.getValue("floatingFilterHeight", "number");
   // Properties and Customisations
   const borders = Figma.getValue("borders", "boolean");
@@ -349,7 +372,7 @@ function processInputToMessage(): void {
       break;
   }
   // Validation
-  const validWithinLimits: boolean = validateInput(mode, columns, rows, columnWidth, rowHeight);
+  const validWithinLimits: boolean = validateInput(mode, columns, rows, columnWidth, rowHeight, header, floatingFilter);
   if (validWithinLimits) {
     setTimeout(() => {
       parent.postMessage(

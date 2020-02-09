@@ -10,6 +10,15 @@ p {
   text-align: left;
 }
 
+.validator {
+  color: #ef5533;
+  display: none;
+}
+
+.validator.show {
+  display: block;
+}
+
 h4 {
   margin: 0;
   padding: 5px 0;

@@ -13,7 +13,7 @@ type CreateMessage = import("./interfaces/interfaces").CreateMessage;
 /* Constants */
 const showUIOptions: ShowUIOptions = {
   width: 300,
-  height: 600,
+  height: 620,
   visible: false,
 };
 
