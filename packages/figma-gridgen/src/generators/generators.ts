@@ -233,6 +233,7 @@ export function generateTableHeader(
         text.textAlignVertical = "CENTER";
         text.resize(columnWidth - 1 - 2 * headerTextMargin.x, textHeight - 2 * headerTextMargin.y);
         isHeaderFontLoaded = true;
+        areFontsLoaded();
       }
     });
     tableHeaderTextsGroup.name = "Column Headers";
@@ -283,6 +284,10 @@ export async function listAvailableFontsAsync(): Promise<Font[]> {
 }
 
 // Getter function for font load status
-export function areFontsLoaded(): boolean {
-  return isTableFontLoaded && isHeaderFontLoaded;
+function areFontsLoaded(): void {
+  if (isTableFontLoaded && isHeaderFontLoaded) {
+    /* Notify Success to User */
+    figma.notify("👍 GridGen successfully generated your table", { timeout: 5 });
+    figma.closePlugin();
+  }
 }

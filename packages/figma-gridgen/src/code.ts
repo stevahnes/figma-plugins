@@ -4,7 +4,6 @@ import {
   generateTableTexts,
   generateTableHeader,
   listAvailableFontsAsync,
-  areFontsLoaded,
 } from "./generators/generators";
 import * as Figma from "./utils/utils";
 
@@ -142,12 +141,6 @@ function processMessage(message: CreateMessage): void {
     tableGroup.name = "Table";
     figma.currentPage.selection = [tableGroup];
     figma.viewport.scrollAndZoomIntoView([tableGroup]);
-
-    /* Notify Success to User */
-    if (areFontsLoaded) {
-      figma.notify("👍 GridGen successfully generated your table");
-      figma.closePlugin();
-    }
     return null;
   }
 }
