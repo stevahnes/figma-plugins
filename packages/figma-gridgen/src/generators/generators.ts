@@ -6,6 +6,10 @@ type ReferenceCoordinates = import("../interfaces/interfaces").ReferenceCoordina
 /* Defaults/Constants */
 const defaultBorderColor = "#C7C7C7";
 
+/* Check if Font is Loaded */
+let isTableFontLoaded: boolean = false;
+let isHeaderFontLoaded: boolean = false;
+
 export function generateBorders(
   borderType: "Horizontal" | "Vertical",
   visible: boolean = true,
@@ -168,6 +172,7 @@ export function generateTableTexts(
       text.characters = "Sample";
       text.textAlignVertical = "CENTER";
       text.resize(columnWidth - 1 - 2 * textMargin.x, rowHeight - 2 * textMargin.y);
+      isTableFontLoaded = true;
     }
   });
   tableTextsGroup.name = "Table Texts";
@@ -227,6 +232,7 @@ export function generateTableHeader(
         text.characters = "SAMPLE";
         text.textAlignVertical = "CENTER";
         text.resize(columnWidth - 1 - 2 * headerTextMargin.x, textHeight - 2 * headerTextMargin.y);
+        isHeaderFontLoaded = true;
       }
     });
     tableHeaderTextsGroup.name = "Column Headers";
@@ -274,4 +280,9 @@ async function loadNodeFont(fontName: FontName): Promise<void> {
 // Function to list all available fonts on Figma
 export async function listAvailableFontsAsync(): Promise<Font[]> {
   return await figma.listAvailableFontsAsync();
+}
+
+// Getter function for font load status
+export function areFontsLoaded(): boolean {
+  return isTableFontLoaded && isHeaderFontLoaded;
 }
