@@ -17,9 +17,10 @@ Utilizes built-in Figma rectangles, lines, and texts to generate tables with nea
   - "Shift + Arrow" keys on textboxes to increaes/decrease by 10
   - "Enter" on checkboxes to toggle
   - "Enter" on buttons to click
+  - "Shift + C" to initiate table creation
   - Shortcuts to switch between constraint modes (see above)
 
-## Current capabilites:
+## Current Capabilites:
 
 - Supports up to 100 rows and columns
 - Supports table up to 5000px by 5000px (width by height)
@@ -34,10 +35,10 @@ Utilizes built-in Figma rectangles, lines, and texts to generate tables with nea
 - Ability to select both primary and striped colors of the table
 - With/without borders, and ability to define border color
 - Automated population of content and header texts
+- Specify fonts family and style based on list of installed fonts
 - Specify table and header font sizes
 
 ## Work-in-Progress:
 
-- Specify fonts family and style based on list of installed fonts
 - Other units besides pixel
 - Caching of last inputs
