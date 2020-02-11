@@ -238,16 +238,13 @@ document.getElementById("headerFontFamily").onchange = () => {
 
 // Create Button Actions
 document.getElementById("create").onclick = () => {
-  // Disable create button and display loader
-  Figma.getHTMLInputElementById("create").disabled = true;
-  Figma.getHTMLElementById("lds").classList.add("is-visible");
-  // FIXME ensures that button is disabled and loader is displayed before processing input
-  processInputToMessage();
+  createTable();
 };
 
 /* Keyboard Navigation */
 document.onkeydown = keyDown => {
   if (keyDown.key) {
+    console.log(keyDown.key);
     let activeElement = document.activeElement as HTMLInputElement;
     if (keyDown.key === "Shift") {
       isShiftHeld = true;
@@ -339,6 +336,9 @@ document.onkeydown = keyDown => {
             break;
         }
       }
+    } else if (keyDown.key === "C") {
+      isShiftHeld ? createTable() : null;
+      keyDown.preventDefault();
     }
   }
 };
@@ -349,6 +349,15 @@ document.onkeyup = keyUp => {
     isAltHeld = false;
   }
 };
+
+/* Create Table */
+function createTable(): void {
+  // Disable create button and display loader
+  Figma.getHTMLInputElementById("create").disabled = true;
+  Figma.getHTMLElementById("lds").classList.add("is-visible");
+  // FIXME ensures that button is disabled and loader is displayed before processing input
+  processInputToMessage();
+}
 
 /* Process Input */
 function processInputToMessage(): void {
