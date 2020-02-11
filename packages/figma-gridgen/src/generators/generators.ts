@@ -142,7 +142,7 @@ export function generateTableTexts(
   const tableTextsNode: SceneNode[] = [];
   const tableFontName: FontName = {
     family: tableFontFamily,
-    style: "Regular",
+    style: tableFontStyle,
   };
   if (header) {
     rowCount -= 1;
@@ -173,6 +173,7 @@ export function generateTableTexts(
       text.textAlignVertical = "CENTER";
       text.resize(columnWidth - 1 - 2 * textMargin.x, rowHeight - 2 * textMargin.y);
       isTableFontLoaded = true;
+      areFontsLoaded();
     }
   });
   tableTextsGroup.name = "Table Texts";
@@ -197,7 +198,7 @@ export function generateTableHeader(
   if (header) {
     // Background
     const tableHeaderNode: SceneNode[] = [];
-    const tableHeaderFontName: FontName = { family: headerFontFamily, style: "Bold" };
+    const tableHeaderFontName: FontName = { family: headerFontFamily, style: headerFontStyle };
     const rowWidth = columnWidth * columnCount;
     const background = figma.createRectangle();
     const backgroundFills = Figma.clone(background.fills);
