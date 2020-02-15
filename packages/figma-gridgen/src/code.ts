@@ -35,7 +35,7 @@ figma.ui.onmessage = msg => {
   processMessage(msg);
 };
 
-function processMessage(message: Interfaces.CreateMessage): void {
+function processMessage(message: Interfaces.PluginMessage): void {
   if (message.type === Constants.MessageType.CREATE) {
     /* Generate Background */
     const oddRowBackgroundGroup: GroupNode = generateRowBackground(

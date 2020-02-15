@@ -88,3 +88,33 @@ export const inputsAffectedByMode: { [key: string]: string } = {
   columns: DefaultValuesForInputs.COLUMNS,
   rows: DefaultValuesForInputs.ROWS,
 };
+
+export const inputIds: { [key: string]: InputType } = {
+  tableWidth: InputType.NUMBER,
+  tableHeight: InputType.NUMBER,
+  columns: InputType.NUMBER,
+  rows: InputType.NUMBER,
+  primarybackgroundColor: InputType.STRING,
+  tableFontFamily: InputType.STRING,
+  tableFontStyle: InputType.STRING,
+  tableFontSize: InputType.NUMBER,
+  columnWidth: InputType.NUMBER,
+  rowHeight: InputType.NUMBER,
+  header: InputType.BOOLEAN,
+  headerHeight: InputType.NUMBER,
+  headerFontFamily: InputType.STRING,
+  headerFontStyle: InputType.STRING,
+  headerFontSize: InputType.NUMBER,
+  floatingFilter: InputType.BOOLEAN,
+  floatingFilterHeight: InputType.NUMBER,
+  alternateBackgrounds: InputType.BOOLEAN,
+  stripedbackgroundColor: InputType.STRING,
+  borders: InputType.BOOLEAN,
+  borderColor: InputType.STRING,
+};
+
+export const enum Modes {
+  CELL_AND_TABLE_SIZE = "cell-and-table-size",
+  COUNT_AND_CELL_SIZE = "count-and-cell-size",
+  COUNT_AND_TABLE_SIZE = "count-and-table-size",
+}

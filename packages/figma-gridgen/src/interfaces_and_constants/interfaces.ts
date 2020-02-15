@@ -1,16 +1,17 @@
 import * as Constants from "./constants";
 
-export interface CreateMessage {
+export interface PluginMessage {
   type: Constants.MessageType;
+  tableWidth?: number;
+  tableHeight?: number;
   columns?: number;
-  columnWidth?: number;
   rows?: number;
-  rowHeight?: number;
+  primarybackgroundColor?: string;
   tableFontFamily?: string;
   tableFontStyle?: string;
   tableFontSize?: number;
-  borders?: boolean;
-  alternateBackgrounds?: boolean;
+  columnWidth?: number;
+  rowHeight?: number;
   header?: boolean;
   headerHeight?: number;
   headerFontFamily?: string;
@@ -18,8 +19,9 @@ export interface CreateMessage {
   headerFontSize?: number;
   floatingFilter?: boolean;
   floatingFilterHeight?: number;
-  primarybackgroundColor?: string;
+  alternateBackgrounds?: boolean;
   stripedbackgroundColor?: string;
+  borders?: boolean;
   borderColor?: string;
   referenceCoordinates?: ReferenceCoordinates;
 }

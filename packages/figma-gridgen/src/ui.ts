@@ -58,7 +58,6 @@ function toggleEditable(
   isPrerequisiteSelected: boolean,
   defaultValue: string,
 ): void {
-  console.log(htmlTagId);
   let htmlTagById;
   switch (htmlTagType) {
     case Constants.HtmlTagType.INPUT:
@@ -281,7 +280,6 @@ document.getElementById("create").onclick = () => {
 /* Keyboard Navigation */
 document.onkeydown = keyDown => {
   if (keyDown.key) {
-    console.log(keyDown.key);
     let activeElement = document.activeElement as HTMLInputElement;
     if (keyDown.key === "Shift") {
       isShiftHeld = true;
@@ -432,101 +430,71 @@ function createTable(): void {
   // Disable create button and display loader
   Utils.getHTMLInputElementById("create").disabled = true;
   Utils.getHTMLElementById("lds").classList.add("is-visible");
-  // FIXME ensures that button is disabled and loader is displayed before processing input
   processInputToMessage();
 }
 
 /* Process Input */
 function processInputToMessage(): void {
   // Selected Mode
-  const mode: string = Utils.getValue("count-and-table-size", Constants.InputType.BOOLEAN)
-    ? "count-and-table-size"
-    : Utils.getValue("count-and-cell-size", Constants.InputType.BOOLEAN)
-    ? "count-and-cell-size"
-    : "cell-and-table-size";
+  const mode: string = Utils.getValue(Constants.Modes.COUNT_AND_TABLE_SIZE, Constants.InputType.BOOLEAN)
+    ? Constants.Modes.COUNT_AND_TABLE_SIZE
+    : Utils.getValue(Constants.Modes.COUNT_AND_CELL_SIZE, Constants.InputType.BOOLEAN)
+    ? Constants.Modes.COUNT_AND_CELL_SIZE
+    : Constants.Modes.CELL_AND_TABLE_SIZE;
+  // PluginMessage Creation
+  const createMessage: Interfaces.PluginMessage = { type: Constants.MessageType.CREATE };
   // Table Font Info
-  const tableFontFamily = Utils.getValue("tableFontFamily", Constants.InputType.STRING);
-  const tableFontStyle = Utils.getValue("tableFontStyle", Constants.InputType.STRING);
-  const tableFontSize = Utils.getValue("tableFontSize", Constants.InputType.NUMBER);
-  // Header Info
-  const header = Utils.getValue("header", Constants.InputType.BOOLEAN) as boolean;
-  const headerHeight = Utils.getValue("headerHeight", Constants.InputType.NUMBER);
-  const headerFontFamily = Utils.getValue("headerFontFamily", Constants.InputType.STRING);
-  const headerFontStyle = Utils.getValue("headerFontStyle", Constants.InputType.STRING);
-  const headerFontSize = Utils.getValue("headerFontSize", Constants.InputType.NUMBER);
-  const floatingFilter = Utils.getValue("floatingFilter", Constants.InputType.BOOLEAN) as boolean;
-  const floatingFilterHeight = Utils.getValue("floatingFilterHeight", Constants.InputType.NUMBER);
-  // Properties and Customisations
-  const borders = Utils.getValue("borders", Constants.InputType.BOOLEAN);
-  const alternateBackgrounds = Utils.getValue("alternateBackgrounds", Constants.InputType.BOOLEAN);
-  const primarybackgroundColor = Utils.getValue("primarybackgroundColor", Constants.InputType.STRING);
-  const stripedbackgroundColor = Utils.getValue("stripedbackgroundColor", Constants.InputType.STRING);
-  const borderColor = Utils.getValue("borderColor", Constants.InputType.STRING);
+  Object.keys(Constants.inputIds).forEach(id => {
+    createMessage[id] = Utils.getValue(id, Constants.inputIds[id]);
+  });
   // Constraints Processing
-  let columns: number = 0;
-  let columnWidth: number = 0;
-  let rows: number = 0;
-  let rowHeight: number = 0;
-  let tableWidth: number = 0;
-  let tableHeight: number = 0;
-  let referenceCoordinates: Interfaces.ReferenceCoordinates = { x: 0, y: 0 };
+  createMessage.referenceCoordinates = { x: 0, y: 0 };
   switch (mode) {
     case "count-and-table-size":
-      columns = Utils.getValue("columns", Constants.InputType.NUMBER) as number;
-      rows = Utils.getValue("rows", Constants.InputType.NUMBER) as number;
-      columnWidth = (Utils.getValue("tableWidth", Constants.InputType.NUMBER) as number) / columns;
-      rowHeight =
-        ((Utils.getValue("tableHeight", Constants.InputType.NUMBER) as number) - (headerHeight as number)) / rows;
+      createMessage.columns = Utils.getValue("columns", Constants.InputType.NUMBER) as number;
+      createMessage.rows = Utils.getValue("rows", Constants.InputType.NUMBER) as number;
+      createMessage.columnWidth =
+        (Utils.getValue("tableWidth", Constants.InputType.NUMBER) as number) / createMessage.columns;
+      createMessage.rowHeight =
+        ((Utils.getValue("tableHeight", Constants.InputType.NUMBER) as number) -
+          (createMessage.headerHeight as number)) /
+        createMessage.rows;
       break;
     case "count-and-cell-size":
-      columns = Utils.getValue("columns", Constants.InputType.NUMBER) as number;
-      rows = Utils.getValue("rows", Constants.InputType.NUMBER) as number;
-      columnWidth = Utils.getValue("columnWidth", Constants.InputType.NUMBER) as number;
-      rowHeight = Utils.getValue("rowHeight", Constants.InputType.NUMBER) as number;
+      createMessage.columns = Utils.getValue("columns", Constants.InputType.NUMBER) as number;
+      createMessage.rows = Utils.getValue("rows", Constants.InputType.NUMBER) as number;
+      createMessage.columnWidth = Utils.getValue("columnWidth", Constants.InputType.NUMBER) as number;
+      createMessage.rowHeight = Utils.getValue("rowHeight", Constants.InputType.NUMBER) as number;
       break;
     case "cell-and-table-size":
-      tableWidth = Utils.getValue("tableWidth", Constants.InputType.NUMBER) as number;
-      tableHeight = Utils.getValue("tableHeight", Constants.InputType.NUMBER) as number;
-      columnWidth = Utils.getValue("columnWidth", Constants.InputType.NUMBER) as number;
-      rowHeight = Utils.getValue("rowHeight", Constants.InputType.NUMBER) as number;
-      columns = Math.floor(tableWidth / columnWidth);
-      rows = Math.floor((tableHeight - (headerHeight as number)) / rowHeight + 1);
-      referenceCoordinates.y = tableHeight % rowHeight;
+      createMessage.tableWidth = Utils.getValue("tableWidth", Constants.InputType.NUMBER) as number;
+      createMessage.tableHeight = Utils.getValue("tableHeight", Constants.InputType.NUMBER) as number;
+      createMessage.columnWidth = Utils.getValue("columnWidth", Constants.InputType.NUMBER) as number;
+      createMessage.rowHeight = Utils.getValue("rowHeight", Constants.InputType.NUMBER) as number;
+      createMessage.columns = Math.floor(createMessage.tableWidth / createMessage.columnWidth);
+      createMessage.rows = Math.floor(
+        (createMessage.tableHeight - createMessage.headerHeight) / createMessage.rowHeight + 1,
+      );
+      createMessage.referenceCoordinates.y = createMessage.tableHeight % createMessage.rowHeight;
       break;
   }
   // Validation
-  const validWithinLimits: boolean = validateInput(mode, columns, rows, columnWidth, rowHeight, header, floatingFilter);
+  const validWithinLimits: boolean = validateInput(
+    mode,
+    createMessage.columns,
+    createMessage.rows,
+    createMessage.columnWidth,
+    createMessage.rowHeight,
+    createMessage.header,
+    createMessage.floatingFilter,
+  );
   if (validWithinLimits) {
-    setTimeout(() => {
-      parent.postMessage(
-        {
-          pluginMessage: {
-            type: Constants.MessageType.CREATE,
-            columns: columns,
-            columnWidth: columnWidth,
-            rows: rows,
-            rowHeight: rowHeight,
-            tableFontFamily: tableFontFamily,
-            tableFontStyle: tableFontStyle,
-            tableFontSize: tableFontSize,
-            borders: borders,
-            alternateBackgrounds: alternateBackgrounds,
-            header: header,
-            headerHeight: headerHeight,
-            headerFontFamily: headerFontFamily,
-            headerFontStyle: headerFontStyle,
-            headerFontSize: headerFontSize,
-            floatingFilter: floatingFilter,
-            floatingFilterHeight: floatingFilterHeight,
-            primarybackgroundColor: primarybackgroundColor,
-            stripedbackgroundColor: stripedbackgroundColor,
-            borderColor: borderColor,
-            referenceCoordinates: referenceCoordinates,
-          },
-        },
-        "*",
-      );
-    }, 100);
+    parent.postMessage(
+      {
+        pluginMessage: createMessage,
+      },
+      "*",
+    );
   } else {
     // Enable create button and hide loader
     Utils.getHTMLInputElementById("create").disabled = false;
