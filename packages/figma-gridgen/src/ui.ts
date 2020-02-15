@@ -451,31 +451,17 @@ function processInputToMessage(): void {
   createMessage.referenceCoordinates = { x: 0, y: 0 };
   switch (mode) {
     case "count-and-table-size":
-      createMessage.columns = Utils.getValue("columns", Constants.InputType.NUMBER) as number;
-      createMessage.rows = Utils.getValue("rows", Constants.InputType.NUMBER) as number;
-      createMessage.columnWidth =
-        (Utils.getValue("tableWidth", Constants.InputType.NUMBER) as number) / createMessage.columns;
-      createMessage.rowHeight =
-        ((Utils.getValue("tableHeight", Constants.InputType.NUMBER) as number) -
-          (createMessage.headerHeight as number)) /
-        createMessage.rows;
-      break;
-    case "count-and-cell-size":
-      createMessage.columns = Utils.getValue("columns", Constants.InputType.NUMBER) as number;
-      createMessage.rows = Utils.getValue("rows", Constants.InputType.NUMBER) as number;
-      createMessage.columnWidth = Utils.getValue("columnWidth", Constants.InputType.NUMBER) as number;
-      createMessage.rowHeight = Utils.getValue("rowHeight", Constants.InputType.NUMBER) as number;
+      createMessage.columnWidth = createMessage.tableWidth / createMessage.columns;
+      createMessage.rowHeight = (createMessage.tableHeight - createMessage.headerHeight) / createMessage.rows;
       break;
     case "cell-and-table-size":
-      createMessage.tableWidth = Utils.getValue("tableWidth", Constants.InputType.NUMBER) as number;
-      createMessage.tableHeight = Utils.getValue("tableHeight", Constants.InputType.NUMBER) as number;
-      createMessage.columnWidth = Utils.getValue("columnWidth", Constants.InputType.NUMBER) as number;
-      createMessage.rowHeight = Utils.getValue("rowHeight", Constants.InputType.NUMBER) as number;
       createMessage.columns = Math.floor(createMessage.tableWidth / createMessage.columnWidth);
       createMessage.rows = Math.floor(
         (createMessage.tableHeight - createMessage.headerHeight) / createMessage.rowHeight + 1,
       );
       createMessage.referenceCoordinates.y = createMessage.tableHeight % createMessage.rowHeight;
+      break;
+    default:
       break;
   }
   // Validation
