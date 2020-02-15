@@ -1,17 +1,13 @@
-import * as Figma from "../utils/utils";
-
-/* Objects */
-type ReferenceCoordinates = import("../interfaces/interfaces").ReferenceCoordinates;
-
-/* Defaults/Constants */
-const defaultBorderColor = "#C7C7C7";
+import * as Utils from "../utils/utils";
+import * as Interfaces from "../interfaces_and_constants/interfaces";
+import * as Constants from "../interfaces_and_constants/constants";
 
 /* Check if Font is Loaded */
 let isTableFontLoaded: boolean = false;
 let isHeaderFontLoaded: boolean = false;
 
 export function generateBorders(
-  borderType: "Horizontal" | "Vertical",
+  borderType: Constants.BorderType,
   visible: boolean = true,
   borderCount: number,
   borderSpacing: number,
@@ -20,12 +16,12 @@ export function generateBorders(
   header: boolean,
   headerHeight: number,
   borderColor: string,
-  referenceCoordinates: ReferenceCoordinates,
+  referenceCoordinates: Interfaces.ReferenceCoordinates,
 ): GroupNode {
   const linesNode: SceneNode[] = [];
   let borderWidth: number;
   if (header) {
-    if (borderType === "Vertical") {
+    if (borderType === Constants.BorderType.VERTICAL) {
       borderWidth = (borderWidthMultiplier - 1) * borderWidthIndividual + headerHeight;
     } else {
       borderCount -= 1;
@@ -36,17 +32,17 @@ export function generateBorders(
   }
   const lineStrokesColor =
     borderColor.match(/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i) === null
-      ? Figma.hexToRgb(defaultBorderColor)
-      : Figma.hexToRgb(borderColor);
+      ? Utils.hexToRgb(Constants.defaultBorderColor)
+      : Utils.hexToRgb(borderColor);
   for (let i = 0; i < borderCount + 1; i++) {
     const line = figma.createLine();
-    const lineStrokes = Figma.clone(line.strokes);
-    lineStrokes[0].color.r = lineStrokesColor.r / 255;
-    lineStrokes[0].color.g = lineStrokesColor.g / 255;
-    lineStrokes[0].color.b = lineStrokesColor.b / 255;
+    const lineStrokes = Utils.clone(line.strokes);
+    lineStrokes[0].color.r = lineStrokesColor.r / Constants.maxRGB;
+    lineStrokes[0].color.g = lineStrokesColor.g / Constants.maxRGB;
+    lineStrokes[0].color.b = lineStrokesColor.b / Constants.maxRGB;
     line.strokes = lineStrokes;
-    if (borderType === "Vertical") {
-      line.rotation = 90;
+    if (borderType === Constants.BorderType.VERTICAL) {
+      line.rotation = Constants.Rotation.QUARTER;
       line.x = referenceCoordinates.x + i * borderSpacing;
       line.y = referenceCoordinates.y;
     } else {
@@ -57,19 +53,19 @@ export function generateBorders(
     linesNode.push(line);
   }
   // create top line if header is included
-  if (header && borderType === "Horizontal") {
+  if (header && borderType === Constants.BorderType.HORIZONTAL) {
     const line = figma.createLine();
-    const lineStrokes = Figma.clone(line.strokes);
-    lineStrokes[0].color.r = lineStrokesColor.r / 255;
-    lineStrokes[0].color.g = lineStrokesColor.g / 255;
-    lineStrokes[0].color.b = lineStrokesColor.b / 255;
+    const lineStrokes = Utils.clone(line.strokes);
+    lineStrokes[0].color.r = lineStrokesColor.r / Constants.maxRGB;
+    lineStrokes[0].color.g = lineStrokesColor.g / Constants.maxRGB;
+    lineStrokes[0].color.b = lineStrokesColor.b / Constants.maxRGB;
     line.strokes = lineStrokes;
     line.resize(borderWidth, 0);
     line.x = referenceCoordinates.x;
     line.y = referenceCoordinates.y - headerHeight - borderCount * borderSpacing;
     linesNode.push(line);
   }
-  const linesGroup: GroupNode = Figma.groupNodes(linesNode, Figma.getCurrentPage());
+  const linesGroup: GroupNode = Utils.groupNodes(linesNode, Utils.getCurrentPage());
   if (!visible) {
     linesGroup.visible = false;
   }
@@ -78,7 +74,7 @@ export function generateBorders(
 }
 
 export function generateRowBackground(
-  rowBackgroundType: "Odd" | "Even",
+  rowBackgroundType: Constants.RowBackgroundType,
   rowCount: number,
   rowHeight: number,
   rowWidth: number,
@@ -86,7 +82,7 @@ export function generateRowBackground(
   header: boolean,
   primaryBackgroundColor: string,
   stripedBackgroundColor: string,
-  referenceCoordinates: ReferenceCoordinates,
+  referenceCoordinates: Interfaces.ReferenceCoordinates,
 ): GroupNode {
   const rowBackgroundNode: SceneNode[] = [];
   const rowSpacing = rowHeight * 2;
@@ -95,7 +91,7 @@ export function generateRowBackground(
   if (header) {
     rowCount -= 1;
   }
-  if (rowBackgroundType === "Odd") {
+  if (rowBackgroundType === Constants.RowBackgroundType.ODD) {
     computedRowCount = Math.round(rowCount / 2);
     startingPoint = referenceCoordinates.y - rowHeight;
   } else {
@@ -104,26 +100,29 @@ export function generateRowBackground(
   }
   for (let i = 0; i < computedRowCount; i++) {
     const background = figma.createRectangle();
-    const backgroundFills = Figma.clone(background.fills);
+    const backgroundFills = Utils.clone(background.fills);
     let backgroundFillsColor: RGB;
     if (alternateBackgrounds) {
-      if ((rowCount % 2 === 0 && rowBackgroundType === "Odd") || (rowCount % 2 !== 0 && rowBackgroundType === "Even")) {
-        backgroundFillsColor = Figma.hexToRgb(stripedBackgroundColor);
+      if (
+        (rowCount % 2 === 0 && rowBackgroundType === Constants.RowBackgroundType.ODD) ||
+        (rowCount % 2 !== 0 && rowBackgroundType === Constants.RowBackgroundType.EVEN)
+      ) {
+        backgroundFillsColor = Utils.hexToRgb(stripedBackgroundColor);
       } else {
-        backgroundFillsColor = Figma.hexToRgb(primaryBackgroundColor);
+        backgroundFillsColor = Utils.hexToRgb(primaryBackgroundColor);
       }
     } else {
-      backgroundFillsColor = Figma.hexToRgb(primaryBackgroundColor);
+      backgroundFillsColor = Utils.hexToRgb(primaryBackgroundColor);
     }
-    backgroundFills[0].color.r = backgroundFillsColor.r / 255;
-    backgroundFills[0].color.g = backgroundFillsColor.g / 255;
-    backgroundFills[0].color.b = backgroundFillsColor.b / 255;
+    backgroundFills[0].color.r = backgroundFillsColor.r / Constants.maxRGB;
+    backgroundFills[0].color.g = backgroundFillsColor.g / Constants.maxRGB;
+    backgroundFills[0].color.b = backgroundFillsColor.b / Constants.maxRGB;
     background.fills = backgroundFills;
     background.resize(rowWidth, rowHeight);
     background.y = startingPoint - i * rowSpacing;
     rowBackgroundNode.push(background);
   }
-  const rowBackgroundGroup: GroupNode = Figma.groupNodes(rowBackgroundNode, Figma.getCurrentPage());
+  const rowBackgroundGroup: GroupNode = Utils.groupNodes(rowBackgroundNode, Utils.getCurrentPage());
   rowBackgroundGroup.name = rowBackgroundType;
   return rowBackgroundGroup;
 }
@@ -137,7 +136,7 @@ export function generateTableTexts(
   tableFontStyle: string,
   tableFontSize: number,
   header: boolean,
-  referenceCoordinates: ReferenceCoordinates,
+  referenceCoordinates: Interfaces.ReferenceCoordinates,
 ) {
   const tableTextsNode: SceneNode[] = [];
   const tableFontName: FontName = {
@@ -147,7 +146,7 @@ export function generateTableTexts(
   if (header) {
     rowCount -= 1;
   }
-  const textMargin: ReferenceCoordinates = { x: 5, y: 5 };
+  const textMargin: Interfaces.ReferenceCoordinates = { x: 5, y: 5 };
   for (let i = 0; i < columnCount; i++) {
     const columnTextsNode: SceneNode[] = [];
     const columnTextsStartingPosition = referenceCoordinates.x + i * columnWidth + textMargin.x;
@@ -158,19 +157,19 @@ export function generateTableTexts(
       text.y = referenceCoordinates.y + textMargin.y - (j + 1) * rowHeight;
       columnTextsNode.push(text);
     }
-    const columnTextsGroup = Figma.groupNodes(columnTextsNode, Figma.getCurrentPage());
+    const columnTextsGroup = Utils.groupNodes(columnTextsNode, Utils.getCurrentPage());
     columnTextsGroup.name = "Column " + (i + 1);
     tableTextsNode.push(columnTextsGroup);
   }
-  const tableTextsGroup: GroupNode = Figma.groupNodes(tableTextsNode, Figma.getCurrentPage());
+  const tableTextsGroup: GroupNode = Utils.groupNodes(tableTextsNode, Utils.getCurrentPage());
   const allTextsNodesGenerated: SceneNode[] = tableTextsGroup.findAll(node => node.type === "TEXT");
   loadNodeFont(tableFontName).then(() => {
     for (let textNode of allTextsNodesGenerated) {
       const text = textNode as TextNode;
       text.fontName = tableFontName;
       text.fontSize = tableFontSize;
-      text.characters = "Sample";
-      text.textAlignVertical = "CENTER";
+      text.characters = Constants.sampleText;
+      text.textAlignVertical = Constants.TextVerticalAlignment.CENTER;
       text.resize(columnWidth - 1 - 2 * textMargin.x, rowHeight - 2 * textMargin.y);
       isTableFontLoaded = true;
       areFontsLoaded();
@@ -193,7 +192,7 @@ export function generateTableHeader(
   floatingFilter: boolean,
   floatingFilterHeight: number,
   primaryBackgroundColor: string,
-  referenceCoordinates: ReferenceCoordinates,
+  referenceCoordinates: Interfaces.ReferenceCoordinates,
 ): GroupNode {
   if (header) {
     // Background
@@ -201,11 +200,11 @@ export function generateTableHeader(
     const tableHeaderFontName: FontName = { family: headerFontFamily, style: headerFontStyle };
     const rowWidth = columnWidth * columnCount;
     const background = figma.createRectangle();
-    const backgroundFills = Figma.clone(background.fills);
-    const backgroundFillsColor: RGB = Figma.hexToRgb(primaryBackgroundColor);
-    backgroundFills[0].color.r = backgroundFillsColor.r / 255;
-    backgroundFills[0].color.g = backgroundFillsColor.g / 255;
-    backgroundFills[0].color.b = backgroundFillsColor.b / 255;
+    const backgroundFills = Utils.clone(background.fills);
+    const backgroundFillsColor: RGB = Utils.hexToRgb(primaryBackgroundColor);
+    backgroundFills[0].color.r = backgroundFillsColor.r / Constants.maxRGB;
+    backgroundFills[0].color.g = backgroundFillsColor.g / Constants.maxRGB;
+    backgroundFills[0].color.b = backgroundFillsColor.b / Constants.maxRGB;
     background.fills = backgroundFills;
     background.resize(rowWidth, headerHeight);
     background.y = referenceCoordinates.y - headerHeight - (rowCount - 1) * rowHeight;
@@ -214,7 +213,7 @@ export function generateTableHeader(
     // Texts
     const tableHeaderTextsNode: SceneNode[] = [];
     const textHeight: number = floatingFilter ? headerHeight - floatingFilterHeight : headerHeight;
-    const headerTextMargin: ReferenceCoordinates = { x: 5, y: 5 };
+    const headerTextMargin: Interfaces.ReferenceCoordinates = { x: 5, y: 5 };
     for (let i = 0; i < columnCount; i++) {
       const columnTextsStartingPosition = referenceCoordinates.x + i * columnWidth + headerTextMargin.x;
       const text = figma.createText();
@@ -223,15 +222,15 @@ export function generateTableHeader(
       text.y = referenceCoordinates.y - headerHeight + headerTextMargin.y - (rowCount - 1) * rowHeight;
       tableHeaderTextsNode.push(text);
     }
-    const tableHeaderTextsGroup = Figma.groupNodes(tableHeaderTextsNode, Figma.getCurrentPage());
+    const tableHeaderTextsGroup = Utils.groupNodes(tableHeaderTextsNode, Utils.getCurrentPage());
     const allTextsNodesGenerated: SceneNode[] = tableHeaderTextsGroup.findAll(node => node.type === "TEXT");
     loadNodeFont(tableHeaderFontName).then(() => {
       for (let textNode of allTextsNodesGenerated) {
         const text = textNode as TextNode;
         text.fontName = tableHeaderFontName;
         text.fontSize = headerFontSize;
-        text.characters = "SAMPLE";
-        text.textAlignVertical = "CENTER";
+        text.characters = Constants.sampleText.toUpperCase();
+        text.textAlignVertical = Constants.TextVerticalAlignment.CENTER;
         text.resize(columnWidth - 1 - 2 * headerTextMargin.x, textHeight - 2 * headerTextMargin.y);
         isHeaderFontLoaded = true;
         areFontsLoaded();
@@ -242,15 +241,15 @@ export function generateTableHeader(
     // Floating Filters
     if (floatingFilter) {
       const floatingFiltersNode: SceneNode[] = [];
-      const floatingFilterMargin: ReferenceCoordinates = { x: 5, y: 5 };
+      const floatingFilterMargin: Interfaces.ReferenceCoordinates = { x: 5, y: 5 };
       for (let i = 0; i < columnCount; i++) {
         const columnFloatingFiltersStartingPosition = referenceCoordinates.x + i * columnWidth + floatingFilterMargin.x;
         const floatingFilter = figma.createRectangle();
-        const floatingFilterFills = Figma.clone(floatingFilter.fills);
-        const floatingFilterFillsColor: RGB = Figma.hexToRgb("#FFFFFF");
-        floatingFilterFills[0].color.r = floatingFilterFillsColor.r / 255;
-        floatingFilterFills[0].color.g = floatingFilterFillsColor.g / 255;
-        floatingFilterFills[0].color.b = floatingFilterFillsColor.b / 255;
+        const floatingFilterFills = Utils.clone(floatingFilter.fills);
+        const floatingFilterFillsColor: RGB = Utils.hexToRgb(Constants.ColorNameToHex.WHITE);
+        floatingFilterFills[0].color.r = floatingFilterFillsColor.r / Constants.maxRGB;
+        floatingFilterFills[0].color.g = floatingFilterFillsColor.g / Constants.maxRGB;
+        floatingFilterFills[0].color.b = floatingFilterFillsColor.b / Constants.maxRGB;
         floatingFilter.fills = floatingFilterFills;
         floatingFilter.name = "Floating Filter Placeholder" + (i + 1);
         floatingFilter.resize(
@@ -262,11 +261,11 @@ export function generateTableHeader(
           referenceCoordinates.y - floatingFilterHeight + floatingFilterMargin.y - (rowCount - 1) * rowHeight;
         floatingFiltersNode.push(floatingFilter);
       }
-      const tableFloatingFiltersGroup = Figma.groupNodes(floatingFiltersNode, Figma.getCurrentPage());
+      const tableFloatingFiltersGroup = Utils.groupNodes(floatingFiltersNode, Utils.getCurrentPage());
       tableFloatingFiltersGroup.name = "Floating Filters";
       tableHeaderNode.push(tableFloatingFiltersGroup);
     }
-    const tableHeaderGroup: GroupNode = Figma.groupNodes(tableHeaderNode, Figma.getCurrentPage());
+    const tableHeaderGroup: GroupNode = Utils.groupNodes(tableHeaderNode, Utils.getCurrentPage());
     tableHeaderGroup.name = "Table Header";
     return tableHeaderGroup;
   } else {

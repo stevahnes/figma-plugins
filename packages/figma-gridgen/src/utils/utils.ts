@@ -1,3 +1,5 @@
+import * as Constants from "../interfaces_and_constants/constants";
+
 /* Figma API Function Abstraction */
 export function groupNodes(nodes: ReadonlyArray<BaseNode>, parent: BaseNode & ChildrenMixin): GroupNode {
   return figma.group(nodes, parent);
@@ -67,16 +69,16 @@ export function getHTMLInputElementById(htmlElement: string): HTMLInputElement {
 }
 
 /* Extract Inputs */
-export function getValue(htmlTagId: string, inputType: string): number | boolean | string {
+export function getValue(htmlTagId: string, inputType: Constants.InputType): number | boolean | string {
   const input = getHTMLInputElementById(htmlTagId);
   switch (inputType) {
-    case "number":
+    case Constants.InputType.NUMBER:
       return parseInt(input.value, 10) ? parseInt(input.value, 10) : 0;
       break;
-    case "boolean":
+    case Constants.InputType.BOOLEAN:
       return input.checked;
       break;
-    case "string":
+    case Constants.InputType.STRING:
       return input.value;
       break;
   }

@@ -1,5 +1,7 @@
+import * as Constants from "./constants";
+
 export interface CreateMessage {
-  type: string;
+  type: Constants.MessageType;
   columns?: number;
   columnWidth?: number;
   rows?: number;

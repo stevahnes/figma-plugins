@@ -5,20 +5,12 @@ import {
   generateTableHeader,
   listAvailableFontsAsync,
 } from "./generators/generators";
-import * as Figma from "./utils/utils";
-
-/* Objects */
-type CreateMessage = import("./interfaces/interfaces").CreateMessage;
-
-/* Constants */
-const showUIOptions: ShowUIOptions = {
-  width: 300,
-  height: 620,
-  visible: false,
-};
+import * as Utils from "./utils/utils";
+import * as Constants from "./interfaces_and_constants/constants";
+import * as Interfaces from "./interfaces_and_constants/interfaces";
 
 // This shows the HTML page in "ui.html".
-figma.showUI(__html__, showUIOptions);
+figma.showUI(__html__, Constants.showUIOptions);
 
 // Generate available font options
 listAvailableFontsAsync().then(fonts => {
@@ -43,11 +35,11 @@ figma.ui.onmessage = msg => {
   processMessage(msg);
 };
 
-function processMessage(message: CreateMessage): void {
-  if (message.type === "create-table") {
+function processMessage(message: Interfaces.CreateMessage): void {
+  if (message.type === Constants.MessageType.CREATE) {
     /* Generate Background */
     const oddRowBackgroundGroup: GroupNode = generateRowBackground(
-      "Odd",
+      Constants.RowBackgroundType.ODD,
       message.rows,
       message.rowHeight,
       message.columnWidth * message.columns,
@@ -58,7 +50,7 @@ function processMessage(message: CreateMessage): void {
       message.referenceCoordinates,
     );
     const evenRowBackgroundGroup: GroupNode = generateRowBackground(
-      "Even",
+      Constants.RowBackgroundType.EVEN,
       message.rows,
       message.rowHeight,
       message.columnWidth * message.columns,
@@ -69,7 +61,7 @@ function processMessage(message: CreateMessage): void {
       message.referenceCoordinates,
     );
     const rowBackgroundNode: SceneNode[] = [oddRowBackgroundGroup, evenRowBackgroundGroup];
-    const rowBackgroundGroup: GroupNode = Figma.groupNodes(rowBackgroundNode, figma.currentPage);
+    const rowBackgroundGroup: GroupNode = Utils.groupNodes(rowBackgroundNode, figma.currentPage);
     rowBackgroundGroup.name = "Row Background";
 
     /* Generate Texts */
@@ -104,7 +96,7 @@ function processMessage(message: CreateMessage): void {
 
     /* Generate Borders */
     const verticalLinesGroup: GroupNode = generateBorders(
-      "Vertical",
+      Constants.BorderType.VERTICAL,
       message.borders,
       message.columns,
       message.columnWidth,
@@ -116,7 +108,7 @@ function processMessage(message: CreateMessage): void {
       message.referenceCoordinates,
     );
     const horizontalLinesGroup: GroupNode = generateBorders(
-      "Horizontal",
+      Constants.BorderType.HORIZONTAL,
       message.borders,
       message.rows,
       message.rowHeight,
@@ -128,11 +120,11 @@ function processMessage(message: CreateMessage): void {
       message.referenceCoordinates,
     );
     const borderLinesNode: SceneNode[] = [verticalLinesGroup, horizontalLinesGroup];
-    const borderLinesGroup: GroupNode = Figma.groupNodes(borderLinesNode, figma.currentPage);
+    const borderLinesGroup: GroupNode = Utils.groupNodes(borderLinesNode, figma.currentPage);
     borderLinesGroup.name = "Borders";
 
     /* Sort Group Nodes */
-    const tableGroup = Figma.groupNodes([rowBackgroundGroup], figma.currentPage);
+    const tableGroup = Utils.groupNodes([rowBackgroundGroup], figma.currentPage);
     tableGroup.appendChild(columnTextsGroup);
     if (tableHeaderGroup !== null) {
       tableGroup.appendChild(tableHeaderGroup);

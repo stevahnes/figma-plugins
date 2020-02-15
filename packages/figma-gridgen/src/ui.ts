@@ -1,24 +1,7 @@
 import "./ui.css";
-import * as Figma from "./utils/utils";
-
-/* Objects */
-type ReferenceCoordinates = import("./interfaces/interfaces").ReferenceCoordinates;
-
-/* Constants */
-const defaultInputsForModes: { [key: string]: string[] } = {
-  // first on list is the default selected
-  "count-and-table-size": ["tableWidth", "tableHeight", "columns", "rows"],
-  "count-and-cell-size": ["columns", "rows", "columnWidth", "rowHeight"],
-  "cell-and-table-size": ["tableWidth", "tableHeight", "columnWidth", "rowHeight"],
-};
-const defaultValuesForInputs: { [key: string]: string } = {
-  tableWidth: "1024",
-  tableHeight: "768",
-  columnWidth: "100",
-  rowHeight: "30",
-  columns: "5",
-  rows: "8",
-};
+import * as Utils from "./utils/utils";
+import * as Interfaces from "./interfaces_and_constants/interfaces";
+import * as Constants from "./interfaces_and_constants/constants";
 
 /* State Changes Variable */
 let isShiftHeld: boolean = false;
@@ -29,7 +12,7 @@ let processedFontOptions: { [key: string]: string[] } = {};
 
 /* Run after onLoad */
 window.addEventListener("load", function() {
-  Figma.getHTMLInputElementById("tableWidth").select();
+  Utils.getHTMLInputElementById("tableWidth").select();
 });
 
 /* Receive message from plugin code */
@@ -43,12 +26,12 @@ function constructInitialFontOptions(fontOptions: { [key: string]: string[] }) {
   const overallDefaultFont: string = "Roboto";
   const fontFamilyOptionsHTML = constructFontFamilyOptions(fontOptions);
   const fontStyleOptionsHTML = constructFontStyleOptions(fontOptions, overallDefaultFont);
-  Figma.getHTMLElementById("tableFontFamilyOptions").innerHTML = fontFamilyOptionsHTML;
-  Figma.getHTMLElementById("headerFontFamilyOptions").innerHTML = fontFamilyOptionsHTML;
-  Figma.getHTMLElementById("tableFontStyle").innerHTML = fontStyleOptionsHTML;
-  Figma.getHTMLElementById("headerFontStyle").innerHTML = fontStyleOptionsHTML;
-  Figma.getHTMLInputElementById("tableFontFamily").value = overallDefaultFont;
-  Figma.getHTMLInputElementById("headerFontFamily").value = overallDefaultFont;
+  Utils.getHTMLElementById("tableFontFamilyOptions").innerHTML = fontFamilyOptionsHTML;
+  Utils.getHTMLElementById("headerFontFamilyOptions").innerHTML = fontFamilyOptionsHTML;
+  Utils.getHTMLElementById("tableFontStyle").innerHTML = fontStyleOptionsHTML;
+  Utils.getHTMLElementById("headerFontStyle").innerHTML = fontStyleOptionsHTML;
+  Utils.getHTMLInputElementById("tableFontFamily").value = overallDefaultFont;
+  Utils.getHTMLInputElementById("headerFontFamily").value = overallDefaultFont;
 }
 function constructFontFamilyOptions(pluginFontOptions: { [key: string]: string[] }): string {
   let fontFamilyOptionsHTML: string = "";
@@ -74,9 +57,9 @@ function toggleEditable(
 ): void {
   let htmlTagById;
   if (htmlTagType === "input") {
-    htmlTagById = Figma.getHTMLInputElementById(htmlTagId) as HTMLInputElement;
+    htmlTagById = Utils.getHTMLInputElementById(htmlTagId) as HTMLInputElement;
   } else if (htmlTagType === "select") {
-    htmlTagById = Figma.getHTMLElementById(htmlTagId) as HTMLSelectElement;
+    htmlTagById = Utils.getHTMLElementById(htmlTagId) as HTMLSelectElement;
   }
   if (htmlTagById.checked) {
     htmlTagById.checked = false;
@@ -97,32 +80,32 @@ function toggleEditable(
 
 /* Reset Invalid CSS */
 function resetInvalidInput(): void {
-  const inputList: string[] = Object.keys(defaultValuesForInputs);
+  const inputList: string[] = Object.keys(Constants.defaultValuesForInputs);
   for (let input of inputList) {
-    Figma.getHTMLElementById(input).classList.remove("invalid");
+    Utils.getHTMLElementById(input).classList.remove("invalid");
   }
 }
 
 /* Set Invalid CSS by List */
 function setInvalidInputs(mode: string): void {
-  const inputList: string[] = defaultInputsForModes[mode];
+  const inputList: string[] = Constants.defaultInputsForModes[mode];
   for (let input of inputList) {
-    Figma.getHTMLElementById(input).classList.add("invalid");
+    Utils.getHTMLElementById(input).classList.add("invalid");
   }
 }
 
 /* Toggle HTML Rendering */
 function setDefault(mode: string) {
-  const inputList: string[] = Object.keys(defaultValuesForInputs);
+  const inputList: string[] = Object.keys(Constants.defaultValuesForInputs);
   for (let input of inputList) {
-    if (defaultInputsForModes[mode].indexOf(input) > -1) {
-      toggleEditable("input", input, true, defaultValuesForInputs[input]);
+    if (Constants.defaultInputsForModes[mode].indexOf(input) > -1) {
+      toggleEditable("input", input, true, Constants.defaultValuesForInputs[input]);
     } else {
-      toggleEditable("input", input, false, defaultValuesForInputs[input]);
+      toggleEditable("input", input, false, Constants.defaultValuesForInputs[input]);
     }
   }
   resetInvalidInput();
-  Figma.getHTMLInputElementById(defaultInputsForModes[mode][0]).select();
+  Utils.getHTMLInputElementById(Constants.defaultInputsForModes[mode][0]).select();
 }
 
 /* Validate User Input */
@@ -138,11 +121,11 @@ function validateInput(
   let validInput: boolean = true;
   // reset invalid CSS and validators
   resetInvalidInput();
-  Figma.getHTMLElementById("validValidator").classList.add("show");
-  Figma.getHTMLElementById("negativeValidator").classList.remove("show");
-  Figma.getHTMLElementById("constraintValidator").classList.remove("show");
+  Utils.getHTMLElementById("validValidator").classList.add("show");
+  Utils.getHTMLElementById("negativeValidator").classList.remove("show");
+  Utils.getHTMLElementById("constraintValidator").classList.remove("show");
   // negative and invalid value check
-  let inputsToValidate: string[] = defaultInputsForModes[mode].concat(["tableFontSize"]);
+  let inputsToValidate: string[] = Constants.defaultInputsForModes[mode].concat(["tableFontSize"]);
   if (hasHeader) {
     inputsToValidate = inputsToValidate.concat(["headerHeight", "headerFontSize"]);
   }
@@ -150,12 +133,12 @@ function validateInput(
     inputsToValidate = inputsToValidate.concat(["floatingFilterHeight"]);
   }
   for (let input of inputsToValidate) {
-    const inputValue: number = Figma.getValue(input, "number") as number;
+    const inputValue: number = Utils.getValue(input, Constants.InputType.NUMBER) as number;
     if (!inputValue || inputValue < 1) {
-      Figma.getHTMLInputElementById(input).classList.add("invalid");
-      Figma.getHTMLElementById("validValidator").classList.remove("show");
-      Figma.getHTMLElementById("negativeValidator").classList.add("show");
-      Figma.getHTMLElementById("constraintValidator").classList.remove("show");
+      Utils.getHTMLInputElementById(input).classList.add("invalid");
+      Utils.getHTMLElementById("validValidator").classList.remove("show");
+      Utils.getHTMLElementById("negativeValidator").classList.add("show");
+      Utils.getHTMLElementById("constraintValidator").classList.remove("show");
       validInput = false;
     }
   }
@@ -163,76 +146,81 @@ function validateInput(
   if (validInput) {
     if (columns * columnWidth > 5000 || rows * rowHeight > 5000 || columns > 100 || rows > 100) {
       setInvalidInputs(mode);
-      Figma.getHTMLElementById("validValidator").classList.remove("show");
-      Figma.getHTMLElementById("negativeValidator").classList.remove("show");
-      Figma.getHTMLElementById("constraintValidator").classList.add("show");
+      Utils.getHTMLElementById("validValidator").classList.remove("show");
+      Utils.getHTMLElementById("negativeValidator").classList.remove("show");
+      Utils.getHTMLElementById("constraintValidator").classList.add("show");
       validInput = false;
     }
   }
-  Figma.getHTMLInputElementById(defaultInputsForModes[mode][0]).select();
+  Utils.getHTMLInputElementById(Constants.defaultInputsForModes[mode][0]).select();
   return validInput;
 }
 
 /* Document OnChange Actions */
 // Detect inputs state change
-const inputList: string[] = Object.keys(defaultValuesForInputs);
+const inputList: string[] = Object.keys(Constants.defaultValuesForInputs);
 for (let input of inputList) {
   document.getElementById(input).onchange = () => {
-    Figma.getHTMLInputElementById(input).classList.remove("invalid");
+    Utils.getHTMLInputElementById(input).classList.remove("invalid");
   };
 }
 // Detect radio buttons state change
-const modes: string[] = Object.keys(defaultInputsForModes);
+const modes: string[] = Object.keys(Constants.defaultInputsForModes);
 for (let mode of modes) {
   document.getElementById(mode).onclick = () => {
-    if (Figma.getHTMLInputElementById(mode).checked) {
+    if (Utils.getHTMLInputElementById(mode).checked) {
       setDefault(mode);
     }
   };
 }
 // Detect header checkbox state change
 document.getElementById("header").onchange = () => {
-  toggleEditable("input", "floatingFilter", Figma.getHTMLInputElementById("header").checked, "");
-  toggleEditable("input", "headerHeight", Figma.getHTMLInputElementById("header").checked, "60");
-  toggleEditable("input", "headerFontFamily", Figma.getHTMLInputElementById("header").checked, "Roboto");
+  toggleEditable("input", "floatingFilter", Utils.getHTMLInputElementById("header").checked, "");
+  toggleEditable("input", "headerHeight", Utils.getHTMLInputElementById("header").checked, "60");
+  toggleEditable("input", "headerFontFamily", Utils.getHTMLInputElementById("header").checked, "Roboto");
   toggleEditable(
     "select",
     "headerFontStyle",
-    Figma.getHTMLInputElementById("header").checked,
+    Utils.getHTMLInputElementById("header").checked,
     constructFontStyleOptions(processedFontOptions, "Roboto"),
   );
-  toggleEditable("input", "headerFontSize", Figma.getHTMLInputElementById("header").checked, "12");
-  toggleEditable("input", "floatingFilterHeight", Figma.getHTMLInputElementById("floatingFilter").checked, "");
+  toggleEditable("input", "headerFontSize", Utils.getHTMLInputElementById("header").checked, "12");
+  toggleEditable("input", "floatingFilterHeight", Utils.getHTMLInputElementById("floatingFilter").checked, "");
 };
 // Detect floating filter checkbox state change
 document.getElementById("floatingFilter").onchange = () => {
-  toggleEditable("input", "floatingFilterHeight", Figma.getHTMLInputElementById("floatingFilter").checked, "30");
+  toggleEditable("input", "floatingFilterHeight", Utils.getHTMLInputElementById("floatingFilter").checked, "30");
 };
 // Detect striped/alternate background checkbox state change
 document.getElementById("alternateBackgrounds").onchange = () => {
   toggleEditable(
     "input",
     "stripedbackgroundColor",
-    Figma.getHTMLInputElementById("alternateBackgrounds").checked,
-    "#FFFFFF",
+    Utils.getHTMLInputElementById("alternateBackgrounds").checked,
+    Constants.ColorNameToHex.WHITE,
   );
 };
 // Detect borders checkbox state change
 document.getElementById("borders").onchange = () => {
-  toggleEditable("input", "borderColor", Figma.getHTMLInputElementById("borders").checked, "#C7C7C7");
+  toggleEditable(
+    "input",
+    "borderColor",
+    Utils.getHTMLInputElementById("borders").checked,
+    Constants.ColorNameToHex.GREY_C7,
+  );
 };
 // Detect table font family dropdown state change
 document.getElementById("tableFontFamily").onchange = () => {
-  Figma.getHTMLElementById("tableFontStyle").innerHTML = constructFontStyleOptions(
+  Utils.getHTMLElementById("tableFontStyle").innerHTML = constructFontStyleOptions(
     processedFontOptions,
-    Figma.getValue("tableFontFamily", "string") as string,
+    Utils.getValue("tableFontFamily", Constants.InputType.STRING) as string,
   );
 };
 // Detect header font family dropdown state change
 document.getElementById("headerFontFamily").onchange = () => {
-  Figma.getHTMLElementById("headerFontStyle").innerHTML = constructFontStyleOptions(
+  Utils.getHTMLElementById("headerFontStyle").innerHTML = constructFontStyleOptions(
     processedFontOptions,
-    Figma.getValue("headerFontFamily", "string") as string,
+    Utils.getValue("headerFontFamily", Constants.InputType.STRING) as string,
   );
 };
 
@@ -278,16 +266,16 @@ document.onkeydown = keyDown => {
       }
     } else if (keyDown.key === "Tab") {
       // Selected Mode
-      const mode: string = Figma.getValue("count-and-table-size", "boolean")
+      const mode: string = Utils.getValue("count-and-table-size", Constants.InputType.BOOLEAN)
         ? "count-and-table-size"
-        : Figma.getValue("count-and-cell-size", "boolean")
+        : Utils.getValue("count-and-cell-size", Constants.InputType.BOOLEAN)
         ? "count-and-cell-size"
         : "cell-and-table-size";
       if (activeElement.id === "create" && isShiftHeld === false) {
-        Figma.getHTMLInputElementById(defaultInputsForModes[mode][0]).select();
+        Utils.getHTMLInputElementById(Constants.defaultInputsForModes[mode][0]).select();
         keyDown.preventDefault();
       } else if (
-        activeElement === Figma.getHTMLInputElementById(defaultInputsForModes[mode][0]) &&
+        activeElement === Utils.getHTMLInputElementById(Constants.defaultInputsForModes[mode][0]) &&
         isShiftHeld === true
       ) {
         document.getElementById("create").focus();
@@ -297,40 +285,40 @@ document.onkeydown = keyDown => {
       if (activeElement.type === "checkbox") {
         activeElement.checked = !activeElement.checked;
         if (activeElement.id === "header") {
-          toggleEditable("input", "floatingFilter", Figma.getHTMLInputElementById("header").checked, "");
-          toggleEditable("input", "headerHeight", Figma.getHTMLInputElementById("header").checked, "60");
-          // toggleEditable("input", "headerFontFamily", Figma.getHTMLInputElementById("header").checked, "Roboto");
+          toggleEditable("input", "floatingFilter", Utils.getHTMLInputElementById("header").checked, "");
+          toggleEditable("input", "headerHeight", Utils.getHTMLInputElementById("header").checked, "60");
+          // toggleEditable("input", "headerFontFamily", Utils.getHTMLInputElementById("header").checked, "Roboto");
           toggleEditable(
             "select",
             "headerFontStyle",
-            Figma.getHTMLInputElementById("header").checked,
+            Utils.getHTMLInputElementById("header").checked,
             constructFontStyleOptions(processedFontOptions, "Roboto"),
           );
-          toggleEditable("input", "headerFontSize", Figma.getHTMLInputElementById("header").checked, "12");
-          toggleEditable("input", "floatingFilterHeight", Figma.getHTMLInputElementById("floatingFilter").checked, "");
+          toggleEditable("input", "headerFontSize", Utils.getHTMLInputElementById("header").checked, "12");
+          toggleEditable("input", "floatingFilterHeight", Utils.getHTMLInputElementById("floatingFilter").checked, "");
         } else if (activeElement.id === "floatingFilter") {
           toggleEditable("input", "floatingFilterHeight", activeElement.checked, "30");
         } else if (activeElement.id === "alternateBackgrounds") {
-          toggleEditable("input", "stripedbackgroundColor", activeElement.checked, "#FFFFFF");
+          toggleEditable("input", "stripedbackgroundColor", activeElement.checked, Constants.ColorNameToHex.WHITE);
         } else if (activeElement.id === "borders") {
-          toggleEditable("input", "borderColor", activeElement.checked, "#C7C7C7");
+          toggleEditable("input", "borderColor", activeElement.checked, Constants.ColorNameToHex.GREY_C7);
         }
       }
     } else if (keyDown.key === "1" || keyDown.key === "2" || keyDown.key === "3") {
       if (isAltHeld) {
         switch (keyDown.key) {
           case "1":
-            Figma.getHTMLInputElementById("cell-and-table-size").checked = true;
+            Utils.getHTMLInputElementById("cell-and-table-size").checked = true;
             setDefault("cell-and-table-size");
             keyDown.preventDefault();
             break;
           case "2":
-            Figma.getHTMLInputElementById("count-and-cell-size").checked = true;
+            Utils.getHTMLInputElementById("count-and-cell-size").checked = true;
             setDefault("count-and-cell-size");
             keyDown.preventDefault();
             break;
           case "3":
-            Figma.getHTMLInputElementById("count-and-table-size").checked = true;
+            Utils.getHTMLInputElementById("count-and-table-size").checked = true;
             setDefault("count-and-table-size");
             keyDown.preventDefault();
             break;
@@ -353,8 +341,8 @@ document.onkeyup = keyUp => {
 /* Create Table */
 function createTable(): void {
   // Disable create button and display loader
-  Figma.getHTMLInputElementById("create").disabled = true;
-  Figma.getHTMLElementById("lds").classList.add("is-visible");
+  Utils.getHTMLInputElementById("create").disabled = true;
+  Utils.getHTMLElementById("lds").classList.add("is-visible");
   // FIXME ensures that button is disabled and loader is displayed before processing input
   processInputToMessage();
 }
@@ -362,29 +350,29 @@ function createTable(): void {
 /* Process Input */
 function processInputToMessage(): void {
   // Selected Mode
-  const mode: string = Figma.getValue("count-and-table-size", "boolean")
+  const mode: string = Utils.getValue("count-and-table-size", Constants.InputType.BOOLEAN)
     ? "count-and-table-size"
-    : Figma.getValue("count-and-cell-size", "boolean")
+    : Utils.getValue("count-and-cell-size", Constants.InputType.BOOLEAN)
     ? "count-and-cell-size"
     : "cell-and-table-size";
   // Table Font Info
-  const tableFontFamily = Figma.getValue("tableFontFamily", "string");
-  const tableFontStyle = Figma.getValue("tableFontStyle", "string");
-  const tableFontSize = Figma.getValue("tableFontSize", "number");
+  const tableFontFamily = Utils.getValue("tableFontFamily", Constants.InputType.STRING);
+  const tableFontStyle = Utils.getValue("tableFontStyle", Constants.InputType.STRING);
+  const tableFontSize = Utils.getValue("tableFontSize", Constants.InputType.NUMBER);
   // Header Info
-  const header = Figma.getValue("header", "boolean") as boolean;
-  const headerHeight = Figma.getValue("headerHeight", "number");
-  const headerFontFamily = Figma.getValue("headerFontFamily", "string");
-  const headerFontStyle = Figma.getValue("headerFontStyle", "string");
-  const headerFontSize = Figma.getValue("headerFontSize", "number");
-  const floatingFilter = Figma.getValue("floatingFilter", "boolean") as boolean;
-  const floatingFilterHeight = Figma.getValue("floatingFilterHeight", "number");
+  const header = Utils.getValue("header", Constants.InputType.BOOLEAN) as boolean;
+  const headerHeight = Utils.getValue("headerHeight", Constants.InputType.NUMBER);
+  const headerFontFamily = Utils.getValue("headerFontFamily", Constants.InputType.STRING);
+  const headerFontStyle = Utils.getValue("headerFontStyle", Constants.InputType.STRING);
+  const headerFontSize = Utils.getValue("headerFontSize", Constants.InputType.NUMBER);
+  const floatingFilter = Utils.getValue("floatingFilter", Constants.InputType.BOOLEAN) as boolean;
+  const floatingFilterHeight = Utils.getValue("floatingFilterHeight", Constants.InputType.NUMBER);
   // Properties and Customisations
-  const borders = Figma.getValue("borders", "boolean");
-  const alternateBackgrounds = Figma.getValue("alternateBackgrounds", "boolean");
-  const primarybackgroundColor = Figma.getValue("primarybackgroundColor", "string");
-  const stripedbackgroundColor = Figma.getValue("stripedbackgroundColor", "string");
-  const borderColor = Figma.getValue("borderColor", "string");
+  const borders = Utils.getValue("borders", Constants.InputType.BOOLEAN);
+  const alternateBackgrounds = Utils.getValue("alternateBackgrounds", Constants.InputType.BOOLEAN);
+  const primarybackgroundColor = Utils.getValue("primarybackgroundColor", Constants.InputType.STRING);
+  const stripedbackgroundColor = Utils.getValue("stripedbackgroundColor", Constants.InputType.STRING);
+  const borderColor = Utils.getValue("borderColor", Constants.InputType.STRING);
   // Constraints Processing
   let columns: number = 0;
   let columnWidth: number = 0;
@@ -392,25 +380,26 @@ function processInputToMessage(): void {
   let rowHeight: number = 0;
   let tableWidth: number = 0;
   let tableHeight: number = 0;
-  let referenceCoordinates: ReferenceCoordinates = { x: 0, y: 0 };
+  let referenceCoordinates: Interfaces.ReferenceCoordinates = { x: 0, y: 0 };
   switch (mode) {
     case "count-and-table-size":
-      columns = Figma.getValue("columns", "number") as number;
-      rows = Figma.getValue("rows", "number") as number;
-      columnWidth = (Figma.getValue("tableWidth", "number") as number) / columns;
-      rowHeight = ((Figma.getValue("tableHeight", "number") as number) - (headerHeight as number)) / rows;
+      columns = Utils.getValue("columns", Constants.InputType.NUMBER) as number;
+      rows = Utils.getValue("rows", Constants.InputType.NUMBER) as number;
+      columnWidth = (Utils.getValue("tableWidth", Constants.InputType.NUMBER) as number) / columns;
+      rowHeight =
+        ((Utils.getValue("tableHeight", Constants.InputType.NUMBER) as number) - (headerHeight as number)) / rows;
       break;
     case "count-and-cell-size":
-      columns = Figma.getValue("columns", "number") as number;
-      rows = Figma.getValue("rows", "number") as number;
-      columnWidth = Figma.getValue("columnWidth", "number") as number;
-      rowHeight = Figma.getValue("rowHeight", "number") as number;
+      columns = Utils.getValue("columns", Constants.InputType.NUMBER) as number;
+      rows = Utils.getValue("rows", Constants.InputType.NUMBER) as number;
+      columnWidth = Utils.getValue("columnWidth", Constants.InputType.NUMBER) as number;
+      rowHeight = Utils.getValue("rowHeight", Constants.InputType.NUMBER) as number;
       break;
     case "cell-and-table-size":
-      tableWidth = Figma.getValue("tableWidth", "number") as number;
-      tableHeight = Figma.getValue("tableHeight", "number") as number;
-      columnWidth = Figma.getValue("columnWidth", "number") as number;
-      rowHeight = Figma.getValue("rowHeight", "number") as number;
+      tableWidth = Utils.getValue("tableWidth", Constants.InputType.NUMBER) as number;
+      tableHeight = Utils.getValue("tableHeight", Constants.InputType.NUMBER) as number;
+      columnWidth = Utils.getValue("columnWidth", Constants.InputType.NUMBER) as number;
+      rowHeight = Utils.getValue("rowHeight", Constants.InputType.NUMBER) as number;
       columns = Math.floor(tableWidth / columnWidth);
       rows = Math.floor((tableHeight - (headerHeight as number)) / rowHeight + 1);
       referenceCoordinates.y = tableHeight % rowHeight;
@@ -423,7 +412,7 @@ function processInputToMessage(): void {
       parent.postMessage(
         {
           pluginMessage: {
-            type: "create-table",
+            type: Constants.MessageType.CREATE,
             columns: columns,
             columnWidth: columnWidth,
             rows: rows,
@@ -451,7 +440,7 @@ function processInputToMessage(): void {
     }, 100);
   } else {
     // Enable create button and hide loader
-    Figma.getHTMLInputElementById("create").disabled = false;
-    Figma.getHTMLElementById("lds").classList.remove("is-visible");
+    Utils.getHTMLInputElementById("create").disabled = false;
+    Utils.getHTMLElementById("lds").classList.remove("is-visible");
   }
 }
