@@ -55,11 +55,36 @@ export const defaultInputsForModes: { [key: string]: string[] } = {
   "cell-and-table-size": ["tableWidth", "tableHeight", "columnWidth", "rowHeight"],
 };
 
-export const defaultValuesForInputs: { [key: string]: string } = {
-  tableWidth: "1024",
-  tableHeight: "768",
-  columnWidth: "100",
-  rowHeight: "30",
-  columns: "5",
-  rows: "8",
+export const enum HtmlTagType {
+  INPUT = "input",
+  SELECT = "select",
+}
+
+export const maxDimensionInPixels: number = 5000;
+
+export const maxNumberOfRowsOrColumns: number = 100;
+
+export const enum DefaultValuesForInputs {
+  DISABLED = "N.A.",
+  CHECKBOX = "",
+  OVERALL_FONT_NAME_FAMILY = "Roboto",
+  OVERALL_FONT_NAME_STYLE = "Regular",
+  OVERALL_FONT_SIZE = "12",
+  TABLE_WIDTH = "1024",
+  TABLE_HEIGHT = "768",
+  COLUMN_WIDTH = "100",
+  ROW_HEIGHT = "30",
+  HEADER_HEIGHT = "60",
+  FLOATING_FILTER_HEIGHT = "30",
+  COLUMNS = "5",
+  ROWS = "8",
+}
+
+export const inputsAffectedByMode: { [key: string]: string } = {
+  tableWidth: DefaultValuesForInputs.TABLE_WIDTH,
+  tableHeight: DefaultValuesForInputs.TABLE_HEIGHT,
+  columnWidth: DefaultValuesForInputs.COLUMN_WIDTH,
+  rowHeight: DefaultValuesForInputs.ROW_HEIGHT,
+  columns: DefaultValuesForInputs.COLUMNS,
+  rows: DefaultValuesForInputs.ROWS,
 };

@@ -23,15 +23,17 @@ onmessage = fontOptions => {
 
 /* Construct Font Options */
 function constructInitialFontOptions(fontOptions: { [key: string]: string[] }) {
-  const overallDefaultFont: string = "Roboto";
   const fontFamilyOptionsHTML = constructFontFamilyOptions(fontOptions);
-  const fontStyleOptionsHTML = constructFontStyleOptions(fontOptions, overallDefaultFont);
+  const fontStyleOptionsHTML = constructFontStyleOptions(
+    fontOptions,
+    Constants.DefaultValuesForInputs.OVERALL_FONT_NAME_FAMILY,
+  );
   Utils.getHTMLElementById("tableFontFamilyOptions").innerHTML = fontFamilyOptionsHTML;
   Utils.getHTMLElementById("headerFontFamilyOptions").innerHTML = fontFamilyOptionsHTML;
   Utils.getHTMLElementById("tableFontStyle").innerHTML = fontStyleOptionsHTML;
   Utils.getHTMLElementById("headerFontStyle").innerHTML = fontStyleOptionsHTML;
-  Utils.getHTMLInputElementById("tableFontFamily").value = overallDefaultFont;
-  Utils.getHTMLInputElementById("headerFontFamily").value = overallDefaultFont;
+  Utils.getHTMLInputElementById("tableFontFamily").value = Constants.DefaultValuesForInputs.OVERALL_FONT_NAME_FAMILY;
+  Utils.getHTMLInputElementById("headerFontFamily").value = Constants.DefaultValuesForInputs.OVERALL_FONT_NAME_FAMILY;
 }
 function constructFontFamilyOptions(pluginFontOptions: { [key: string]: string[] }): string {
   let fontFamilyOptionsHTML: string = "";
@@ -43,44 +45,56 @@ function constructFontFamilyOptions(pluginFontOptions: { [key: string]: string[]
 function constructFontStyleOptions(pluginFontOptions: { [key: string]: string[] }, selectedFontFamily: string): string {
   let fontStyleOptionsHTML: string = "";
   pluginFontOptions[selectedFontFamily].forEach(fontStyle => {
-    fontStyleOptionsHTML += `<option value="${fontStyle}">${fontStyle}</option>`;
+    const selected: string = fontStyle === Constants.DefaultValuesForInputs.OVERALL_FONT_NAME_STYLE ? "selected" : "";
+    fontStyleOptionsHTML += `<option value="${fontStyle}" ${selected}>${fontStyle}</option>`;
   });
   return fontStyleOptionsHTML;
 }
 
 /* Toggle HTML Rendering */
 function toggleEditable(
-  htmlTagType: string,
+  htmlTagType: Constants.HtmlTagType,
   htmlTagId: string,
   isPrerequisiteSelected: boolean,
   defaultValue: string,
 ): void {
+  console.log(htmlTagId);
   let htmlTagById;
-  if (htmlTagType === "input") {
-    htmlTagById = Utils.getHTMLInputElementById(htmlTagId) as HTMLInputElement;
-  } else if (htmlTagType === "select") {
-    htmlTagById = Utils.getHTMLElementById(htmlTagId) as HTMLSelectElement;
+  switch (htmlTagType) {
+    case Constants.HtmlTagType.INPUT:
+      htmlTagById = Utils.getHTMLInputElementById(htmlTagId) as HTMLInputElement;
+      break;
+    case Constants.HtmlTagType.SELECT:
+      htmlTagById = Utils.getHTMLElementById(htmlTagId) as HTMLSelectElement;
+      break;
+    default:
+      break;
   }
   if (htmlTagById.checked) {
     htmlTagById.checked = false;
   }
   if (isPrerequisiteSelected) {
     htmlTagById.disabled = false;
-    if (htmlTagType === "input") {
-      htmlTagById.value = defaultValue;
-    } else if (htmlTagType === "select") {
-      htmlTagById.innerHTML = defaultValue;
+    switch (htmlTagType) {
+      case Constants.HtmlTagType.INPUT:
+        htmlTagById.value = defaultValue;
+        break;
+      case Constants.HtmlTagType.SELECT:
+        htmlTagById.innerHTML = defaultValue;
+        break;
+      default:
+        break;
     }
   } else {
     htmlTagById.disabled = true;
-    htmlTagById.value = "N.A.";
+    htmlTagById.value = Constants.DefaultValuesForInputs.DISABLED;
   }
   return null;
 }
 
 /* Reset Invalid CSS */
 function resetInvalidInput(): void {
-  const inputList: string[] = Object.keys(Constants.defaultValuesForInputs);
+  const inputList: string[] = Object.keys(Constants.inputsAffectedByMode);
   for (let input of inputList) {
     Utils.getHTMLElementById(input).classList.remove("invalid");
   }
@@ -96,12 +110,12 @@ function setInvalidInputs(mode: string): void {
 
 /* Toggle HTML Rendering */
 function setDefault(mode: string) {
-  const inputList: string[] = Object.keys(Constants.defaultValuesForInputs);
+  const inputList: string[] = Object.keys(Constants.inputsAffectedByMode);
   for (let input of inputList) {
     if (Constants.defaultInputsForModes[mode].indexOf(input) > -1) {
-      toggleEditable("input", input, true, Constants.defaultValuesForInputs[input]);
+      toggleEditable(Constants.HtmlTagType.INPUT, input, true, Constants.inputsAffectedByMode[input]);
     } else {
-      toggleEditable("input", input, false, Constants.defaultValuesForInputs[input]);
+      toggleEditable(Constants.HtmlTagType.INPUT, input, false, Constants.inputsAffectedByMode[input]);
     }
   }
   resetInvalidInput();
@@ -144,7 +158,12 @@ function validateInput(
   }
   // limit check
   if (validInput) {
-    if (columns * columnWidth > 5000 || rows * rowHeight > 5000 || columns > 100 || rows > 100) {
+    if (
+      columns * columnWidth > Constants.maxDimensionInPixels ||
+      rows * rowHeight > Constants.maxDimensionInPixels ||
+      columns > Constants.maxNumberOfRowsOrColumns ||
+      rows > Constants.maxNumberOfRowsOrColumns
+    ) {
       setInvalidInputs(mode);
       Utils.getHTMLElementById("validValidator").classList.remove("show");
       Utils.getHTMLElementById("negativeValidator").classList.remove("show");
@@ -158,7 +177,7 @@ function validateInput(
 
 /* Document OnChange Actions */
 // Detect inputs state change
-const inputList: string[] = Object.keys(Constants.defaultValuesForInputs);
+const inputList: string[] = Object.keys(Constants.inputsAffectedByMode);
 for (let input of inputList) {
   document.getElementById(input).onchange = () => {
     Utils.getHTMLInputElementById(input).classList.remove("invalid");
@@ -175,26 +194,56 @@ for (let mode of modes) {
 }
 // Detect header checkbox state change
 document.getElementById("header").onchange = () => {
-  toggleEditable("input", "floatingFilter", Utils.getHTMLInputElementById("header").checked, "");
-  toggleEditable("input", "headerHeight", Utils.getHTMLInputElementById("header").checked, "60");
-  toggleEditable("input", "headerFontFamily", Utils.getHTMLInputElementById("header").checked, "Roboto");
   toggleEditable(
-    "select",
+    Constants.HtmlTagType.INPUT,
+    "floatingFilter",
+    Utils.getHTMLInputElementById("header").checked,
+    Constants.DefaultValuesForInputs.CHECKBOX,
+  );
+  toggleEditable(
+    Constants.HtmlTagType.INPUT,
+    "headerHeight",
+    Utils.getHTMLInputElementById("header").checked,
+    Constants.DefaultValuesForInputs.HEADER_HEIGHT,
+  );
+  toggleEditable(
+    Constants.HtmlTagType.INPUT,
+    "headerFontFamily",
+    Utils.getHTMLInputElementById("header").checked,
+    Constants.DefaultValuesForInputs.OVERALL_FONT_NAME_FAMILY,
+  );
+  toggleEditable(
+    Constants.HtmlTagType.SELECT,
     "headerFontStyle",
     Utils.getHTMLInputElementById("header").checked,
-    constructFontStyleOptions(processedFontOptions, "Roboto"),
+    constructFontStyleOptions(processedFontOptions, Constants.DefaultValuesForInputs.OVERALL_FONT_NAME_FAMILY),
   );
-  toggleEditable("input", "headerFontSize", Utils.getHTMLInputElementById("header").checked, "12");
-  toggleEditable("input", "floatingFilterHeight", Utils.getHTMLInputElementById("floatingFilter").checked, "");
+  toggleEditable(
+    Constants.HtmlTagType.INPUT,
+    "headerFontSize",
+    Utils.getHTMLInputElementById("header").checked,
+    Constants.DefaultValuesForInputs.OVERALL_FONT_SIZE,
+  );
+  toggleEditable(
+    Constants.HtmlTagType.INPUT,
+    "floatingFilterHeight",
+    Utils.getHTMLInputElementById("floatingFilter").checked,
+    Constants.DefaultValuesForInputs.CHECKBOX,
+  );
 };
 // Detect floating filter checkbox state change
 document.getElementById("floatingFilter").onchange = () => {
-  toggleEditable("input", "floatingFilterHeight", Utils.getHTMLInputElementById("floatingFilter").checked, "30");
+  toggleEditable(
+    Constants.HtmlTagType.INPUT,
+    "floatingFilterHeight",
+    Utils.getHTMLInputElementById("floatingFilter").checked,
+    Constants.DefaultValuesForInputs.FLOATING_FILTER_HEIGHT,
+  );
 };
 // Detect striped/alternate background checkbox state change
 document.getElementById("alternateBackgrounds").onchange = () => {
   toggleEditable(
-    "input",
+    Constants.HtmlTagType.INPUT,
     "stripedbackgroundColor",
     Utils.getHTMLInputElementById("alternateBackgrounds").checked,
     Constants.ColorNameToHex.WHITE,
@@ -203,7 +252,7 @@ document.getElementById("alternateBackgrounds").onchange = () => {
 // Detect borders checkbox state change
 document.getElementById("borders").onchange = () => {
   toggleEditable(
-    "input",
+    Constants.HtmlTagType.INPUT,
     "borderColor",
     Utils.getHTMLInputElementById("borders").checked,
     Constants.ColorNameToHex.GREY_C7,
@@ -285,23 +334,63 @@ document.onkeydown = keyDown => {
       if (activeElement.type === "checkbox") {
         activeElement.checked = !activeElement.checked;
         if (activeElement.id === "header") {
-          toggleEditable("input", "floatingFilter", Utils.getHTMLInputElementById("header").checked, "");
-          toggleEditable("input", "headerHeight", Utils.getHTMLInputElementById("header").checked, "60");
-          // toggleEditable("input", "headerFontFamily", Utils.getHTMLInputElementById("header").checked, "Roboto");
           toggleEditable(
-            "select",
+            Constants.HtmlTagType.INPUT,
+            "floatingFilter",
+            Utils.getHTMLInputElementById("header").checked,
+            Constants.DefaultValuesForInputs.CHECKBOX,
+          );
+          toggleEditable(
+            Constants.HtmlTagType.INPUT,
+            "headerHeight",
+            Utils.getHTMLInputElementById("header").checked,
+            Constants.DefaultValuesForInputs.HEADER_HEIGHT,
+          );
+          toggleEditable(
+            Constants.HtmlTagType.INPUT,
+            "headerFontFamily",
+            Utils.getHTMLInputElementById("header").checked,
+            Constants.DefaultValuesForInputs.OVERALL_FONT_NAME_FAMILY,
+          );
+          toggleEditable(
+            Constants.HtmlTagType.SELECT,
             "headerFontStyle",
             Utils.getHTMLInputElementById("header").checked,
-            constructFontStyleOptions(processedFontOptions, "Roboto"),
+            constructFontStyleOptions(processedFontOptions, Constants.DefaultValuesForInputs.OVERALL_FONT_NAME_FAMILY),
           );
-          toggleEditable("input", "headerFontSize", Utils.getHTMLInputElementById("header").checked, "12");
-          toggleEditable("input", "floatingFilterHeight", Utils.getHTMLInputElementById("floatingFilter").checked, "");
+          toggleEditable(
+            Constants.HtmlTagType.INPUT,
+            "headerFontSize",
+            Utils.getHTMLInputElementById("header").checked,
+            Constants.DefaultValuesForInputs.OVERALL_FONT_SIZE,
+          );
+          toggleEditable(
+            Constants.HtmlTagType.INPUT,
+            "floatingFilterHeight",
+            Utils.getHTMLInputElementById("floatingFilter").checked,
+            Constants.DefaultValuesForInputs.CHECKBOX,
+          );
         } else if (activeElement.id === "floatingFilter") {
-          toggleEditable("input", "floatingFilterHeight", activeElement.checked, "30");
+          toggleEditable(
+            Constants.HtmlTagType.INPUT,
+            "floatingFilterHeight",
+            activeElement.checked,
+            Constants.DefaultValuesForInputs.FLOATING_FILTER_HEIGHT,
+          );
         } else if (activeElement.id === "alternateBackgrounds") {
-          toggleEditable("input", "stripedbackgroundColor", activeElement.checked, Constants.ColorNameToHex.WHITE);
+          toggleEditable(
+            Constants.HtmlTagType.INPUT,
+            "stripedbackgroundColor",
+            activeElement.checked,
+            Constants.ColorNameToHex.WHITE,
+          );
         } else if (activeElement.id === "borders") {
-          toggleEditable("input", "borderColor", activeElement.checked, Constants.ColorNameToHex.GREY_C7);
+          toggleEditable(
+            Constants.HtmlTagType.INPUT,
+            "borderColor",
+            activeElement.checked,
+            Constants.ColorNameToHex.GREY_C7,
+          );
         }
       }
     } else if (keyDown.key === "1" || keyDown.key === "2" || keyDown.key === "3") {
