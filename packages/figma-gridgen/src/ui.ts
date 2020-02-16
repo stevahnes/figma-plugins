@@ -17,7 +17,7 @@ window.addEventListener("load", function() {
 
 /* Receive message from plugin code */
 onmessage = msg => {
-  const processedFontOptions = msg.data.pluginMessage.fontOptions;
+  processedFontOptions = msg.data.pluginMessage.fontOptions;
   const createMessage = msg.data.pluginMessage.createMessage;
   const fontFamilyOptionsHTML = constructFontFamilyOptions(processedFontOptions);
   Utils.getHTMLElementById("tableFontFamilyOptions").innerHTML = fontFamilyOptionsHTML;
