@@ -23,6 +23,7 @@ onmessage = msg => {
   Utils.getHTMLElementById("tableFontFamilyOptions").innerHTML = fontFamilyOptionsHTML;
   Utils.getHTMLElementById("headerFontFamilyOptions").innerHTML = fontFamilyOptionsHTML;
   if (createMessage) {
+    //TODO modify implementation for setDefaults methods and add it here
   } else {
     Utils.getHTMLInputElementById(Constants.Modes.CELL_AND_TABLE_SIZE).checked = true;
     setDefaultForMode(Constants.Modes.CELL_AND_TABLE_SIZE);
