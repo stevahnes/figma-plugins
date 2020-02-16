@@ -3,7 +3,7 @@ import {
   generateBorders,
   generateTableTexts,
   generateTableHeader,
-  listAvailableFontsAsync,
+  saveMessage,
 } from "./generators/generators";
 import * as Utils from "./utils/utils";
 import * as Constants from "./interfaces_and_constants/constants";
@@ -12,8 +12,16 @@ import * as Interfaces from "./interfaces_and_constants/interfaces";
 // This shows the HTML page in "ui.html".
 figma.showUI(__html__, Constants.showUIOptions);
 
-// Generate available font options
-listAvailableFontsAsync().then(fonts => {
+// Generate available font options and load saved states
+let promise: [Promise<Font[]>, Promise<Interfaces.PluginMessage>] = [
+  Utils.listAvailableFontsAsync(),
+  Utils.getStorageData("BOO"),
+];
+
+Promise.all(promise).then(results => {
+  const msg: { [key: string]: any } = {};
+  const fonts = results[0];
+  const createMessage = results[1];
   let fontOptions: { [key: string]: string[] } = {};
   let previousFont: string = "";
   fonts.forEach(font => {
@@ -24,7 +32,9 @@ listAvailableFontsAsync().then(fonts => {
       fontOptions[font.fontName.family].push(font.fontName.style);
     }
   });
-  figma.ui.postMessage(fontOptions);
+  msg.fontOptions = fontOptions;
+  msg.createMessage = createMessage;
+  figma.ui.postMessage(msg);
   figma.ui.show();
 });
 
@@ -133,6 +143,9 @@ function processMessage(message: Interfaces.PluginMessage): void {
     tableGroup.name = "Table";
     figma.currentPage.selection = [tableGroup];
     figma.viewport.scrollAndZoomIntoView([tableGroup]);
+
+    /* Save Message to Client Storage */
+    saveMessage(Constants.MessageType.CREATE, message);
     return null;
   }
 }

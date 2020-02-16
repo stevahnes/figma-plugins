@@ -2,6 +2,7 @@ import * as Constants from "./constants";
 
 export interface PluginMessage {
   type: Constants.MessageType;
+  mode: string;
   tableWidth?: number;
   tableHeight?: number;
   columns?: number;

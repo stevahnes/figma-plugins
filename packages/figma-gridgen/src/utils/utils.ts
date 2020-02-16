@@ -83,3 +83,28 @@ export function getValue(htmlTagId: string, inputType: Constants.InputType): num
       break;
   }
 }
+
+/* Fonts Util */
+// Function to load selected font
+export async function loadNodeFont(fontName: FontName): Promise<void> {
+  await figma.loadFontAsync(fontName).catch(error => console.error(error));
+}
+
+// Function to list all available fonts on Figma
+export async function listAvailableFontsAsync(): Promise<Font[]> {
+  return await figma.listAvailableFontsAsync().catch(error => {
+    console.error(error);
+    return null;
+  });
+}
+
+/* Client Storage */
+export async function getStorageData(key: string): Promise<any | undefined> {
+  return await figma.clientStorage.getAsync(key).catch(error => {
+    console.error(error);
+    return null;
+  });
+}
+export async function setStorageData(key: string, value: any): Promise<void> {
+  await figma.clientStorage.setAsync(key, value).catch(error => console.error(error));
+}

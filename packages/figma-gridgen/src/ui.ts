@@ -16,25 +16,21 @@ window.addEventListener("load", function() {
 });
 
 /* Receive message from plugin code */
-onmessage = fontOptions => {
-  processedFontOptions = fontOptions.data.pluginMessage;
-  constructInitialFontOptions(processedFontOptions);
+onmessage = msg => {
+  const processedFontOptions = msg.data.pluginMessage.fontOptions;
+  const createMessage = msg.data.pluginMessage.createMessage;
+  const fontFamilyOptionsHTML = constructFontFamilyOptions(processedFontOptions);
+  Utils.getHTMLElementById("tableFontFamilyOptions").innerHTML = fontFamilyOptionsHTML;
+  Utils.getHTMLElementById("headerFontFamilyOptions").innerHTML = fontFamilyOptionsHTML;
+  if (createMessage) {
+  } else {
+    Utils.getHTMLInputElementById(Constants.Modes.CELL_AND_TABLE_SIZE).checked = true;
+    setDefaultForMode(Constants.Modes.CELL_AND_TABLE_SIZE);
+    setDefaultForGenericInputs();
+  }
 };
 
 /* Construct Font Options */
-function constructInitialFontOptions(fontOptions: { [key: string]: string[] }) {
-  const fontFamilyOptionsHTML = constructFontFamilyOptions(fontOptions);
-  const fontStyleOptionsHTML = constructFontStyleOptions(
-    fontOptions,
-    Constants.DefaultValuesForInputs.OVERALL_FONT_NAME_FAMILY,
-  );
-  Utils.getHTMLElementById("tableFontFamilyOptions").innerHTML = fontFamilyOptionsHTML;
-  Utils.getHTMLElementById("headerFontFamilyOptions").innerHTML = fontFamilyOptionsHTML;
-  Utils.getHTMLElementById("tableFontStyle").innerHTML = fontStyleOptionsHTML;
-  Utils.getHTMLElementById("headerFontStyle").innerHTML = fontStyleOptionsHTML;
-  Utils.getHTMLInputElementById("tableFontFamily").value = Constants.DefaultValuesForInputs.OVERALL_FONT_NAME_FAMILY;
-  Utils.getHTMLInputElementById("headerFontFamily").value = Constants.DefaultValuesForInputs.OVERALL_FONT_NAME_FAMILY;
-}
 function constructFontFamilyOptions(pluginFontOptions: { [key: string]: string[] }): string {
   let fontFamilyOptionsHTML: string = "";
   Object.keys(pluginFontOptions).forEach(fontFamily => {
@@ -107,8 +103,8 @@ function setInvalidInputs(mode: string): void {
   }
 }
 
-/* Toggle HTML Rendering */
-function setDefault(mode: string) {
+/* Set Input Values */
+function setDefaultForMode(mode: string): void {
   const inputList: string[] = Object.keys(Constants.inputsAffectedByMode);
   for (let input of inputList) {
     if (Constants.defaultInputsForModes[mode].indexOf(input) > -1) {
@@ -119,6 +115,24 @@ function setDefault(mode: string) {
   }
   resetInvalidInput();
   Utils.getHTMLInputElementById(Constants.defaultInputsForModes[mode][0]).select();
+}
+
+function setDefaultForGenericInputs(): void {
+  Object.keys(Constants.genericInputs).forEach(input => {
+    if (Constants.genericInputs[input] === Constants.DefaultValuesForInputs.OVERALL_FONT_NAME_STYLE) {
+      toggleEditable(
+        Constants.HtmlTagType.SELECT,
+        input,
+        true,
+        constructFontStyleOptions(processedFontOptions, Constants.DefaultValuesForInputs.OVERALL_FONT_NAME_FAMILY),
+      );
+    } else {
+      toggleEditable(Constants.HtmlTagType.INPUT, input, true, Constants.genericInputs[input]);
+      if (Constants.genericInputs[input] === Constants.DefaultValuesForInputs.CHECKBOX) {
+        Utils.getHTMLInputElementById(input).checked = true;
+      }
+    }
+  });
 }
 
 /* Validate User Input */
@@ -187,7 +201,7 @@ const modes: string[] = Object.keys(Constants.defaultInputsForModes);
 for (let mode of modes) {
   document.getElementById(mode).onclick = () => {
     if (Utils.getHTMLInputElementById(mode).checked) {
-      setDefault(mode);
+      setDefaultForMode(mode);
     }
   };
 }
@@ -396,17 +410,17 @@ document.onkeydown = keyDown => {
         switch (keyDown.key) {
           case "1":
             Utils.getHTMLInputElementById("cell-and-table-size").checked = true;
-            setDefault("cell-and-table-size");
+            setDefaultForMode("cell-and-table-size");
             keyDown.preventDefault();
             break;
           case "2":
             Utils.getHTMLInputElementById("count-and-cell-size").checked = true;
-            setDefault("count-and-cell-size");
+            setDefaultForMode("count-and-cell-size");
             keyDown.preventDefault();
             break;
           case "3":
             Utils.getHTMLInputElementById("count-and-table-size").checked = true;
-            setDefault("count-and-table-size");
+            setDefaultForMode("count-and-table-size");
             keyDown.preventDefault();
             break;
         }
@@ -442,7 +456,7 @@ function processInputToMessage(): void {
     ? Constants.Modes.COUNT_AND_CELL_SIZE
     : Constants.Modes.CELL_AND_TABLE_SIZE;
   // PluginMessage Creation
-  const createMessage: Interfaces.PluginMessage = { type: Constants.MessageType.CREATE };
+  const createMessage: Interfaces.PluginMessage = { type: Constants.MessageType.CREATE, mode: mode };
   // Table Font Info
   Object.keys(Constants.inputIds).forEach(id => {
     createMessage[id] = Utils.getValue(id, Constants.inputIds[id]);

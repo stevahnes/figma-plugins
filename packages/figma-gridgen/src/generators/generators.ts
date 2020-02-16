@@ -5,6 +5,8 @@ import * as Constants from "../interfaces_and_constants/constants";
 /* Check if Font is Loaded */
 let isTableFontLoaded: boolean = false;
 let isHeaderFontLoaded: boolean = false;
+/* Check if Data is Save */
+let isDataSaved: boolean = false;
 
 export function generateBorders(
   borderType: Constants.BorderType,
@@ -163,7 +165,7 @@ export function generateTableTexts(
   }
   const tableTextsGroup: GroupNode = Utils.groupNodes(tableTextsNode, Utils.getCurrentPage());
   const allTextsNodesGenerated: SceneNode[] = tableTextsGroup.findAll(node => node.type === "TEXT");
-  loadNodeFont(tableFontName).then(() => {
+  Utils.loadNodeFont(tableFontName).then(() => {
     for (let textNode of allTextsNodesGenerated) {
       const text = textNode as TextNode;
       text.fontName = tableFontName;
@@ -173,7 +175,7 @@ export function generateTableTexts(
       text.resize(columnWidth - 1 - 2 * textMargin.x, rowHeight - 2 * textMargin.y);
     }
     isTableFontLoaded = true;
-    areFontsLoaded(header);
+    onPromiseResolved(header);
   });
   tableTextsGroup.name = "Table Texts";
   return tableTextsGroup;
@@ -224,7 +226,7 @@ export function generateTableHeader(
     }
     const tableHeaderTextsGroup = Utils.groupNodes(tableHeaderTextsNode, Utils.getCurrentPage());
     const allTextsNodesGenerated: SceneNode[] = tableHeaderTextsGroup.findAll(node => node.type === "TEXT");
-    loadNodeFont(tableHeaderFontName).then(() => {
+    Utils.loadNodeFont(tableHeaderFontName).then(() => {
       isHeaderFontLoaded = true;
       for (let textNode of allTextsNodesGenerated) {
         const text = textNode as TextNode;
@@ -234,7 +236,7 @@ export function generateTableHeader(
         text.textAlignVertical = Constants.TextVerticalAlignment.CENTER;
         text.resize(columnWidth - 1 - 2 * headerTextMargin.x, textHeight - 2 * headerTextMargin.y);
       }
-      areFontsLoaded(header);
+      onPromiseResolved(header);
     });
     tableHeaderTextsGroup.name = "Column Headers";
     tableHeaderNode.push(tableHeaderTextsGroup);
@@ -273,19 +275,16 @@ export function generateTableHeader(
   }
 }
 
-// Function to load selected font
-async function loadNodeFont(fontName: FontName): Promise<void> {
-  await figma.loadFontAsync(fontName);
-}
-
-// Function to list all available fonts on Figma
-export async function listAvailableFontsAsync(): Promise<Font[]> {
-  return await figma.listAvailableFontsAsync();
+export async function saveMessage(key: string, value: Interfaces.PluginMessage): Promise<void> {
+  Utils.setStorageData(key, value).then(() => {
+    isDataSaved = true;
+    onPromiseResolved(value.header);
+  });
 }
 
 // Getter function for font load status
-function areFontsLoaded(header: boolean): void {
-  if (isTableFontLoaded && (isHeaderFontLoaded || !header)) {
+function onPromiseResolved(header: boolean): void {
+  if (isDataSaved && isTableFontLoaded && (isHeaderFontLoaded || !header)) {
     /* Notify Success to User */
     figma.notify("👍 GridGen successfully generated your table", { timeout: 300 });
     figma.closePlugin();

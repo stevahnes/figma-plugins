@@ -83,10 +83,28 @@ export const enum DefaultValuesForInputs {
 export const inputsAffectedByMode: { [key: string]: string } = {
   tableWidth: DefaultValuesForInputs.TABLE_WIDTH,
   tableHeight: DefaultValuesForInputs.TABLE_HEIGHT,
-  columnWidth: DefaultValuesForInputs.COLUMN_WIDTH,
-  rowHeight: DefaultValuesForInputs.ROW_HEIGHT,
   columns: DefaultValuesForInputs.COLUMNS,
   rows: DefaultValuesForInputs.ROWS,
+  columnWidth: DefaultValuesForInputs.COLUMN_WIDTH,
+  rowHeight: DefaultValuesForInputs.ROW_HEIGHT,
+};
+
+export const genericInputs: { [key: string]: string } = {
+  primarybackgroundColor: ColorNameToHex.GREY_F7,
+  tableFontFamily: DefaultValuesForInputs.OVERALL_FONT_NAME_FAMILY,
+  tableFontStyle: DefaultValuesForInputs.OVERALL_FONT_NAME_STYLE,
+  tableFontSize: DefaultValuesForInputs.OVERALL_FONT_SIZE,
+  header: DefaultValuesForInputs.CHECKBOX,
+  headerHeight: DefaultValuesForInputs.HEADER_HEIGHT,
+  headerFontFamily: DefaultValuesForInputs.OVERALL_FONT_NAME_FAMILY,
+  headerFontStyle: DefaultValuesForInputs.OVERALL_FONT_NAME_STYLE,
+  headerFontSize: DefaultValuesForInputs.OVERALL_FONT_SIZE,
+  floatingFilter: DefaultValuesForInputs.CHECKBOX,
+  floatingFilterHeight: DefaultValuesForInputs.FLOATING_FILTER_HEIGHT,
+  alternateBackgrounds: DefaultValuesForInputs.CHECKBOX,
+  stripedbackgroundColor: ColorNameToHex.WHITE,
+  borders: DefaultValuesForInputs.CHECKBOX,
+  borderColor: ColorNameToHex.GREY_C7,
 };
 
 export const inputIds: { [key: string]: InputType } = {
