@@ -1,4 +1,4 @@
-// Figma Plugin API version 1, update 11
+// Figma Plugin API version 1, update 13
 
 declare global {
   // Global variable with Figma's plugin API.
@@ -475,13 +475,13 @@ declare global {
 
     /**
      * If you only need to search immediate children, it is much faster
-     * to call node.children.filter(callback)
+     * to call node.children.filter(callback) or node.findChildren(callback)
      */
     findAll(callback?: (node: SceneNode) => boolean): SceneNode[];
 
     /**
      * If you only need to search immediate children, it is much faster
-     * to call node.children.find(callback)
+     * to call node.children.find(callback) or node.findChild(callback)
      */
     findOne(callback: (node: SceneNode) => boolean): SceneNode | null;
   }
@@ -518,10 +518,6 @@ declare global {
   interface ContainerMixin {
     expanded: boolean;
     backgrounds: ReadonlyArray<Paint>; // DEPRECATED: use 'fills' instead
-    layoutGrids: ReadonlyArray<LayoutGrid>;
-    clipsContent: boolean;
-    guides: ReadonlyArray<Guide>;
-    gridStyleId: string;
     backgroundStyleId: string; // DEPRECATED: use 'fillStyleId' instead
   }
 
@@ -598,6 +594,11 @@ declare global {
     verticalPadding: number; // applicable only if layoutMode != "NONE"
     itemSpacing: number; // applicable only if layoutMode != "NONE"
 
+    layoutGrids: ReadonlyArray<LayoutGrid>;
+    gridStyleId: string;
+    clipsContent: boolean;
+    guides: ReadonlyArray<Guide>;
+
     overflowDirection: OverflowDirection;
     numberOfFixedChildren: number;
 
@@ -621,13 +622,13 @@ declare global {
 
     /**
      * If you only need to search immediate children, it is much faster
-     * to call node.children.filter(callback)
+     * to call node.children.filter(callback) or node.findChildren(callback)
      */
     findAll(callback?: (node: PageNode | SceneNode) => boolean): Array<PageNode | SceneNode>;
 
     /**
      * If you only need to search immediate children, it is much faster
-     * to call node.children.find(callback)
+     * to call node.children.find(callback) or node.findChild(callback)
      */
     findOne(callback: (node: PageNode | SceneNode) => boolean): PageNode | SceneNode | null;
   }
@@ -638,6 +639,7 @@ declare global {
 
     guides: ReadonlyArray<Guide>;
     selection: ReadonlyArray<SceneNode>;
+    selectedTextRange: { node: TextNode; start: number; end: number } | null;
 
     backgrounds: ReadonlyArray<Paint>;
 
@@ -708,7 +710,6 @@ declare global {
   interface TextNode extends DefaultShapeMixin, ConstraintMixin {
     readonly type: "TEXT";
     clone(): TextNode;
-    characters: string;
     readonly hasMissingFont: boolean;
     textAlignHorizontal: "LEFT" | "CENTER" | "RIGHT" | "JUSTIFIED";
     textAlignVertical: "TOP" | "CENTER" | "BOTTOM";
@@ -724,6 +725,10 @@ declare global {
     textDecoration: TextDecoration | PluginAPI["mixed"];
     letterSpacing: LetterSpacing | PluginAPI["mixed"];
     lineHeight: LineHeight | PluginAPI["mixed"];
+
+    characters: string;
+    insertCharacters(start: number, characters: string, useStyle?: "BEFORE" | "AFTER"): void;
+    deleteCharacters(start: number, end: number): void;
 
     getRangeFontSize(start: number, end: number): number | PluginAPI["mixed"];
     setRangeFontSize(start: number, end: number, value: number): void;
