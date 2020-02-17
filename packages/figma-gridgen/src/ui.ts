@@ -7,8 +7,10 @@ import * as Constants from "./interfaces_and_constants/constants";
 let isShiftHeld: boolean = false;
 let isAltHeld: boolean = false;
 
-/* Store Font Options */
+/* Store Font Options, Active Mode, and Create Message */
 let processedFontOptions: { [key: string]: string[] } = {};
+let createMessage: Interfaces.PluginMessage;
+let activeMode: string = Constants.Modes.CELL_AND_TABLE_SIZE;
 
 /* Run after onLoad */
 window.addEventListener("load", function() {
@@ -18,58 +20,60 @@ window.addEventListener("load", function() {
 /* Receive message from plugin code */
 onmessage = msg => {
   processedFontOptions = msg.data.pluginMessage.fontOptions;
-  const createMessage: Interfaces.PluginMessage = msg.data.pluginMessage.createMessage;
+  createMessage = msg.data.pluginMessage.createMessage;
   const fontFamilyOptionsHTML = constructFontFamilyOptions(processedFontOptions);
   Utils.getHTMLElementById("tableFontFamilyOptions").innerHTML = fontFamilyOptionsHTML;
   Utils.getHTMLElementById("headerFontFamilyOptions").innerHTML = fontFamilyOptionsHTML;
   if (createMessage) {
-    Utils.getHTMLInputElementById(createMessage.mode).checked = true;
-    Object.keys(Constants.inputIds).forEach(input => {
-      if (Utils.getHTMLElementById(input).nodeName.toLowerCase() === Constants.HtmlTagType.SELECT) {
-        if (input.toLowerCase().includes("header")) {
-          toggleEditable(
-            Constants.HtmlTagType.SELECT,
-            input,
-            true,
-            constructFontStyleOptions(
-              processedFontOptions,
-              createMessage.headerFontFamily,
-              createMessage.headerFontStyle,
-            ),
-          );
-        } else {
-          toggleEditable(
-            Constants.HtmlTagType.SELECT,
-            input,
-            true,
-            constructFontStyleOptions(
-              processedFontOptions,
-              createMessage.tableFontFamily,
-              createMessage.tableFontStyle,
-            ),
-          );
-        }
-      } else if (Object.keys(Constants.inputsAffectedByMode).indexOf(input) > -1) {
-        if (Constants.defaultInputsForModes[createMessage.mode].indexOf(input) > -1) {
-          toggleEditable(Constants.HtmlTagType.INPUT, input, true, createMessage[input]);
-        } else {
-          toggleEditable(Constants.HtmlTagType.INPUT, input, false, createMessage[input]);
-        }
-      } else {
-        toggleEditable(Constants.HtmlTagType.INPUT, input, true, createMessage[input]);
-        if (Constants.genericInputs[input] === Constants.DefaultValuesForInputs.CHECKBOX) {
-          Utils.getHTMLInputElementById(input).checked = true;
-        }
-      }
-    });
-    resetInvalidInput();
-    Utils.getHTMLInputElementById(Constants.defaultInputsForModes[createMessage.mode][0]).select();
+    activeMode = createMessage.mode;
+    resetInputToDefault(createMessage);
   } else {
-    Utils.getHTMLInputElementById(Constants.Modes.CELL_AND_TABLE_SIZE).checked = true;
-    setDefaultForMode(Constants.Modes.CELL_AND_TABLE_SIZE);
+    Utils.getHTMLInputElementById(activeMode).checked = true;
+    setDefaultForMode(activeMode);
     setDefaultForGenericInputs();
   }
 };
+
+/* Set or Reset To Create Message Default */
+function resetInputToDefault(createMessage: Interfaces.PluginMessage): void {
+  Utils.getHTMLInputElementById(createMessage.mode).checked = true;
+  Object.keys(Constants.inputIds).forEach(input => {
+    if (Utils.getHTMLElementById(input).nodeName.toLowerCase() === Constants.HtmlTagType.SELECT) {
+      if (input.toLowerCase().includes("header")) {
+        toggleEditable(
+          Constants.HtmlTagType.SELECT,
+          input,
+          true,
+          constructFontStyleOptions(
+            processedFontOptions,
+            createMessage.headerFontFamily,
+            createMessage.headerFontStyle,
+          ),
+        );
+      } else {
+        toggleEditable(
+          Constants.HtmlTagType.SELECT,
+          input,
+          true,
+          constructFontStyleOptions(processedFontOptions, createMessage.tableFontFamily, createMessage.tableFontStyle),
+        );
+      }
+    } else if (Object.keys(Constants.inputsAffectedByMode).indexOf(input) > -1) {
+      if (Constants.defaultInputsForModes[createMessage.mode].indexOf(input) > -1) {
+        toggleEditable(Constants.HtmlTagType.INPUT, input, true, createMessage[input]);
+      } else {
+        toggleEditable(Constants.HtmlTagType.INPUT, input, false, createMessage[input]);
+      }
+    } else {
+      toggleEditable(Constants.HtmlTagType.INPUT, input, true, createMessage[input]);
+      if (Constants.genericInputs[input] === Constants.DefaultValuesForInputs.CHECKBOX) {
+        Utils.getHTMLInputElementById(input).checked = true;
+      }
+    }
+  });
+  resetInvalidInput();
+  Utils.getHTMLInputElementById(Constants.defaultInputsForModes[createMessage.mode][0]).select();
+}
 
 /* Construct Font Options */
 function constructFontFamilyOptions(pluginFontOptions: { [key: string]: string[] }): string {
@@ -250,8 +254,9 @@ for (let input of inputList) {
 const modes: string[] = Object.keys(Constants.defaultInputsForModes);
 for (let mode of modes) {
   document.getElementById(mode).onclick = () => {
-    if (Utils.getHTMLInputElementById(mode).checked) {
-      setDefaultForMode(mode);
+    if (Utils.getHTMLInputElementById(mode).checked && activeMode !== mode) {
+      activeMode = mode;
+      setDefaultForMode(activeMode);
     }
   };
 }
@@ -336,9 +341,12 @@ document.getElementById("headerFontFamily").onchange = () => {
   );
 };
 
-// Create Button Actions
+// Button Actions
 document.getElementById("create").onclick = () => {
   createTable();
+};
+document.getElementById("reset").onclick = () => {
+  createMessage ? resetInputToDefault(createMessage) : null;
 };
 
 /* Keyboard Navigation */
@@ -457,26 +465,26 @@ document.onkeydown = keyDown => {
       }
     } else if (keyDown.key === "1" || keyDown.key === "2" || keyDown.key === "3") {
       if (isAltHeld) {
+        const previousMode: string = activeMode;
         switch (keyDown.key) {
           case "1":
-            Utils.getHTMLInputElementById("cell-and-table-size").checked = true;
-            setDefaultForMode("cell-and-table-size");
-            keyDown.preventDefault();
+            activeMode = Constants.Modes.CELL_AND_TABLE_SIZE;
             break;
           case "2":
-            Utils.getHTMLInputElementById("count-and-cell-size").checked = true;
-            setDefaultForMode("count-and-cell-size");
-            keyDown.preventDefault();
+            activeMode = Constants.Modes.COUNT_AND_CELL_SIZE;
             break;
           case "3":
-            Utils.getHTMLInputElementById("count-and-table-size").checked = true;
-            setDefaultForMode("count-and-table-size");
-            keyDown.preventDefault();
-            break;
+            activeMode = Constants.Modes.COUNT_AND_TABLE_SIZE;
         }
+        Utils.getHTMLInputElementById(activeMode).checked = true;
+        activeMode !== previousMode ? setDefaultForMode(activeMode) : null;
+        keyDown.preventDefault();
       }
     } else if (keyDown.key === "C") {
       isShiftHeld ? createTable() : null;
+      keyDown.preventDefault();
+    } else if (keyDown.key === "R") {
+      isShiftHeld ? (createMessage ? resetInputToDefault(createMessage) : null) : null;
       keyDown.preventDefault();
     }
   }
