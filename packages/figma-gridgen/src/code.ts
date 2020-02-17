@@ -15,7 +15,7 @@ figma.showUI(__html__, Constants.showUIOptions);
 // Generate available font options and load saved states
 let promise: [Promise<Font[]>, Promise<Interfaces.PluginMessage>] = [
   Utils.listAvailableFontsAsync(),
-  Utils.getStorageData("BOO"),
+  Utils.getStorageData(Constants.MessageType.CREATE),
 ];
 
 Promise.all(promise).then(results => {

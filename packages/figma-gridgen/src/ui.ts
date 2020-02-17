@@ -18,12 +18,52 @@ window.addEventListener("load", function() {
 /* Receive message from plugin code */
 onmessage = msg => {
   processedFontOptions = msg.data.pluginMessage.fontOptions;
-  const createMessage = msg.data.pluginMessage.createMessage;
+  const createMessage: Interfaces.PluginMessage = msg.data.pluginMessage.createMessage;
   const fontFamilyOptionsHTML = constructFontFamilyOptions(processedFontOptions);
   Utils.getHTMLElementById("tableFontFamilyOptions").innerHTML = fontFamilyOptionsHTML;
   Utils.getHTMLElementById("headerFontFamilyOptions").innerHTML = fontFamilyOptionsHTML;
   if (createMessage) {
-    //TODO modify implementation for setDefaults methods and add it here, also consider Toggle Behavior! May want to refactor some functions
+    Utils.getHTMLInputElementById(createMessage.mode).checked = true;
+    Object.keys(Constants.inputIds).forEach(input => {
+      if (Utils.getHTMLElementById(input).nodeName.toLowerCase() === Constants.HtmlTagType.SELECT) {
+        if (input.toLowerCase().includes("header")) {
+          toggleEditable(
+            Constants.HtmlTagType.SELECT,
+            input,
+            true,
+            constructFontStyleOptions(
+              processedFontOptions,
+              createMessage.headerFontFamily,
+              createMessage.headerFontStyle,
+            ),
+          );
+        } else {
+          toggleEditable(
+            Constants.HtmlTagType.SELECT,
+            input,
+            true,
+            constructFontStyleOptions(
+              processedFontOptions,
+              createMessage.tableFontFamily,
+              createMessage.tableFontStyle,
+            ),
+          );
+        }
+      } else if (Object.keys(Constants.inputsAffectedByMode).indexOf(input) > -1) {
+        if (Constants.defaultInputsForModes[createMessage.mode].indexOf(input) > -1) {
+          toggleEditable(Constants.HtmlTagType.INPUT, input, true, createMessage[input]);
+        } else {
+          toggleEditable(Constants.HtmlTagType.INPUT, input, false, createMessage[input]);
+        }
+      } else {
+        toggleEditable(Constants.HtmlTagType.INPUT, input, true, createMessage[input]);
+        if (Constants.genericInputs[input] === Constants.DefaultValuesForInputs.CHECKBOX) {
+          Utils.getHTMLInputElementById(input).checked = true;
+        }
+      }
+    });
+    resetInvalidInput();
+    Utils.getHTMLInputElementById(Constants.defaultInputsForModes[createMessage.mode][0]).select();
   } else {
     Utils.getHTMLInputElementById(Constants.Modes.CELL_AND_TABLE_SIZE).checked = true;
     setDefaultForMode(Constants.Modes.CELL_AND_TABLE_SIZE);
@@ -39,10 +79,19 @@ function constructFontFamilyOptions(pluginFontOptions: { [key: string]: string[]
   });
   return fontFamilyOptionsHTML;
 }
-function constructFontStyleOptions(pluginFontOptions: { [key: string]: string[] }, selectedFontFamily: string): string {
+function constructFontStyleOptions(
+  pluginFontOptions: { [key: string]: string[] },
+  selectedFontFamily: string,
+  selectedFontStyle?: string,
+): string {
   let fontStyleOptionsHTML: string = "";
   pluginFontOptions[selectedFontFamily].forEach(fontStyle => {
-    const selected: string = fontStyle === Constants.DefaultValuesForInputs.OVERALL_FONT_NAME_STYLE ? "selected" : "";
+    const selected: string =
+      fontStyle === selectedFontStyle
+        ? "selected"
+        : fontStyle === Constants.DefaultValuesForInputs.OVERALL_FONT_NAME_STYLE && !selectedFontStyle
+        ? "selected"
+        : "";
     fontStyleOptionsHTML += `<option value="${fontStyle}" ${selected}>${fontStyle}</option>`;
   });
   return fontStyleOptionsHTML;
