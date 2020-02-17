@@ -17,6 +17,7 @@ Utilizes built-in Figma rectangles, lines, and texts to generate tables with nea
   - "Shift + Arrow" keys on textboxes to increaes/decrease by 10
   - "Enter" on checkboxes to toggle
   - "Enter" on buttons to click
+  - "Shift + R" to reset input to cached values, if any
   - "Shift + C" to initiate table creation
   - Shortcuts to switch between constraint modes (see above)
 
@@ -37,8 +38,10 @@ Utilizes built-in Figma rectangles, lines, and texts to generate tables with nea
 - Automated population of content and header texts
 - Specify fonts family and style based on list of installed fonts
 - Specify table and header font sizes
+- Caching and preloading of last input
+- Resetting to last cached input upon changes
 
 ## Work-in-Progress:
 
 - Other units besides pixel
-- Caching of last inputs
+- Edit mode
