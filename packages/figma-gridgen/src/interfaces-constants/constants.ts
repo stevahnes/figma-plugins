@@ -60,6 +60,13 @@ export const enum HtmlTagType {
   SELECT = "select",
 }
 
+export enum CheckboxInputIds {
+  HEADER = "header",
+  FLOATING_FILTER = "floatingFilter",
+  ALTERNATE_BACKGROUNDS = "alternateBackgrounds",
+  BORDERS = "borders",
+}
+
 export const maxDimensionInPixels: number = 5000;
 
 export const maxNumberOfRowsOrColumns: number = 100;
