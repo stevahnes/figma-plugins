@@ -1,6 +1,7 @@
 import * as Utils from "../utils/utils";
-import * as Interfaces from "../interfaces_and_constants/interfaces";
-import * as Constants from "../interfaces_and_constants/constants";
+import * as Interfaces from "../interfaces-constants/interfaces";
+import * as Constants from "../interfaces-constants/constants";
+import * as Figma from "../utils/figma";
 
 /* Check if Font is Loaded */
 let isTableFontLoaded: boolean = false;
@@ -67,7 +68,7 @@ export function generateBorders(
     line.y = referenceCoordinates.y - headerHeight - borderCount * borderSpacing;
     linesNode.push(line);
   }
-  const linesGroup: GroupNode = Utils.groupNodes(linesNode, Utils.getCurrentPage());
+  const linesGroup: GroupNode = Figma.groupNodes(linesNode, Figma.getCurrentPage());
   if (!visible) {
     linesGroup.visible = false;
   }
@@ -124,7 +125,7 @@ export function generateRowBackground(
     background.y = startingPoint - i * rowSpacing;
     rowBackgroundNode.push(background);
   }
-  const rowBackgroundGroup: GroupNode = Utils.groupNodes(rowBackgroundNode, Utils.getCurrentPage());
+  const rowBackgroundGroup: GroupNode = Figma.groupNodes(rowBackgroundNode, Figma.getCurrentPage());
   rowBackgroundGroup.name = rowBackgroundType;
   return rowBackgroundGroup;
 }
@@ -159,13 +160,13 @@ export function generateTableTexts(
       text.y = referenceCoordinates.y + textMargin.y - (j + 1) * rowHeight;
       columnTextsNode.push(text);
     }
-    const columnTextsGroup = Utils.groupNodes(columnTextsNode, Utils.getCurrentPage());
+    const columnTextsGroup = Figma.groupNodes(columnTextsNode, Figma.getCurrentPage());
     columnTextsGroup.name = "Column " + (i + 1);
     tableTextsNode.push(columnTextsGroup);
   }
-  const tableTextsGroup: GroupNode = Utils.groupNodes(tableTextsNode, Utils.getCurrentPage());
+  const tableTextsGroup: GroupNode = Figma.groupNodes(tableTextsNode, Figma.getCurrentPage());
   const allTextsNodesGenerated: SceneNode[] = tableTextsGroup.findAll(node => node.type === "TEXT");
-  Utils.loadNodeFont(tableFontName).then(() => {
+  Figma.loadNodeFont(tableFontName).then(() => {
     for (let textNode of allTextsNodesGenerated) {
       const text = textNode as TextNode;
       text.fontName = tableFontName;
@@ -224,9 +225,9 @@ export function generateTableHeader(
       text.y = referenceCoordinates.y - headerHeight + headerTextMargin.y - (rowCount - 1) * rowHeight;
       tableHeaderTextsNode.push(text);
     }
-    const tableHeaderTextsGroup = Utils.groupNodes(tableHeaderTextsNode, Utils.getCurrentPage());
+    const tableHeaderTextsGroup = Figma.groupNodes(tableHeaderTextsNode, Figma.getCurrentPage());
     const allTextsNodesGenerated: SceneNode[] = tableHeaderTextsGroup.findAll(node => node.type === "TEXT");
-    Utils.loadNodeFont(tableHeaderFontName).then(() => {
+    Figma.loadNodeFont(tableHeaderFontName).then(() => {
       isHeaderFontLoaded = true;
       for (let textNode of allTextsNodesGenerated) {
         const text = textNode as TextNode;
@@ -263,11 +264,11 @@ export function generateTableHeader(
           referenceCoordinates.y - floatingFilterHeight + floatingFilterMargin.y - (rowCount - 1) * rowHeight;
         floatingFiltersNode.push(floatingFilter);
       }
-      const tableFloatingFiltersGroup = Utils.groupNodes(floatingFiltersNode, Utils.getCurrentPage());
+      const tableFloatingFiltersGroup = Figma.groupNodes(floatingFiltersNode, Figma.getCurrentPage());
       tableFloatingFiltersGroup.name = "Floating Filters";
       tableHeaderNode.push(tableFloatingFiltersGroup);
     }
-    const tableHeaderGroup: GroupNode = Utils.groupNodes(tableHeaderNode, Utils.getCurrentPage());
+    const tableHeaderGroup: GroupNode = Figma.groupNodes(tableHeaderNode, Figma.getCurrentPage());
     tableHeaderGroup.name = "Table Header";
     return tableHeaderGroup;
   } else {
@@ -276,7 +277,7 @@ export function generateTableHeader(
 }
 
 export async function saveMessage(key: string, value: Interfaces.PluginMessage): Promise<void> {
-  Utils.setStorageData(key, value).then(() => {
+  Figma.setStorageData(key, value).then(() => {
     isDataSaved = true;
     onPromiseResolved(value.header);
   });
@@ -286,7 +287,7 @@ export async function saveMessage(key: string, value: Interfaces.PluginMessage):
 function onPromiseResolved(header: boolean): void {
   if (isDataSaved && isTableFontLoaded && (isHeaderFontLoaded || !header)) {
     /* Notify Success to User */
-    figma.notify("👍 GridGen successfully generated your table", { timeout: 300 });
-    figma.closePlugin();
+    Figma.notify("👍 GridGen successfully generated your table", 300);
+    Figma.closePlugin();
   }
 }

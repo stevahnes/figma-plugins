@@ -1,7 +1,7 @@
 import "./ui.css";
 import * as Utils from "./utils/utils";
-import * as Interfaces from "./interfaces_and_constants/interfaces";
-import * as Constants from "./interfaces_and_constants/constants";
+import * as Interfaces from "./interfaces-constants/interfaces";
+import * as Constants from "./interfaces-constants/constants";
 
 /* State Changes Variable */
 let isShiftHeld: boolean = false;

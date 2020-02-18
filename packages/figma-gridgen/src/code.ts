@@ -6,16 +6,17 @@ import {
   saveMessage,
 } from "./generators/generators";
 import * as Utils from "./utils/utils";
-import * as Constants from "./interfaces_and_constants/constants";
-import * as Interfaces from "./interfaces_and_constants/interfaces";
+import * as Figma from "./utils/figma";
+import * as Constants from "./interfaces-constants/constants";
+import * as Interfaces from "./interfaces-constants/interfaces";
 
 // This shows the HTML page in "ui.html".
 figma.showUI(__html__, Constants.showUIOptions);
 
 // Generate available font options and load saved states
 let promise: [Promise<Font[]>, Promise<Interfaces.PluginMessage>] = [
-  Utils.listAvailableFontsAsync(),
-  Utils.getStorageData(Constants.MessageType.CREATE),
+  Figma.listAvailableFontsAsync(),
+  Figma.getStorageData(Constants.MessageType.CREATE),
 ];
 
 Promise.all(promise).then(results => {
@@ -71,7 +72,7 @@ function processMessage(message: Interfaces.PluginMessage): void {
       message.referenceCoordinates,
     );
     const rowBackgroundNode: SceneNode[] = [oddRowBackgroundGroup, evenRowBackgroundGroup];
-    const rowBackgroundGroup: GroupNode = Utils.groupNodes(rowBackgroundNode, figma.currentPage);
+    const rowBackgroundGroup: GroupNode = Figma.groupNodes(rowBackgroundNode, figma.currentPage);
     rowBackgroundGroup.name = "Row Background";
 
     /* Generate Texts */
@@ -130,11 +131,11 @@ function processMessage(message: Interfaces.PluginMessage): void {
       message.referenceCoordinates,
     );
     const borderLinesNode: SceneNode[] = [verticalLinesGroup, horizontalLinesGroup];
-    const borderLinesGroup: GroupNode = Utils.groupNodes(borderLinesNode, figma.currentPage);
+    const borderLinesGroup: GroupNode = Figma.groupNodes(borderLinesNode, figma.currentPage);
     borderLinesGroup.name = "Borders";
 
     /* Sort Group Nodes */
-    const tableGroup = Utils.groupNodes([rowBackgroundGroup], figma.currentPage);
+    const tableGroup = Figma.groupNodes([rowBackgroundGroup], figma.currentPage);
     tableGroup.appendChild(columnTextsGroup);
     if (tableHeaderGroup !== null) {
       tableGroup.appendChild(tableHeaderGroup);

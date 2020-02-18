@@ -1,27 +1,4 @@
-import * as Constants from "../interfaces_and_constants/constants";
-
-/* Figma API Function Abstraction */
-export function groupNodes(nodes: ReadonlyArray<BaseNode>, parent: BaseNode & ChildrenMixin): GroupNode {
-  return figma.group(nodes, parent);
-}
-
-export function getCurrentPage(): PageNode {
-  return figma.currentPage;
-}
-
-export function getSelection(): readonly SceneNode[] {
-  return getCurrentPage().selection;
-}
-
-export function setSelection(node: SceneNode[]): null {
-  figma.currentPage.selection = node;
-  return null;
-}
-
-export function scrollAndZoomIntoView(node: SceneNode[]): null {
-  figma.viewport.scrollAndZoomIntoView(node);
-  return null;
-}
+import * as Constants from "../interfaces-constants/constants";
 
 /* Clone function taken from Figma Plugin API example */
 export function clone(val) {
@@ -74,37 +51,9 @@ export function getValue(htmlTagId: string, inputType: Constants.InputType): num
   switch (inputType) {
     case Constants.InputType.NUMBER:
       return parseInt(input.value, 10) ? parseInt(input.value, 10) : 0;
-      break;
     case Constants.InputType.BOOLEAN:
       return input.checked;
-      break;
     case Constants.InputType.STRING:
       return input.value;
-      break;
   }
-}
-
-/* Fonts Util */
-// Function to load selected font
-export async function loadNodeFont(fontName: FontName): Promise<void> {
-  await figma.loadFontAsync(fontName).catch(error => console.error(error));
-}
-
-// Function to list all available fonts on Figma
-export async function listAvailableFontsAsync(): Promise<Font[]> {
-  return await figma.listAvailableFontsAsync().catch(error => {
-    console.error(error);
-    return null;
-  });
-}
-
-/* Client Storage */
-export async function getStorageData(key: string): Promise<any | undefined> {
-  return await figma.clientStorage.getAsync(key).catch(error => {
-    console.error(error);
-    return null;
-  });
-}
-export async function setStorageData(key: string, value: any): Promise<void> {
-  await figma.clientStorage.setAsync(key, value).catch(error => console.error(error));
 }
