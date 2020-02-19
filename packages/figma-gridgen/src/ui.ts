@@ -28,7 +28,6 @@ onmessage = msg => {
     activeMode = createMessage.mode;
     resetInputToDefault(createMessage);
   } else {
-    Utils.getHTMLInputElementById(activeMode).checked = true;
     setDefaultForMode(activeMode);
     setDefaultForGenericInputs();
   }
@@ -47,10 +46,7 @@ for (let input of inputList) {
 const modes: string[] = Object.keys(Constants.defaultInputsForModes);
 for (let mode of modes) {
   document.getElementById(mode).onclick = () => {
-    if (Utils.getHTMLInputElementById(mode).checked && activeMode !== mode) {
-      activeMode = mode;
-      setDefaultForMode(activeMode);
-    }
+    Utils.getHTMLInputElementById(mode).checked && activeMode !== mode ? setDefaultForMode(activeMode) : null;
   };
 }
 // Detect checkboxes state change
@@ -85,77 +81,79 @@ document.getElementById("reset").onclick = () => {
 document.onkeydown = keyDown => {
   if (keyDown.key) {
     let activeElement = document.activeElement as HTMLInputElement;
-    if (keyDown.key === "Shift") {
-      isShiftHeld = true;
-    } else if (keyDown.key === "Alt") {
-      isAltHeld = true;
-    } else if (keyDown.key.match(/Arrow\w+/g)) {
-      let value: number = parseInt(activeElement.value, 10);
-      if (activeElement.type === "text" && !activeElement.list && value) {
-        if (isShiftHeld === false) {
-          switch (keyDown.key) {
-            case "ArrowUp":
-              value += 1;
-              break;
-            case "ArrowDown":
-              value -= 1;
-              break;
-          }
-        } else {
-          switch (keyDown.key) {
-            case "ArrowUp":
-              value += 10;
-              break;
-            case "ArrowDown":
-              value -= 10;
-              break;
-          }
+    switch (keyDown.key) {
+      case "Shift":
+        isShiftHeld = true;
+        keyDown.preventDefault();
+        break;
+      case "Alt":
+        isAltHeld = true;
+        keyDown.preventDefault();
+        break;
+      case Constants.ArrowPresses.UP:
+        activeElement.value = computeValueOnArrowPress(
+          Constants.ArrowPresses.UP,
+          activeElement,
+          isShiftHeld,
+        ).toString();
+        keyDown.preventDefault();
+        break;
+      case Constants.ArrowPresses.DOWN:
+        activeElement.value = computeValueOnArrowPress(
+          Constants.ArrowPresses.DOWN,
+          activeElement,
+          isShiftHeld,
+        ).toString();
+        keyDown.preventDefault();
+        break;
+      case "Tab":
+        // Get selected Mode
+        const mode: string = Utils.getActiveMode();
+        if (activeElement.id === "create" && isShiftHeld === false) {
+          Utils.getHTMLInputElementById(Constants.defaultInputsForModes[mode][0]).select();
+          keyDown.preventDefault();
+        } else if (
+          activeElement === Utils.getHTMLInputElementById(Constants.defaultInputsForModes[mode][0]) &&
+          isShiftHeld === true
+        ) {
+          document.getElementById("create").focus();
+          keyDown.preventDefault();
         }
-        activeElement.value = value.toString();
-        activeElement.select();
-        keyDown.preventDefault();
-      }
-    } else if (keyDown.key === "Tab") {
-      // Selected Mode
-      const mode: string = Utils.getActiveMode();
-      if (activeElement.id === "create" && isShiftHeld === false) {
-        Utils.getHTMLInputElementById(Constants.defaultInputsForModes[mode][0]).select();
-        keyDown.preventDefault();
-      } else if (
-        activeElement === Utils.getHTMLInputElementById(Constants.defaultInputsForModes[mode][0]) &&
-        isShiftHeld === true
-      ) {
-        document.getElementById("create").focus();
-        keyDown.preventDefault();
-      }
-    } else if (keyDown.key === "Enter") {
-      if (activeElement.type === "checkbox") {
-        activeElement.checked = !activeElement.checked;
-        toggleCheckboxSubOptions(activeElement.id);
-      }
-    } else if (keyDown.key === "1" || keyDown.key === "2" || keyDown.key === "3") {
-      if (isAltHeld) {
-        const previousMode: string = activeMode;
-        switch (keyDown.key) {
-          case "1":
-            activeMode = Constants.Modes.CELL_AND_TABLE_SIZE;
-            break;
-          case "2":
-            activeMode = Constants.Modes.COUNT_AND_CELL_SIZE;
-            break;
-          case "3":
-            activeMode = Constants.Modes.COUNT_AND_TABLE_SIZE;
+        break;
+      case "Enter":
+        if (activeElement.type === "checkbox") {
+          activeElement.checked = !activeElement.checked;
+          toggleCheckboxSubOptions(activeElement.id);
         }
-        Utils.getHTMLInputElementById(activeMode).checked = true;
-        activeMode !== previousMode ? setDefaultForMode(activeMode) : null;
-        keyDown.preventDefault();
-      }
-    } else if (keyDown.key === "C") {
-      isShiftHeld ? createTable() : null;
-      keyDown.preventDefault();
-    } else if (keyDown.key === "R") {
-      isShiftHeld ? (createMessage ? resetInputToDefault(createMessage) : null) : null;
-      keyDown.preventDefault();
+        break;
+      case "C":
+        isShiftHeld ? createTable() : null;
+        isShiftHeld ? keyDown.preventDefault() : null;
+        break;
+      case "R":
+        isShiftHeld ? (createMessage ? resetInputToDefault(createMessage) : null) : null;
+        isShiftHeld ? keyDown.preventDefault() : null;
+        break;
+      case "1":
+        isAltHeld && activeMode !== Constants.Modes.CELL_AND_TABLE_SIZE
+          ? setDefaultForMode(Constants.Modes.CELL_AND_TABLE_SIZE)
+          : null;
+        isAltHeld ? keyDown.preventDefault() : null;
+        break;
+      case "2":
+        isAltHeld && activeMode !== Constants.Modes.COUNT_AND_CELL_SIZE
+          ? setDefaultForMode(Constants.Modes.COUNT_AND_CELL_SIZE)
+          : null;
+        isAltHeld ? keyDown.preventDefault() : null;
+        break;
+      case "3":
+        isAltHeld && activeMode !== Constants.Modes.COUNT_AND_TABLE_SIZE
+          ? setDefaultForMode(Constants.Modes.COUNT_AND_TABLE_SIZE)
+          : null;
+        isAltHeld ? keyDown.preventDefault() : null;
+        break;
+      default:
+        break;
     }
   }
 };
@@ -175,6 +173,22 @@ function createTable(): void {
   Utils.processInputToMessage();
 }
 
+function computeValueOnArrowPress(
+  arrowPressed: Constants.ArrowPresses,
+  activeElement: HTMLInputElement,
+  isShiftHeld: boolean,
+): number {
+  let value: number = parseInt(activeElement.value, 10);
+  return value && !activeElement.list && activeElement.type === "text"
+    ? isShiftHeld
+      ? arrowPressed === Constants.ArrowPresses.UP
+        ? (value += 10)
+        : (value -= 10)
+      : arrowPressed === Constants.ArrowPresses.UP
+      ? (value += 1)
+      : (value -= 1)
+    : null;
+}
 /* ----------------- Checkbox SubOptions Toggling -----------------  */
 
 // Toggle (enable or disable) header suboptions or subinputs
@@ -324,6 +338,7 @@ function resetInputToDefault(createMessage: Interfaces.PluginMessage): void {
 /* Set Input Values */
 // Default per mode
 function setDefaultForMode(mode: string): void {
+  Utils.getHTMLInputElementById(mode).checked = true;
   const inputList: string[] = Object.keys(Constants.inputsAffectedByMode);
   for (let input of inputList) {
     if (Constants.defaultInputsForModes[mode].indexOf(input) > -1) {
@@ -334,6 +349,7 @@ function setDefaultForMode(mode: string): void {
   }
   Utils.resetInvalidInput();
   Utils.getHTMLInputElementById(Constants.defaultInputsForModes[mode][0]).select();
+  activeMode = mode;
 }
 // Default for the rest
 function setDefaultForGenericInputs(): void {

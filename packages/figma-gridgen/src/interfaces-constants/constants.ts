@@ -14,6 +14,11 @@ export const enum InputType {
   STRING,
 }
 
+export const enum ArrowPresses {
+  UP = "ArrowUp",
+  DOWN = "ArrowDown",
+}
+
 export const defaultBorderColor: string = ColorNameToHex.GREY_C7;
 
 export const maxRGB: number = 255;
