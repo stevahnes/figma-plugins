@@ -25,7 +25,6 @@ onmessage = msg => {
   Utils.getHTMLElementById("tableFontFamilyOptions").innerHTML = fontFamilyOptionsHTML;
   Utils.getHTMLElementById("headerFontFamilyOptions").innerHTML = fontFamilyOptionsHTML;
   if (createMessage) {
-    activeMode = createMessage.mode;
     resetInputToDefault(createMessage);
   } else {
     setDefaultForMode(activeMode);
@@ -269,6 +268,7 @@ function toggleCheckboxSubOptions(checkboxId: string): void {
 
 /* Set or Reset To Create Message Default */
 function resetInputToDefault(createMessage: Interfaces.PluginMessage): void {
+  activeMode = createMessage.mode;
   Utils.getHTMLInputElementById(createMessage.mode).checked = true;
   Object.keys(Constants.inputIds).forEach(input => {
     // check if tag is of type SELECT
