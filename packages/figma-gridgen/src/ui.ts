@@ -42,12 +42,11 @@ for (let input of inputList) {
   };
 }
 // Detect radio buttons state change
-const modes: string[] = Object.keys(Constants.defaultInputsForModes);
-for (let mode of modes) {
+Object.keys(Constants.defaultInputsForModes).forEach(mode => {
   document.getElementById(mode).onclick = () => {
-    Utils.getHTMLInputElementById(mode).checked && activeMode !== mode ? setDefaultForMode(activeMode) : null;
+    Utils.getHTMLInputElementById(mode).checked && activeMode !== mode ? setDefaultForMode(mode) : null;
   };
-}
+});
 // Detect checkboxes state change
 Object.keys(Constants.CheckboxInputIds).forEach(id => {
   Utils.getHTMLElementById(Constants.CheckboxInputIds[id]).onchange = () => {
