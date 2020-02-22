@@ -13,26 +13,31 @@
     "Atomics": "readonly",
     "SharedArrayBuffer": "readonly"
   },
-  "overrides": [{
-    "parser": "@typescript-eslint/parser",
-    "parserOptions": {
-      "ecmaVersion": 2018,
-      "sourceType": "module"
-    },
-    "plugins": ["@typescript-eslint"],
-    "rules": {
-      "curly": "error",
-      "quotes": ["error", "double"],
-      // note you must disable the base rule as it can report incorrect errors
-      "no-unused-vars": "off",
-      "@typescript-eslint/no-unused-vars": ["error", {
-        "vars": "all",
-        "args": "after-used",
-        "ignoreRestSiblings": false
-      }]
-    },
-    "files": "*.ts",
-    "excludedFiles": "*.d.ts"
-  }],
-  "ignorePatterns": ["*.config.js", "node_modules/"],
+  "overrides": [
+    {
+      "parser": "@typescript-eslint/parser",
+      "parserOptions": {
+        "ecmaVersion": 2018,
+        "sourceType": "module"
+      },
+      "plugins": ["@typescript-eslint"],
+      "rules": {
+        "curly": "error",
+        "quotes": ["error", "double"],
+        // note you must disable the base rule as it can report incorrect errors
+        "no-unused-vars": "off",
+        "@typescript-eslint/no-unused-vars": [
+          "error",
+          {
+            "vars": "all",
+            "args": "after-used",
+            "ignoreRestSiblings": false
+          }
+        ]
+      },
+      "files": "*.ts",
+      "excludedFiles": "*.d.ts"
+    }
+  ],
+  "ignorePatterns": ["*.config.js", "node_modules/"]
 }
