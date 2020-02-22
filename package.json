@@ -7,7 +7,7 @@
     "lint": "concurrently 'npm:lint-ts' 'npm:lint-css'",
     "lint-ts": "npx eslint --no-eslintrc -c .eslintrc packages/*/src/**/*.ts",
     "lint-css": "npx stylelint --config .stylelintrc packages/*/src/**/*.css",
-    "fix": "npx prettier --write packages/*/src/**/*.{js,ts,css,json,md}",
+    "fix": "npx prettier --write packages/**/*.{ts,css,json,md}",
     "ci": "npm run fix && npm run lint && npm run build"
   },
   "devDependencies": {
