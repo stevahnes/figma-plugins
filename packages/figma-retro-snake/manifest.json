@@ -1,0 +1,7 @@
+{
+  "name": "Retro Snake",
+  "id": "812994090875519300",
+  "api": "1.0.0",
+  "main": "dist/code.js",
+  "ui": "dist/ui.html"
+}

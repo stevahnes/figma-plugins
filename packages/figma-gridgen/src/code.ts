@@ -5,7 +5,6 @@ import {
   generateTableHeader,
   saveMessage,
 } from "./generators/generators";
-import * as Utils from "./utils/utils";
 import * as Figma from "./utils/figma";
 import * as Constants from "./interfaces-constants/constants";
 import * as Interfaces from "./interfaces-constants/interfaces";

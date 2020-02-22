@@ -33,5 +33,6 @@
     },
     "files": "*.ts",
     "excludedFiles": "*.d.ts"
-  }]
+  }],
+  "ignorePatterns": ["*.config.js", "node_modules/"],
 }

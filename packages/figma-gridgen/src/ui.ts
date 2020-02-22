@@ -106,12 +106,11 @@ document.onkeydown = keyDown => {
         break;
       case "Tab":
         // Get selected Mode
-        const mode: string = Utils.getActiveMode();
         if (activeElement.id === "create" && isShiftHeld === false) {
-          Utils.getHTMLInputElementById(Constants.defaultInputsForModes[mode][0]).select();
+          Utils.getHTMLInputElementById(Constants.defaultInputsForModes[Utils.getActiveMode()][0]).select();
           keyDown.preventDefault();
         } else if (
-          activeElement === Utils.getHTMLInputElementById(Constants.defaultInputsForModes[mode][0]) &&
+          activeElement === Utils.getHTMLInputElementById(Constants.defaultInputsForModes[Utils.getActiveMode()][0]) &&
           isShiftHeld === true
         ) {
           document.getElementById("create").focus();
