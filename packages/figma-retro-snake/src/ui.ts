@@ -85,7 +85,7 @@ const update = () => {
     ? (headPosition[1] = 400)
     : (headPosition[1] = headPosition[1] + unitSize[1] * headToTailVelocity[0][1]);
   // update head position
-  let unitPosition: number[] = [headPosition[0], headPosition[1]];
+  let unitPosition: number[] = [...headPosition];
   // clear the canvas
   context.fillStyle = "#333333";
   context.fillRect(0, 0, 400, 400);
