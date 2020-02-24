@@ -33,7 +33,7 @@ const initialSnakeLength: number = 5;
 const unitSize: number[] = [10, 10];
 const initialDirection: Direction = Direction.UP;
 let lastFrameUpdate: number = 0;
-let headPosition: number[] = [190, 190];
+let nextHeadPosition: number[] = [190, 190];
 let snakeLength: number = initialSnakeLength;
 let headToTailVelocity: number[][] = [];
 let currentDirection: Direction = initialDirection;
@@ -45,12 +45,23 @@ const initialize = () => {
 };
 
 const loop = () => {
-  Date.now() - lastFrameUpdate > 1000 / 60 ? ((lastFrameUpdate = Date.now()), update()) : null;
+  Date.now() - lastFrameUpdate > 1000 / 60 ? ((lastFrameUpdate = Date.now()), updateSnake()) : null;
   // prepare for rendering again
   window.requestAnimationFrame(loop);
 };
 
-const update = () => {
+const getCanvas2dContext = (id: string) => {
+  return (document.getElementById(id) as HTMLCanvasElement).getContext("2d");
+};
+
+const spawnFood = () => {
+  const foodPosition: number[] = [0, 0];
+  foodPosition[0] = Math.floor(Math.random() * 390);
+  foodPosition[1] = Math.floor(Math.random() * 390);
+  const context = getCanvas2dContext("snake");
+};
+
+const updateSnake = () => {
   // pop last tail velocity
   headToTailVelocity.pop();
   // update velocity array
@@ -71,21 +82,20 @@ const update = () => {
       break;
   }
   // get canvas context
-  const canvas = document.getElementById("snake") as HTMLCanvasElement;
-  const context = canvas.getContext("2d");
+  const context = getCanvas2dContext("snake");
   // get next head position
-  headPosition[0] > 400
-    ? (headPosition[0] = 0)
-    : headPosition[0] < 0
-    ? (headPosition[0] = 400)
-    : (headPosition[0] = headPosition[0] + unitSize[0] * headToTailVelocity[0][0]);
-  headPosition[1] > 400
-    ? (headPosition[1] = 0)
-    : headPosition[1] < 0
-    ? (headPosition[1] = 400)
-    : (headPosition[1] = headPosition[1] + unitSize[1] * headToTailVelocity[0][1]);
+  nextHeadPosition[0] > 400
+    ? (nextHeadPosition[0] = 0)
+    : nextHeadPosition[0] < 0
+    ? (nextHeadPosition[0] = 400)
+    : (nextHeadPosition[0] = nextHeadPosition[0] + unitSize[0] * headToTailVelocity[0][0]);
+  nextHeadPosition[1] > 400
+    ? (nextHeadPosition[1] = 0)
+    : nextHeadPosition[1] < 0
+    ? (nextHeadPosition[1] = 400)
+    : (nextHeadPosition[1] = nextHeadPosition[1] + unitSize[1] * headToTailVelocity[0][1]);
   // update head position
-  let unitPosition: number[] = [...headPosition];
+  let unitPosition: number[] = [...nextHeadPosition];
   // clear the canvas
   context.fillStyle = "#333333";
   context.fillRect(0, 0, 400, 400);
