@@ -4,6 +4,7 @@ window.onload = () => {
 };
 
 document.onkeydown = key => {
+  console.log(key.keyCode);
   switch (key.keyCode) {
     case 37:
       currentDirection !== Direction.RIGHT ? (currentDirection = Direction.LEFT) : null;
@@ -32,11 +33,13 @@ enum Direction {
 const initialSnakeLength: number = 5;
 const unitSize: number[] = [10, 10];
 const initialDirection: Direction = Direction.UP;
+const foodPosition: number[] = [0, 0];
+const nextHeadPosition: number[] = [190, 190];
 let lastFrameUpdate: number = 0;
-let nextHeadPosition: number[] = [190, 190];
 let snakeLength: number = initialSnakeLength;
 let headToTailVelocity: number[][] = [];
 let currentDirection: Direction = initialDirection;
+let isFoodEaten: boolean = true;
 
 const initialize = () => {
   for (let i: number = 0; i < snakeLength; i++) {
@@ -46,6 +49,7 @@ const initialize = () => {
 
 const loop = () => {
   Date.now() - lastFrameUpdate > 1000 / 60 ? ((lastFrameUpdate = Date.now()), updateSnake()) : null;
+  isFoodEaten ? spawnFood() : null;
   // prepare for rendering again
   window.requestAnimationFrame(loop);
 };
@@ -55,10 +59,9 @@ const getCanvas2dContext = (id: string) => {
 };
 
 const spawnFood = () => {
-  const foodPosition: number[] = [0, 0];
   foodPosition[0] = Math.floor(Math.random() * 390);
   foodPosition[1] = Math.floor(Math.random() * 390);
-  const context = getCanvas2dContext("snake");
+  isFoodEaten = false;
 };
 
 const updateSnake = () => {
@@ -84,15 +87,15 @@ const updateSnake = () => {
   // get canvas context
   const context = getCanvas2dContext("snake");
   // get next head position
-  nextHeadPosition[0] > 400
+  nextHeadPosition[0] > 390
     ? (nextHeadPosition[0] = 0)
     : nextHeadPosition[0] < 0
-    ? (nextHeadPosition[0] = 400)
+    ? (nextHeadPosition[0] = 390)
     : (nextHeadPosition[0] = nextHeadPosition[0] + unitSize[0] * headToTailVelocity[0][0]);
-  nextHeadPosition[1] > 400
+  nextHeadPosition[1] > 390
     ? (nextHeadPosition[1] = 0)
     : nextHeadPosition[1] < 0
-    ? (nextHeadPosition[1] = 400)
+    ? (nextHeadPosition[1] = 390)
     : (nextHeadPosition[1] = nextHeadPosition[1] + unitSize[1] * headToTailVelocity[0][1]);
   // update head position
   let unitPosition: number[] = [...nextHeadPosition];
@@ -103,15 +106,18 @@ const updateSnake = () => {
   headToTailVelocity.forEach(unitVelocity => {
     context.fillStyle = "#D4C2E1";
     context.fillRect(unitPosition[0], unitPosition[1], unitSize[0], unitSize[1]);
-    unitPosition[0] - unitSize[0] * unitVelocity[0] > 400
+    unitPosition[0] - unitSize[0] * unitVelocity[0] > 390
       ? (unitPosition[0] = 0)
       : unitPosition[0] - unitSize[0] * unitVelocity[0] < 0
       ? (unitPosition[0] = 400)
       : (unitPosition[0] -= unitSize[0] * unitVelocity[0]);
-    unitPosition[1] - unitSize[1] * unitVelocity[1] > 400
+    unitPosition[1] - unitSize[1] * unitVelocity[1] > 390
       ? (unitPosition[1] = 0)
       : unitPosition[1] - unitSize[1] * unitVelocity[1] < 0
       ? (unitPosition[1] = 400)
       : (unitPosition[1] -= unitSize[1] * unitVelocity[1]);
   });
+  // draw food
+  context.fillStyle = "#FFDDD1";
+  context.fillRect(foodPosition[0], foodPosition[1], unitSize[0], unitSize[1]);
 };
