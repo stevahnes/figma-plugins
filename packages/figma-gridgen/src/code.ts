@@ -10,7 +10,7 @@ import * as Constants from "./interfaces-constants/constants";
 import * as Interfaces from "./interfaces-constants/interfaces";
 
 // This shows the HTML page in "ui.html".
-figma.showUI(__html__, Constants.showUIOptions);
+Figma.showUI(__html__, Constants.showUIOptions);
 
 // Generate available font options and load saved states
 let promise: [Promise<Font[]>, Promise<Interfaces.PluginMessage>] = [

@@ -2,6 +2,10 @@ export function notify(message: string, timeout?: number): NotificationHandler {
   return figma.notify(message, { timeout: timeout });
 }
 
+export function showUI(html: string, showUIOptions: ShowUIOptions): void {
+  return figma.showUI(html, showUIOptions);
+}
+
 export function closePlugin(): void {
   return figma.closePlugin();
 }
