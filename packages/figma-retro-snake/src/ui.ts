@@ -30,11 +30,11 @@ enum Direction {
   RIGHT,
 }
 
-const initialSnakeLength: number = 20;
+const initialSnakeLength: number = 10;
 const unitSize: number[] = [10, 10];
 const initialDirection: Direction = Direction.UP;
 const foodPosition: number[] = [0, 0];
-const nextHeadPosition: number[] = [190, 190];
+const nextHeadPosition: number[] = [90, 90];
 let nextTailVelocity = [0, 0];
 let lastFrameUpdate: number = 0;
 let snakeLength: number = initialSnakeLength;
@@ -62,8 +62,8 @@ const getCanvas2dContext = (id: string) => {
 };
 
 const spawnFood = () => {
-  foodPosition[0] = Math.round(Math.random() * 39) * 10;
-  foodPosition[1] = Math.round(Math.random() * 39) * 10;
+  foodPosition[0] = Math.round(Math.random() * 19) * 10;
+  foodPosition[1] = Math.round(Math.random() * 19) * 10;
   console.log(foodPosition);
   isFoodEaten = false;
 };
@@ -92,21 +92,21 @@ const updateSnake = () => {
     // get canvas context
     const context = getCanvas2dContext("snake");
     // get next head position
-    nextHeadPosition[0] > 390
+    nextHeadPosition[0] > 190
       ? (nextHeadPosition[0] = 0)
       : nextHeadPosition[0] < 0
-      ? (nextHeadPosition[0] = 390)
+      ? (nextHeadPosition[0] = 190)
       : (nextHeadPosition[0] = nextHeadPosition[0] + unitSize[0] * headToTailVelocity[0][0]);
-    nextHeadPosition[1] > 390
+    nextHeadPosition[1] > 190
       ? (nextHeadPosition[1] = 0)
       : nextHeadPosition[1] < 0
-      ? (nextHeadPosition[1] = 390)
+      ? (nextHeadPosition[1] = 190)
       : (nextHeadPosition[1] = nextHeadPosition[1] + unitSize[1] * headToTailVelocity[0][1]);
     // update head position
     let unitPosition: number[] = [...nextHeadPosition];
     // clear the canvas
     context.fillStyle = "#333333";
-    context.fillRect(0, 0, 400, 400);
+    context.fillRect(0, 0, 200, 200);
     // draw food
     context.fillStyle = "#FFDDD1";
     context.fillRect(foodPosition[0], foodPosition[1], unitSize[0], unitSize[1]);
@@ -120,15 +120,15 @@ const updateSnake = () => {
     headToTailVelocity.forEach(unitVelocity => {
       context.fillStyle = "#D4C2E1";
       context.fillRect(unitPosition[0], unitPosition[1], unitSize[0], unitSize[1]);
-      unitPosition[0] - unitSize[0] * unitVelocity[0] > 390
+      unitPosition[0] - unitSize[0] * unitVelocity[0] > 190
         ? (unitPosition[0] = 0)
         : unitPosition[0] - unitSize[0] * unitVelocity[0] < 0
-        ? (unitPosition[0] = 400)
+        ? (unitPosition[0] = 190)
         : (unitPosition[0] -= unitSize[0] * unitVelocity[0]);
-      unitPosition[1] - unitSize[1] * unitVelocity[1] > 390
+      unitPosition[1] - unitSize[1] * unitVelocity[1] > 190
         ? (unitPosition[1] = 0)
         : unitPosition[1] - unitSize[1] * unitVelocity[1] < 0
-        ? (unitPosition[1] = 400)
+        ? (unitPosition[1] = 190)
         : (unitPosition[1] -= unitSize[1] * unitVelocity[1]);
       if (unitPosition[0] === nextHeadPosition[0] && unitPosition[1] === nextHeadPosition[1]) {
         isDead = true;
