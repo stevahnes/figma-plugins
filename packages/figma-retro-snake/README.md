@@ -1,22 +1,9 @@
-This plugin template uses Typescript. If you are familiar with Javascript, Typescript will
-look very familiar. In fact, valid Javascript code is already valid Typescript code.
+# Retro Snake [![Link to Figma](https://img.shields.io/badge/figma-@retro--snake-blueviolet)](https://www.figma.com/community/plugin/812994090875519300/Retro-Snake) [![npm Version](https://img.shields.io/npm/v/figma-retro-snake)](https://www.npmjs.com/package/figma-retro-snake)
 
-Typescript adds type annotations to variables. This allows code editors such as Visual Studio Code
-to provide information about the Figma API while you are writing code, as well as help catch bugs
-you previously didn't notice.
+Worked for too long? Needing a break? Unwind with a classic!
 
-For more information, visit https://www.typescriptlang.org/
+Bringing the retro game we all love into Figma, Snake!
 
-Using Typescript requires a compiler to convert Typescript (code.ts) into Javascript (code.js)
-for the browser to run.
+Control the wriggly being with either "W+A+S+D" or Arrow Keys and grow it by feeding it with food. Yums!
 
-To get the TypeScript compiler working:
-
-1. Download Visual Studio Code if you haven't already: https://code.visualstudio.com/.
-2. Install the TypeScript compiler globally: `sudo npm install -g typescript`.
-3. Open this directory in Visual Studio Code.
-4. Compile TypeScript to JavaScript: Run the "Terminal > Run Build Task..." menu item,
-   then select "tsc: watch - tsconfig.json". You will have to do this again every time
-   you reopen Visual Studio Code.
-
-That's it! Visual Studio Code will regenerate the JavaScript file every time you save.
+As they all say, the longer the better, or is it?
