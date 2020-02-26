@@ -2,6 +2,7 @@
 
 > Single repository containing all my Figma plugins
 
-| Name                                   | Description                                                                          |
-| :------------------------------------- | :----------------------------------------------------------------------------------- |
-| [**GridGen**](/packages/figma-gridgen) | Automatically generates customized table/grid based on 3 supported constraints modes |
+| Name                                           | Description                                                                          |
+| :--------------------------------------------- | :----------------------------------------------------------------------------------- |
+| [**GridGen**](/packages/figma-gridgen)         | Automatically generates customized table/grid based on 3 supported constraints modes |
+| [**Retro Snake**](/packages/figma-retro-snake) | Bringing the retro game we all love into Figma, Snake!                               |
