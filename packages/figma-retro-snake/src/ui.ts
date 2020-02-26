@@ -71,8 +71,8 @@ const getCanvas2dContext = (id: string) => {
 };
 
 const spawnFood = () => {
-  foodPosition[0] = Math.round((Math.random() * gameField[0]) / 10) * unitSize[0];
-  foodPosition[1] = Math.round((Math.random() * gameField[1]) / 10) * unitSize[1];
+  foodPosition[0] = Math.round((Math.random() * (gameField[0] - unitSize[0])) / 10) * unitSize[0];
+  foodPosition[1] = Math.round((Math.random() * (gameField[1] - unitSize[1])) / 10) * unitSize[1];
   isFoodEaten = false;
   multiplier = Math.round(Math.random() * 7) + 3;
 };
