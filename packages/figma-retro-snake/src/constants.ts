@@ -1,4 +1,8 @@
-export const gameFrameRate: number = 60;
+export const initialGameFrameRate: number = 20;
+
+export const maxGameFrameRate: number = 60;
+
+export const gameFrameRateIncrement: number = 5;
 
 export const gameField: number[] = [300, 300];
 

@@ -1,4 +1,13 @@
-import { Direction, unitSize, initialSnakeLength, initialDirection, gameFrameRate, gameField } from "./constants";
+import {
+  Direction,
+  unitSize,
+  initialSnakeLength,
+  initialDirection,
+  initialGameFrameRate,
+  maxGameFrameRate,
+  gameFrameRateIncrement,
+  gameField,
+} from "./constants";
 
 window.onload = () => {
   initialize();
@@ -27,10 +36,13 @@ document.onkeydown = key => {
 
 const foodPosition: number[] = [0, 0];
 const nextHeadPosition: number[] = [90, 90];
+let gameFrameRate: number = initialGameFrameRate;
 let nextTailVelocity = [0, 0];
 let lastFrameUpdate: number = 0;
 let headToTailVelocity: number[][] = [];
 let currentDirection: Direction = initialDirection;
+let multiplier: number = 1;
+let score: number = 0;
 let isFoodEaten: boolean = true;
 let isDead: boolean = false;
 
@@ -41,10 +53,15 @@ const initialize = () => {
     headToTailVelocity.push([0, 0]);
     nextTailVelocity[1] = -1;
   }
+  document.getElementById("score").innerHTML = score.toString();
+  window.focus();
 };
 
 const loop = () => {
-  Date.now() - lastFrameUpdate > 1000 / gameFrameRate ? ((lastFrameUpdate = Date.now()), updateSnake()) : null;
+  const interval = Date.now() - lastFrameUpdate;
+  interval > 1000 / gameFrameRate
+    ? (console.log(interval), (lastFrameUpdate += interval), updateSnake(), updateMultiplier(interval))
+    : null;
   isFoodEaten ? spawnFood() : null;
   // prepare for rendering again
   window.requestAnimationFrame(loop);
@@ -58,6 +75,12 @@ const spawnFood = () => {
   foodPosition[0] = Math.round((Math.random() * gameField[0]) / 10) * unitSize[0];
   foodPosition[1] = Math.round((Math.random() * gameField[1]) / 10) * unitSize[1];
   isFoodEaten = false;
+  multiplier = Math.round(Math.random() * 7) + 3;
+};
+
+const updateMultiplier = (interval: number) => {
+  multiplier > 1 ? (multiplier -= interval / 1000) : null;
+  document.getElementById("multiplier").innerHTML = Math.round(multiplier).toString();
 };
 
 const updateSnake = () => {
@@ -99,11 +122,17 @@ const updateSnake = () => {
     // clear the canvas
     context.fillStyle = "#333333";
     context.fillRect(0, 0, gameField[0], gameField[1]);
+    context.strokeStyle = "#BDD7EA";
+    context.lineWidth = 3;
+    context.strokeRect(0, 0, gameField[0], gameField[1]);
     // draw food
     context.fillStyle = "#FFDDD1";
     context.fillRect(foodPosition[0], foodPosition[1], unitSize[0], unitSize[1]);
     if (nextHeadPosition[0] === foodPosition[0] && nextHeadPosition[1] === foodPosition[1]) {
       isFoodEaten = true;
+      score += multiplier;
+      document.getElementById("score").innerHTML = Math.round(score).toString();
+      gameFrameRate < maxGameFrameRate ? (gameFrameRate += gameFrameRateIncrement) : null;
       headToTailVelocity.push(nextTailVelocity);
     }
     // draw snake
