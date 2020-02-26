@@ -15,7 +15,6 @@ window.onload = () => {
 };
 
 document.onkeydown = key => {
-  console.log(key.keyCode);
   switch (key.keyCode) {
     case 37:
       currentDirection !== Direction.RIGHT ? (currentDirection = Direction.LEFT) : null;
