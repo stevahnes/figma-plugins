@@ -1,4 +1,4 @@
-export const initialGameFrameRate: number = 20;
+export const initialGameFrameRate: number = 10;
 
 export const maxGameFrameRate: number = 60;
 

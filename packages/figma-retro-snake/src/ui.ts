@@ -60,7 +60,7 @@ const initialize = () => {
 const loop = () => {
   const interval = Date.now() - lastFrameUpdate;
   interval > 1000 / gameFrameRate
-    ? (console.log(interval), (lastFrameUpdate += interval), updateSnake(), updateMultiplier(interval))
+    ? ((lastFrameUpdate += interval), updateSnake(), updateMultiplier(isDead, interval))
     : null;
   isFoodEaten ? spawnFood() : null;
   // prepare for rendering again
@@ -78,8 +78,8 @@ const spawnFood = () => {
   multiplier = Math.round(Math.random() * 7) + 3;
 };
 
-const updateMultiplier = (interval: number) => {
-  multiplier > 1 ? (multiplier -= interval / 1000) : null;
+const updateMultiplier = (isDead: boolean, interval: number) => {
+  multiplier > 1 && !isDead ? (multiplier -= interval / 1000) : null;
   document.getElementById("multiplier").innerHTML = Math.round(multiplier).toString();
 };
 
