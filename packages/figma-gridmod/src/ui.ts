@@ -1,24 +1,12 @@
-document.getElementById("create").onclick = () => {
-  const textbox = document.getElementById("count") as HTMLInputElement;
-  const count = parseInt(textbox.value, 10);
-  parent.postMessage(
-    {
-      pluginMessage: {
-        type: "create-rectangles",
-        count,
-      },
-    },
-    "*",
-  );
+onmessage = msg => {
+  const isValidGridGen = msg.data.pluginMessage;
+  isValidGridGen
+    ? ((document.getElementById("invalid").style.display = "none"),
+      (document.getElementById("valid").style.display = "block"))
+    : ((document.getElementById("invalid").style.display = "block"),
+      (document.getElementById("valid").style.display = "none"));
 };
 
-document.getElementById("cancel").onclick = () => {
-  parent.postMessage(
-    {
-      pluginMessage: {
-        type: "cancel",
-      },
-    },
-    "*",
-  );
+window.onfocus = () => {
+  parent.postMessage({ pluginMessage: true }, "*");
 };
