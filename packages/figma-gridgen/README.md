@@ -43,5 +43,8 @@ Utilizes built-in Figma rectangles, lines, and texts to generate tables with nea
 
 ## Work-in-Progress:
 
-- Other units besides pixel
 - Edit mode
+
+## Note:
+
+- After deliberating for a while, I have decided to have "Edit Mode" implemented as a new plugin instead. Keep a lookout on when "GridMod" goes live!
