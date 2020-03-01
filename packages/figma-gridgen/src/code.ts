@@ -9,12 +9,6 @@ import * as Figma from "./utils/figma";
 import * as Constants from "./interfaces-constants/constants";
 import * as Interfaces from "./interfaces-constants/interfaces";
 
-const selection = figma.currentPage.selection[0];
-if (selection.name === "Table") {
-  (selection as GroupNode).children.forEach(child => {
-    console.log(child.name);
-  });
-}
 // This shows the HTML page in "ui.html".
 Figma.showUI(__html__, Constants.showUIOptions);
 
