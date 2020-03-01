@@ -1,0 +1,27 @@
+{
+  "name": "figma-gridmod",
+  "version": "1.0.0",
+  "description": "Modifier plugin for GridGen-generated tables",
+  "main": "webpack.config.js",
+  "scripts": {
+    "start": "webpack --mode=development --watch",
+    "build": "webpack --mode=production"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gnawx/figma-plugins.git"
+  },
+  "keywords": [
+    "modifier",
+    "editor",
+    "table",
+    "grid",
+    "gridgen"
+  ],
+  "author": "Stevanus Satria",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gnawx/figma-plugins/issues"
+  },
+  "homepage": "https://github.com/gnawx/figma-plugins#readme"
+}

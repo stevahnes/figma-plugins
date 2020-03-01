@@ -1,0 +1,7 @@
+{
+  "name": "GridMod",
+  "id": "815889316898860859",
+  "api": "1.0.0",
+  "main": "dist/code.js",
+  "ui": "dist/ui.html"
+}
