@@ -6,7 +6,15 @@ const uiToCodeMessage: Interfaces.UIToCodeMessage = {
   type: Constants.UIToCodeMessageType.EDIT_CONTENTS,
   payload: null,
 };
-const selectedGrid: Interfaces.SelectedGrid = { id: "", name: "N.A.", hasHeader: false };
+const selectedGrid: Interfaces.SelectedGrid = {
+  id: "",
+  name: "N.A.",
+  hasHeader: false,
+  rowBackgroundId: "",
+  tableTextsId: "",
+  bordersId: "",
+  tableHeaderId: "",
+};
 
 onmessage = msg => {
   const receivedCodeMessage: Interfaces.CodeToUIMessage = msg.data.pluginMessage;

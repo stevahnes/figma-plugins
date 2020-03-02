@@ -14,4 +14,8 @@ export interface SelectedGrid {
   id: string;
   name: string;
   hasHeader: boolean;
+  rowBackgroundId: string;
+  tableTextsId: string;
+  bordersId: string;
+  tableHeaderId: string;
 }

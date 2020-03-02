@@ -3,20 +3,29 @@ import * as Constants from "./interfaces-constants/constants";
 
 const codeToUIMessage: Interfaces.CodeToUIMessage = {
   isValidGridGen: false,
-  selectedGrid: { id: "", name: "N.A.", hasHeader: false },
+  selectedGrid: {
+    id: "",
+    name: "N.A.",
+    hasHeader: false,
+    rowBackgroundId: "",
+    tableTextsId: "",
+    bordersId: "",
+    tableHeaderId: "",
+  },
 };
 
 const validGridGenCheck = (): void => {
   codeToUIMessage.isValidGridGen = true;
   const selection = figma.currentPage.selection[0];
   if (selection) {
-    const childNodesName: string[] = ["Row Background", "Table Texts", "Borders"];
+    const bareboneGridGenGroups = Object.keys(Constants.bareboneGridGenGroups);
     (selection as GroupNode).children.forEach(child => {
-      childNodesName.indexOf(child.name) === -1
+      bareboneGridGenGroups.indexOf(child.name) === -1
         ? child.name === "Table Header"
-          ? (codeToUIMessage.selectedGrid.hasHeader = true)
+          ? ((codeToUIMessage.selectedGrid.hasHeader = true),
+            (codeToUIMessage.selectedGrid[Constants.hasTableHeader[child.name]] = child.id))
           : (codeToUIMessage.isValidGridGen = false)
-        : null;
+        : (codeToUIMessage.selectedGrid[Constants.bareboneGridGenGroups[child.name]] = child.id);
     });
   } else {
     codeToUIMessage.isValidGridGen = false;
