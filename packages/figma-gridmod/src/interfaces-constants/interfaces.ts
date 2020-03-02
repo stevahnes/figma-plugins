@@ -2,8 +2,7 @@ import { UIToCodeMessageType } from "./constants";
 
 export interface CodeToUIMessage {
   isValidGridGen: boolean;
-  selectedGridId: string;
-  selectedGridName: string;
+  selectedGrid: SelectedGrid;
 }
 
 export interface UIToCodeMessage {
@@ -14,4 +13,5 @@ export interface UIToCodeMessage {
 export interface SelectedGrid {
   id: string;
   name: string;
+  hasHeader: boolean;
 }

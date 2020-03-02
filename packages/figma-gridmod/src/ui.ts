@@ -6,12 +6,16 @@ const uiToCodeMessage: Interfaces.UIToCodeMessage = {
   type: Constants.UIToCodeMessageType.EDIT_CONTENTS,
   payload: null,
 };
-const selectedGrid: Interfaces.SelectedGrid = { id: "", name: "N.A." };
+const selectedGrid: Interfaces.SelectedGrid = { id: "", name: "N.A.", hasHeader: false };
 
 onmessage = msg => {
   const receivedCodeMessage: Interfaces.CodeToUIMessage = msg.data.pluginMessage;
-  receivedCodeMessage.selectedGridId !== "" ? (selectedGrid.id = receivedCodeMessage.selectedGridId) : null;
-  receivedCodeMessage.selectedGridName !== "" ? (selectedGrid.name = receivedCodeMessage.selectedGridName) : null;
+  Object.keys(selectedGrid).forEach(key => {
+    selectedGrid[key] !== receivedCodeMessage.selectedGrid[key]
+      ? (selectedGrid[key] = receivedCodeMessage.selectedGrid[key])
+      : null;
+  });
+  console.log(selectedGrid);
   receivedCodeMessage.isValidGridGen
     ? ((document.getElementById("selected-grid-name").innerHTML = selectedGrid.name),
       document.getElementById("selected").classList.add("show"),
