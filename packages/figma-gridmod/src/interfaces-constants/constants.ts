@@ -13,6 +13,5 @@ export const bareboneGridGenGroups: { [key: string]: string } = {
   "Row Background": "rowBackgroundId",
   "Table Texts": "tableTextsId",
   Borders: "bordersId",
+  "Table Header": "tableHeaderId",
 };
-
-export const hasTableHeader: { [key: string]: string } = { "Table Header": "tableHeaderId" };

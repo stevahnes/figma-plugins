@@ -6,7 +6,6 @@ const codeToUIMessage: Interfaces.CodeToUIMessage = {
   selectedGrid: {
     id: "",
     name: "N.A.",
-    hasHeader: false,
     rowBackgroundId: "",
     tableTextsId: "",
     bordersId: "",
@@ -16,16 +15,15 @@ const codeToUIMessage: Interfaces.CodeToUIMessage = {
 
 const validGridGenCheck = (): void => {
   codeToUIMessage.isValidGridGen = true;
+  codeToUIMessage.selectedGrid.tableHeaderId = "";
   const selection = figma.currentPage.selection[0];
   if (selection) {
     const bareboneGridGenGroups = Object.keys(Constants.bareboneGridGenGroups);
-    (selection as GroupNode).children.forEach(child => {
-      bareboneGridGenGroups.indexOf(child.name) === -1
-        ? child.name === "Table Header"
-          ? ((codeToUIMessage.selectedGrid.hasHeader = true),
-            (codeToUIMessage.selectedGrid[Constants.hasTableHeader[child.name]] = child.id))
-          : (codeToUIMessage.isValidGridGen = false)
-        : (codeToUIMessage.selectedGrid[Constants.bareboneGridGenGroups[child.name]] = child.id);
+    const selectedNodeChildren: readonly SceneNode[] = (selection as GroupNode).children;
+    selectedNodeChildren.forEach(child => {
+      bareboneGridGenGroups.indexOf(child.name) !== -1
+        ? (codeToUIMessage.selectedGrid[Constants.bareboneGridGenGroups[child.name]] = child.id)
+        : (codeToUIMessage.isValidGridGen = false);
     });
   } else {
     codeToUIMessage.isValidGridGen = false;

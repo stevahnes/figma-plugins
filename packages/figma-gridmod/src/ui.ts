@@ -9,7 +9,6 @@ const uiToCodeMessage: Interfaces.UIToCodeMessage = {
 const selectedGrid: Interfaces.SelectedGrid = {
   id: "",
   name: "N.A.",
-  hasHeader: false,
   rowBackgroundId: "",
   tableTextsId: "",
   bordersId: "",
