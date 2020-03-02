@@ -19,6 +19,15 @@ p {
   display: block;
 }
 
+.warning {
+  color: #ffb347;
+  display: none;
+}
+
+.warning.show {
+  display: block;
+}
+
 h4 {
   margin: 0;
   padding: 5px 0;
@@ -214,49 +223,6 @@ input:disabled {
 
 .toggle-display.is-visible {
   display: block;
-}
-
-/* --- Custom Radio Button --- */
-
-/* Based on Codepen by Sal */
-.options-radio-buttons-wrapper {
-  clear: both;
-  display: flex;
-}
-
-.options-radio-button {
-  position: absolute;
-  left: -9999em;
-  top: -9999em;
-}
-
-.options-radio-button + label {
-  width: 33.3%;
-  float: left;
-  padding: 0.5em 1em;
-  cursor: pointer;
-  border: 0;
-  color: #bebebe;
-  font-weight: 300;
-  margin-right: -1px;
-}
-
-.options-radio-button + label:first-of-type {
-  border-radius: 0.7em 0 0 0.7em;
-}
-
-.options-radio-button + label:last-of-type {
-  border-radius: 0 0.7em 0.7em 0;
-}
-
-.options-radio-button:hover + label {
-  color: #000;
-  font-weight: 300;
-}
-
-.options-radio-button:checked + label {
-  color: #000;
-  font-weight: 550;
 }
 
 /* --- Animated Loader --- */

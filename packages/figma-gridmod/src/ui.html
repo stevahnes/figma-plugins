@@ -1,6 +1,17 @@
 <body>
-  <div style="text-align: center; vertical-align: middle;">
-    <p id="invalid">Please select a GridGen table/grid</p>
-    <p id="valid">GridGen table/grid selected</p>
+  <div id="lds" class="lds-container">
+    <div class="lds-dual-ring"></div>
+  </div>
+  <div class="row">
+    <div class="column half">
+      <h4>Selected Grid Name:&nbsp;</h4>
+    </div>
+    <div class="column half">
+      <h4 id="selected-grid-name">N.A.</h4>
+    </div>
+  </div>
+  <div class="row" id="selection-warnings">
+    <p id="selected" class="warning show">&nbsp;</p>
+    <p id="deselected" class="warning">No grid layer selected.</p>
   </div>
 </body>

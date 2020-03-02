@@ -1,10 +1,18 @@
+import "./ui.css";
+import * as Interfaces from "./interfaces-constants/interfaces";
+
+const selectedGrid: Interfaces.SelectedGrid = { id: "", name: "N.A." };
+
 onmessage = msg => {
-  const isValidGridGen = msg.data.pluginMessage;
-  isValidGridGen
-    ? ((document.getElementById("invalid").style.display = "none"),
-      (document.getElementById("valid").style.display = "block"))
-    : ((document.getElementById("invalid").style.display = "block"),
-      (document.getElementById("valid").style.display = "none"));
+  const receivedCodeMessage: Interfaces.CodeToUIMessage = msg.data.pluginMessage;
+  receivedCodeMessage.selectedGridId !== "" ? (selectedGrid.id = receivedCodeMessage.selectedGridId) : null;
+  receivedCodeMessage.selectedGridName !== "" ? (selectedGrid.name = receivedCodeMessage.selectedGridName) : null;
+  receivedCodeMessage.isValidGridGen
+    ? ((document.getElementById("selected-grid-name").innerHTML = selectedGrid.name),
+      document.getElementById("selected").classList.add("show"),
+      document.getElementById("deselected").classList.remove("show"))
+    : (document.getElementById("selected").classList.remove("show"),
+      document.getElementById("deselected").classList.add("show"));
 };
 
 window.onfocus = () => {

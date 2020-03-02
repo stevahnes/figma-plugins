@@ -1,23 +1,27 @@
+import * as Interfaces from "./interfaces-constants/interfaces";
+import * as Constants from "./interfaces-constants/constants";
+
+const codeToUIMessage: Interfaces.CodeToUIMessage = { isValidGridGen: false, selectedGridId: "", selectedGridName: "" };
+
 const validGridGenCheck = (): void => {
-  let isValidGridGen: boolean = true;
+  codeToUIMessage.isValidGridGen = true;
   const selection = figma.currentPage.selection[0];
   if (selection) {
-    if (selection.name === "Table") {
-      const childNodesName: string[] = ["Row Background", "Table Texts", "Table Header", "Borders"];
-      (selection as GroupNode).children.forEach(child => {
-        childNodesName.indexOf(child.name) === -1 ? (isValidGridGen = false) : null;
-      });
-    } else {
-      isValidGridGen = false;
-    }
+    const childNodesName: string[] = ["Row Background", "Table Texts", "Table Header", "Borders"];
+    (selection as GroupNode).children.forEach(child => {
+      childNodesName.indexOf(child.name) === -1 ? (codeToUIMessage.isValidGridGen = false) : null;
+    });
   } else {
-    isValidGridGen = false;
+    codeToUIMessage.isValidGridGen = false;
   }
-  figma.ui.postMessage(isValidGridGen);
+  codeToUIMessage.isValidGridGen
+    ? ((codeToUIMessage.selectedGridId = selection.id), (codeToUIMessage.selectedGridName = selection.name))
+    : ((codeToUIMessage.selectedGridId = ""), (codeToUIMessage.selectedGridName = ""));
+  figma.ui.postMessage(codeToUIMessage);
 };
 
 // This shows the HTML page in "ui.html".
-figma.showUI(__html__);
+figma.showUI(__html__, Constants.showUIOptions);
 // Check if selection is a valid GridGen
 validGridGenCheck();
 
