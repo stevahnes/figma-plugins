@@ -29,7 +29,7 @@ validGridGenCheck();
 // callback. The callback will be passed the "pluginMessage" property of the
 // posted message.
 figma.ui.onmessage = (msg: Interfaces.UIToCodeMessage) => {
-  if (msg.type === "focus" && msg.payload) {
+  if (msg.type === Constants.UIToCodeMessageType.WINDOW_FOCUS && msg.payload) {
     validGridGenCheck();
   }
 };

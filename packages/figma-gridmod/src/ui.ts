@@ -1,7 +1,11 @@
 import "./ui.css";
 import * as Interfaces from "./interfaces-constants/interfaces";
+import * as Constants from "./interfaces-constants/constants";
 
-const uiToCodeMessage: Interfaces.UIToCodeMessage = { type: "", payload: null };
+const uiToCodeMessage: Interfaces.UIToCodeMessage = {
+  type: Constants.UIToCodeMessageType.EDIT_CONTENTS,
+  payload: null,
+};
 const selectedGrid: Interfaces.SelectedGrid = { id: "", name: "N.A." };
 
 onmessage = msg => {
@@ -17,7 +21,7 @@ onmessage = msg => {
 };
 
 window.onfocus = () => {
-  uiToCodeMessage.type = "focus";
+  uiToCodeMessage.type = Constants.UIToCodeMessageType.WINDOW_FOCUS;
   uiToCodeMessage.payload = true;
   parent.postMessage({ pluginMessage: uiToCodeMessage }, "*");
 };

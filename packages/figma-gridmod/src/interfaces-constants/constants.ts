@@ -3,3 +3,8 @@ export const showUIOptions: ShowUIOptions = {
   height: 300,
   visible: true,
 };
+
+export const enum UIToCodeMessageType {
+  WINDOW_FOCUS,
+  EDIT_CONTENTS,
+}

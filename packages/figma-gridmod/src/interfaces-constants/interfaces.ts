@@ -1,3 +1,5 @@
+import { UIToCodeMessageType } from "./constants";
+
 export interface CodeToUIMessage {
   isValidGridGen: boolean;
   selectedGridId: string;
@@ -5,7 +7,7 @@ export interface CodeToUIMessage {
 }
 
 export interface UIToCodeMessage {
-  type: string;
+  type: UIToCodeMessageType;
   payload: any;
 }
 
