@@ -15,23 +15,30 @@ const codeToUIMessage: Interfaces.CodeToUIMessage = {
 
 const validGridGenCheck = (): void => {
   codeToUIMessage.isValidGridGen = true;
-  codeToUIMessage.selectedGrid.tableHeaderId = "";
+  const oldGridId = codeToUIMessage.selectedGrid.id;
+  const oldTableHeaderId = codeToUIMessage.selectedGrid.tableHeaderId;
   const selection = figma.currentPage.selection[0];
+  // if something on the Layer is selected
   if (selection) {
     const bareboneGridGenGroups = Object.keys(Constants.bareboneGridGenGroups);
+    // check if selection has children matching the barebone constructor of GridGen
     const selectedNodeChildren: readonly SceneNode[] = (selection as GroupNode).children;
     selectedNodeChildren.forEach(child => {
       bareboneGridGenGroups.indexOf(child.name) !== -1
         ? (codeToUIMessage.selectedGrid[Constants.bareboneGridGenGroups[child.name]] = child.id)
         : (codeToUIMessage.isValidGridGen = false);
     });
+    // if selected is a valid GridGen, update selected grid id
+    codeToUIMessage.isValidGridGen
+      ? ((codeToUIMessage.selectedGrid.id = selection.id), (codeToUIMessage.selectedGrid.name = selection.name))
+      : null;
+    // if selected grid has changed but table header id is not updated, means new grid has no table header
+    codeToUIMessage.selectedGrid.id !== oldGridId && oldTableHeaderId === codeToUIMessage.selectedGrid.tableHeaderId
+      ? (codeToUIMessage.selectedGrid.tableHeaderId = "")
+      : null;
   } else {
     codeToUIMessage.isValidGridGen = false;
   }
-  // update selected grid data
-  codeToUIMessage.isValidGridGen
-    ? ((codeToUIMessage.selectedGrid.id = selection.id), (codeToUIMessage.selectedGrid.name = selection.name))
-    : null;
   console.log(codeToUIMessage);
   figma.ui.postMessage(codeToUIMessage);
 };
