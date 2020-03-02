@@ -28,9 +28,8 @@ validGridGenCheck();
 // Calls to "parent.postMessage" from within the HTML page will trigger this
 // callback. The callback will be passed the "pluginMessage" property of the
 // posted message.
-figma.ui.onmessage = msg => {
-  console.log(msg);
-  if (msg) {
+figma.ui.onmessage = (msg: Interfaces.UIToCodeMessage) => {
+  if (msg.type === "focus" && msg.payload) {
     validGridGenCheck();
   }
 };

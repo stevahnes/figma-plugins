@@ -4,6 +4,11 @@ export interface CodeToUIMessage {
   selectedGridName: string;
 }
 
+export interface UIToCodeMessage {
+  type: string;
+  payload: any;
+}
+
 export interface SelectedGrid {
   id: string;
   name: string;
