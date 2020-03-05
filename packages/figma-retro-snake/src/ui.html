@@ -1,8 +1,16 @@
-<body style="margin: 0; background-color: #333333; font: 12px sans-serif;">
-  <div style="text-align: center; margin: 3px 5px;">
-    <p style="color: #C0F0F4; font-size: 14px;">
+<body>
+  <div id="game-board">
+    <p>
       Multiplier:&nbsp;<span id="multiplier"></span>x&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Score:&nbsp;<span id="score"></span>
     </p>
   </div>
   <div style="text-align: center;"><canvas id="snake"></canvas></div>
+  <div id="game-end-summary">
+    <p>Final Score<br>
+      <h1 id="final-score"></h1>
+    </p>
+    <div class="btn-standalone">
+      <button id="restart">RESTART</button>
+    </div>
+  </div>
 </body>
