@@ -4,6 +4,8 @@ Worked for too long? Needing a break? Unwind with a classic!
 
 Bringing the retro game we all love into Figma, Snake!
 
-Control the wriggly being with either "W+A+S+D" or Arrow Keys and grow it by feeding it with food. Yums!
+Control the wriggly being with either "W+A+S+D" or Arrow Keys and grow it by feeding it with food. Yums~
 
 As they all say, the longer the better, or is it?
+
+In any case, when the game ends just press "ENTER" on the keyboard or click the "RESTART" button to respawn and beat your best score!
