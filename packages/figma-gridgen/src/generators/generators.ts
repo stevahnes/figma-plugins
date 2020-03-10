@@ -1,6 +1,6 @@
 import * as Utils from "../utils/utils";
-import * as Interfaces from "../interfaces-constants/interfaces";
-import * as Constants from "../interfaces-constants/constants";
+import * as Interfaces from "../models/interfaces";
+import * as Constants from "../models/constants";
 import * as Figma from "../utils/figma";
 
 /* Check if Font is Loaded */

@@ -1,5 +1,5 @@
-import * as Constants from "../interfaces-constants/constants";
-import * as Interfaces from "../interfaces-constants/interfaces";
+import * as Constants from "../models/constants";
+import * as Interfaces from "../models/interfaces";
 
 /* Clone function taken from Figma Plugin API example */
 export function clone(val) {

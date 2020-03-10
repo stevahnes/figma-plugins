@@ -1,5 +1,5 @@
-import * as Interfaces from "./interfaces-constants/interfaces";
-import * as Constants from "./interfaces-constants/constants";
+import * as Interfaces from "./models/interfaces";
+import * as Constants from "./models/constants";
 
 const codeToUIMessage: Interfaces.CodeToUIMessage = {
   isValidGridGen: false,
