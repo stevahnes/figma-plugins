@@ -1,6 +1,6 @@
 {
   "name": "figma-gridgen",
-  "version": "1.4.6",
+  "version": "1.4.7",
   "description": "Utilizes built-in Figma rectangles, lines, and texts to generate tables with neatly organized layers",
   "main": "code.js",
   "scripts": {
