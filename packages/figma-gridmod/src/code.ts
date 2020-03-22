@@ -1,11 +1,14 @@
 import * as Interfaces from "./models/interfaces";
 import * as Constants from "./models/constants";
+import { getBorderTypesId } from "./generators/generators";
 
 const codeToUIMessage: Interfaces.CodeToUIMessage = {
   isValidGridGen: false,
   selectedGrid: {
     id: "",
-    name: "N.A.",
+    name: "---",
+    rows: 0, // without header
+    columns: 0,
     rowBackgroundId: "",
     tableTextsId: "",
     bordersId: "",
@@ -36,6 +39,14 @@ const validGridGenCheck = (): void => {
     codeToUIMessage.selectedGrid.id !== oldGridId && oldTableHeaderId === codeToUIMessage.selectedGrid.tableHeaderId
       ? (codeToUIMessage.selectedGrid.tableHeaderId = "")
       : null;
+    // Finally, calculate number of rows and columns without header
+    const allBorders: { [key: string]: string } = getBorderTypesId(codeToUIMessage.selectedGrid);
+    codeToUIMessage.selectedGrid.tableHeaderId === ""
+      ? (codeToUIMessage.selectedGrid.rows =
+          (figma.getNodeById(allBorders["Horizontal"]) as GroupNode).children.length - 1)
+      : (codeToUIMessage.selectedGrid.rows =
+          (figma.getNodeById(allBorders["Horizontal"]) as GroupNode).children.length - 2);
+    codeToUIMessage.selectedGrid.columns = (figma.getNodeById(allBorders["Vertical"]) as GroupNode).children.length - 1;
   } else {
     codeToUIMessage.isValidGridGen = false;
   }

@@ -13,6 +13,8 @@ export interface UIToCodeMessage {
 export interface SelectedGrid {
   id: string;
   name: string;
+  rows: number; // without header
+  columns: number;
   rowBackgroundId: string;
   tableTextsId: string;
   bordersId: string;
