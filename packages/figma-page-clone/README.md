@@ -13,4 +13,4 @@ One-click, fuss-free tool to clone a page. No gimmicks, no frills!
 
 ## Work-in-Progress:
 
-• Validator that name has been input :)
+• Suggestions are welcome!

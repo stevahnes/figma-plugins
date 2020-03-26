@@ -10,10 +10,18 @@ window.onfocus = () => {
 };
 
 document.getElementById("create").onclick = () => {
-  parent.postMessage(
-    { pluginMessage: { type: "cloned", name: (document.getElementById("clone-name") as HTMLInputElement).value } },
-    "*",
-  );
+  const name: string = (document.getElementById("clone-name") as HTMLInputElement).value;
+  if (name.length > 0) {
+    document.getElementById("lds").classList.add("is-visible");
+    setTimeout(() => {
+      parent.postMessage(
+        { pluginMessage: { type: "cloned", name: (document.getElementById("clone-name") as HTMLInputElement).value } },
+        "*",
+      );
+    }, 50);
+  } else {
+    document.getElementById("clone-name").classList.add("invalid");
+  }
 };
 
 document.onkeydown = keyDown => {
