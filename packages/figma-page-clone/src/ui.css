@@ -45,6 +45,16 @@ h4 {
 }
 
 /* --- Input --- */
+input[type="checkbox"] {
+  width: 100%;
+  border: none;
+  border-radius: 3px;
+  outline: none;
+  padding: 5px;
+  margin-top: 0.5em;
+  text-align: left;
+}
+
 input[type="text"] {
   width: 95%;
   border: none;
@@ -169,7 +179,7 @@ input:disabled {
 
 .lds-dual-ring {
   display: inline-block;
-  padding: 20px 0;
+  padding: 32.5px 0;
   width: 80px;
   height: 80px;
 }
