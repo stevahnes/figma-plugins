@@ -4,13 +4,15 @@ One-click, fuss-free tool to clone a page. No gimmicks, no frills!
 
 ## How to Use:
 
-• Launch the plugin
-• While the plugin is active, you are free to move between pages
-• Click on the plugin again once you're on the page you want to clone
-• Verify that the "Selected" page name is reflected on the plugin UI
-• Name the clone to be created
-• Click on "Create"
+- Launch the plugin
+- While the plugin is active, you are free to move between pages
+- Click on the plugin again once you're on the page you want to clone
+- Verify that the "Selected" page name is reflected on the plugin UI
+- Name the clone to be created
+- Select whether the cloned page shall be sanitized:
+  - Removal of hidden nodes/layers
+- Click on "Clone"
 
 ## Work-in-Progress:
 
-• Suggestions are welcome!
+- Suggestions are welcome!
