@@ -1,7 +1,7 @@
 {
-  "name": "figma-retro-snake",
-  "version": "1.1.2",
-  "description": "Feeling exhausted after long hours of designing? De-stress with the classic Snake game, now seamlessly integrated with Figma!",
+  "name": "figma-page-clone",
+  "version": "1.0.0",
+  "description": "One-click tool to clone a page",
   "main": "code.js",
   "scripts": {
     "start": "webpack --mode=development --watch",
@@ -9,13 +9,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/stevahnes/figma-plugins.git"
+    "url": "git+https://github.com/stevahnes/figma-plugins.git"
   },
   "keywords": [
-    "retro",
-    "snake",
-    "game",
-    "de-stress"
+    "clone",
+    "page",
+    "rename"
   ],
   "author": "Stevanus Satria",
   "license": "MIT",

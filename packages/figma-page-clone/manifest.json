@@ -1,0 +1,7 @@
+{
+  "name": "PageClone",
+  "id": "824942413886528676",
+  "api": "1.0.0",
+  "main": "dist/code.js",
+  "ui": "dist/ui.html"
+}
