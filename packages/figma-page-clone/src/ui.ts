@@ -9,7 +9,10 @@ onmessage = (msg: MessageEvent): void => {
 };
 
 window.onfocus = () => {
-  parent.postMessage({ pluginMessage: { type: "focus", name: "", sanitize: false, locked: false } }, "*");
+  parent.postMessage(
+    { pluginMessage: { type: "focus", name: "", sanitize: false, "clone-master": false, locked: false } },
+    "*",
+  );
 };
 
 document.getElementById("clone").onclick = () => {
@@ -23,6 +26,7 @@ document.getElementById("clone").onclick = () => {
             type: "cloned",
             name: (document.getElementById("clone-name") as HTMLInputElement).value,
             sanitize: (document.getElementById("sanitize") as HTMLInputElement).checked,
+            "clone-master": (document.getElementById("clone-master") as HTMLInputElement).checked,
             locked: (document.getElementById("locked") as HTMLInputElement).checked,
           },
         },
