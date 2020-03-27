@@ -8,7 +8,7 @@ onmessage = (msg: MessageEvent): void => {
 };
 
 window.onfocus = () => {
-  parent.postMessage({ pluginMessage: { type: "focus", name: "", sanitize: false } }, "*");
+  parent.postMessage({ pluginMessage: { type: "focus", name: "", sanitize: false, locked: false } }, "*");
 };
 
 document.getElementById("clone").onclick = () => {
@@ -22,6 +22,7 @@ document.getElementById("clone").onclick = () => {
             type: "cloned",
             name: (document.getElementById("clone-name") as HTMLInputElement).value,
             sanitize: (document.getElementById("sanitize") as HTMLInputElement).checked,
+            locked: (document.getElementById("locked") as HTMLInputElement).checked,
           },
         },
         "*",
