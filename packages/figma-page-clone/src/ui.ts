@@ -4,7 +4,8 @@ let isShiftHeld: boolean = false;
 
 onmessage = (msg: MessageEvent): void => {
   document.getElementById("selected-page-name").innerHTML = msg.data.pluginMessage.name;
-  document.getElementById("clone-name").focus();
+  (document.getElementById("clone-name") as HTMLInputElement).value = `Copy of ${msg.data.pluginMessage.name}`;
+  (document.getElementById("clone-name") as HTMLInputElement).select();
 };
 
 window.onfocus = () => {

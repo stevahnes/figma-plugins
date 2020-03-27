@@ -13,18 +13,20 @@ figma.ui.onmessage = (msg: { type: string; name: string; sanitize: boolean; lock
   }
   if (msg.type === "cloned") {
     const clone: PageNode = figma.currentPage.clone();
+    const oldName: string = clone.name;
     clone.name = msg.name;
-    const hiddenNodes = clone.findAll(node => node.visible === false);
     if (msg.sanitize) {
+      const hiddenNodes = clone.findAll(node => node.visible === false);
+      const instanceNodeRegex: RegExp = /I[0-9]+:[0-9]+;/;
       hiddenNodes.forEach(node => {
-        figma.getNodeById(node.id) ? node.remove() : null;
+        !instanceNodeRegex.test(node.id) ? node.remove() : null;
       });
     }
     if (msg.locked) {
       clone.children.forEach((child: SceneNode) => (child.locked = true));
     }
     figma.currentPage = figma.getNodeById(clone.id) as PageNode;
-    figma.notify("👍 PageClone successfully cloned the selected page");
+    figma.notify(`👍 Successfully cloned ${oldName} into ${clone.name}`);
     figma.closePlugin();
   }
 };
