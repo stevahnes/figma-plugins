@@ -19,7 +19,7 @@ figma.ui.onmessage = (msg: { type: string; name: string; sanitize: boolean; lock
       const hiddenNodes = clone.findAll(node => node.visible === false);
       const instanceNodeRegex: RegExp = /I[0-9]+:[0-9]+;/;
       hiddenNodes.forEach(node => {
-        !instanceNodeRegex.test(node.id) ? node.remove() : null;
+        !instanceNodeRegex.test(node.id) ? (figma.getNodeById(node.id) ? node.remove() : null) : null;
       });
     }
     if (msg.locked) {
