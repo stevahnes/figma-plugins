@@ -11,7 +11,6 @@
     "ci": "npm run fix && npm run lint && npm run build"
   },
   "devDependencies": {
-    "@types/jasmine": "^3.5.9",
     "@typescript-eslint/eslint-plugin": "^2.24.0",
     "@typescript-eslint/parser": "^2.24.0",
     "concurrently": "^5.1.0",
@@ -28,8 +27,8 @@
     "style-loader": "^1.1.2",
     "stylelint": "^13.2.1",
     "stylelint-config-standard": "^19.0.0",
-    "ts-loader": "^6.2.1",
-    "ts-node": "^8.6.2",
+    "ts-loader": "^6.2.2",
+    "ts-node": "^8.8.1",
     "typescript": "^3.8.3",
     "url-loader": "^3.0.0",
     "webpack": "^4.42.0",
