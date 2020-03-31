@@ -44,7 +44,7 @@ h4 {
 }
 
 .btn-standalone button:focus {
-  box-shadow: inset 0 0 0 2px #18a0fb;
+  box-shadow: 0 0 0 2px #b9e2fe;
 }
 
 .btn-standalone button:disabled {
