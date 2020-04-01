@@ -58,17 +58,10 @@ const resizeBorders = (id: string, decrease: boolean, amount: number, multiplier
 const moveBorders = (id: string, decrease: boolean, amount: number, all: boolean, index?: number): void => {
   const bordersToMove: GroupNode = figma.getNodeById(id) as GroupNode;
   const startIndex: number = !all ? index : 1;
-  if (bordersToMove.name === "Vertical") {
-    let toAdd: number = amount;
-    for (let i: number = startIndex; i < bordersToMove.children.length; i++) {
-      bordersToMove.children[i].x += toAdd;
-      toAdd += amount;
-    }
-  } else {
-    let toSubtract: number = amount;
-    for (let i: number = bordersToMove.children.length - (startIndex + 1); i >= 0; i--) {
-      bordersToMove.children[i].y -= toSubtract;
-      toSubtract += amount;
-    }
+  let toAdd: number = amount;
+  // Top to bottom logic not needed as reference coordinate is always {0,0}
+  for (let i: number = startIndex; i < bordersToMove.children.length; i++) {
+    bordersToMove.children[i].x += toAdd;
+    toAdd += amount;
   }
 };
