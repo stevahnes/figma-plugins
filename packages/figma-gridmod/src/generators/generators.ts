@@ -43,9 +43,9 @@ const editBorders = (
   const allBorders: { [key: string]: string } = getBorderTypesId(selectedGrid);
   row
     ? (resizeBorders(allBorders["Vertical"], decrease, amount, selectedGrid.rows, all),
-      moveBorders(allBorders["Horizontal"], decrease, amount, index))
+      moveBorders(allBorders["Horizontal"], decrease, amount, all, index))
     : (resizeBorders(allBorders["Horizontal"], decrease, amount, selectedGrid.columns, all),
-      moveBorders(allBorders["Vertical"], decrease, amount, index));
+      moveBorders(allBorders["Vertical"], decrease, amount, all, index));
 };
 
 const resizeBorders = (id: string, decrease: boolean, amount: number, multiplier: number, all: boolean): void => {
@@ -55,6 +55,20 @@ const resizeBorders = (id: string, decrease: boolean, amount: number, multiplier
   });
 };
 
-const moveBorders = (id: string, decrease: boolean, amount: number, index?: number): any => {
-  return [id, decrease, amount, index]; // TODO create algorithm to move borders based on the index (single move) or all (multi move)
+const moveBorders = (id: string, decrease: boolean, amount: number, all: boolean, index?: number): void => {
+  const bordersToMove: GroupNode = figma.getNodeById(id) as GroupNode;
+  const startIndex: number = !all ? index : 1;
+  if (bordersToMove.name === "Vertical") {
+    let toAdd: number = amount;
+    for (let i: number = startIndex; i < bordersToMove.children.length; i++) {
+      bordersToMove.children[i].x += toAdd;
+      toAdd += amount;
+    }
+  } else {
+    let toSubtract: number = amount;
+    for (let i: number = bordersToMove.children.length - (startIndex + 1); i >= 0; i--) {
+      bordersToMove.children[i].y -= toSubtract;
+      toSubtract += amount;
+    }
+  }
 };
