@@ -61,7 +61,7 @@ const moveBorders = (id: string, decrease: boolean, amount: number, all: boolean
   let toAdd: number = amount;
   // Top to bottom logic not needed as reference coordinate is always {0,0}
   for (let i: number = startIndex; i < bordersToMove.children.length; i++) {
-    bordersToMove.children[i].x += toAdd;
+    !decrease ? (bordersToMove.children[i].x += toAdd) : (bordersToMove.children[i].x -= toAdd);
     toAdd += amount;
   }
 };
