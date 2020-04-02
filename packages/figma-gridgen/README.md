@@ -45,6 +45,10 @@ Utilizes built-in Figma rectangles, lines, and texts to generate tables with nea
 
 - Edit mode
 
+## License:
+
+[MIT](/LICENSE)
+
 ## Note:
 
 - After deliberating for a while, I have decided to have "Edit Mode" implemented as a new plugin instead. Keep a lookout on when "GridMod" goes live!

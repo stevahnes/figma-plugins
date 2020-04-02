@@ -9,3 +9,7 @@ Control the wriggly being with either "W+A+S+D" or Arrow Keys and grow it by fee
 As they all say, the longer the better, or is it?
 
 In any case, when the game ends just press "ENTER" on the keyboard or click the "RESTART" button to respawn and beat your best score!
+
+## License:
+
+[MIT](/LICENSE)

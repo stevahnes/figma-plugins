@@ -20,3 +20,7 @@ One-click, fuss-free tool to clone a page.
 ## Work-in-Progress:
 
 - Suggestions are welcome :)
+
+## License:
+
+[MIT](/LICENSE)
