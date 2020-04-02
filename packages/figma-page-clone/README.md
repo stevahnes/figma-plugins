@@ -13,7 +13,7 @@ One-click, fuss-free tool to clone a page.
   - Remove hidden layers
   - Make in-page copies of required master components
     - Useful if changes on original master components should not affect cloned instances
-    - Copies of master components are automatically hidden
+    - Copies of master components are automatically grouped and hidden
   - Automatically lock all frames
 - Finally, click on "Clone" and let the plugin do the rest!
 

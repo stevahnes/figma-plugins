@@ -96,6 +96,12 @@ figma.ui.onmessage = (msg: {
         });
         deepCloneMasterComponentsIds = [...nextDeepCloneMasterComponentsIds];
       }
+      // then group them into a components group
+      const componentGroup = figma.group(
+        figma.currentPage.findAll(node => node.type === "COMPONENT"),
+        figma.currentPage,
+      );
+      componentGroup.name = "Master Components";
     }
     if (msg.locked) {
       clone.children.forEach((child: SceneNode) => (child.locked = true));
