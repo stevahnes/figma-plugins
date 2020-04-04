@@ -19,7 +19,7 @@ export const editRows = (
   all: boolean,
   index?: number,
 ): void => {
-  editBorders(selectedGrid, decrease, false, amount, all, index);
+  editBorders(selectedGrid, decrease, true, amount, all, index);
   // TODO: create editRowBackgrounds, editTexts, editTableHeader
   return null;
 };
@@ -57,11 +57,21 @@ const resizeBorders = (id: string, decrease: boolean, amount: number, multiplier
 
 const moveBorders = (id: string, decrease: boolean, amount: number, all: boolean, index?: number): void => {
   const bordersToMove: GroupNode = figma.getNodeById(id) as GroupNode;
+  const bordersToMoveGroupName = bordersToMove.name;
   const startIndex: number = !all ? index : 1;
   let toAdd: number = amount;
   // Top to bottom logic not needed as reference coordinate is always {0,0}
-  for (let i: number = startIndex; i < bordersToMove.children.length; i++) {
-    !decrease ? (bordersToMove.children[i].x += toAdd) : (bordersToMove.children[i].x -= toAdd);
-    toAdd += amount;
+  if (bordersToMoveGroupName === "Vertical") {
+    for (let i: number = startIndex; i < bordersToMove.children.length; i++) {
+      // for Vertical borders, increase === add as rightward is +ve
+      !decrease ? (bordersToMove.children[i].x += toAdd) : (bordersToMove.children[i].x -= toAdd);
+      toAdd += amount;
+    }
+  } else {
+    for (let i: number = startIndex; i < bordersToMove.children.length; i++) {
+      // for Horizontal borders, increase === subtract as upward is negative
+      !decrease ? (bordersToMove.children[i].y -= toAdd) : (bordersToMove.children[i].y += toAdd);
+      toAdd += amount;
+    }
   }
 };

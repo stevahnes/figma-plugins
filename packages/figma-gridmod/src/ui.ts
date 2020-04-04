@@ -41,21 +41,20 @@ window.onfocus = () => {
 };
 
 document.getElementById("edit").onclick = () => {
-  const name: string = (document.getElementById("clone-name") as HTMLInputElement).value;
-  if (name.length > 0) {
-    document.getElementById("lds").classList.add("is-visible");
-    setTimeout(() => {
-      parent.postMessage(
-        {
-          pluginMessage: {
-            type: Constants.UIToCodeMessageType.EDIT_CONTENTS,
-            payload: null,
+  // document.getElementById("lds").classList.add("is-visible");
+  setTimeout(() => {
+    parent.postMessage(
+      {
+        pluginMessage: {
+          type: Constants.UIToCodeMessageType.EDIT_CONTENTS,
+          payload: {
+            selectedGrid: selectedGrid,
+            rows: ["All", 20],
+            columns: [],
           },
         },
-        "*",
-      );
-    }, 50);
-  } else {
-    document.getElementById("clone-name").classList.add("invalid");
-  }
+      },
+      "*",
+    );
+  }, 50);
 };

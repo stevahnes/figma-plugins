@@ -1,6 +1,6 @@
 import * as Interfaces from "./models/interfaces";
 import * as Constants from "./models/constants";
-import { getBorderTypesId } from "./generators/generators";
+import { getBorderTypesId, editRows } from "./generators/generators";
 
 const codeToUIMessage: Interfaces.CodeToUIMessage = {
   isValidGridGen: false,
@@ -22,7 +22,7 @@ const validGridGenCheck = (): void => {
   const oldTableHeaderId = codeToUIMessage.selectedGrid.tableHeaderId;
   const selection = figma.currentPage.selection[0];
   // if something on the Layer is selected
-  if (selection && (selection.type === "GROUP" || selection.type === "COMPONENT")) {
+  if (selection && selection.type === "GROUP") {
     const bareboneGridGenGroups = Object.keys(Constants.bareboneGridGenGroups);
     // check if selection has children matching the barebone constructor of GridGen
     const selectedNodeChildren: readonly SceneNode[] = (selection as GroupNode).children;
@@ -65,5 +65,7 @@ validGridGenCheck();
 figma.ui.onmessage = (msg: Interfaces.UIToCodeMessage) => {
   if (msg.type === Constants.UIToCodeMessageType.WINDOW_FOCUS && msg.payload) {
     validGridGenCheck();
+  } else if (msg.type === Constants.UIToCodeMessageType.EDIT_CONTENTS) {
+    editRows(msg.payload.selectedGrid, false, msg.payload.rows[1], true);
   }
 };
