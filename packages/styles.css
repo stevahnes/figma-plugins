@@ -19,6 +19,15 @@ p {
   display: block;
 }
 
+.warning {
+  color: #dd571c;
+  display: none;
+}
+
+.warning.show {
+  display: block;
+}
+
 h4 {
   margin: 0;
   padding: 5px 0;

@@ -22,7 +22,7 @@ const validGridGenCheck = (): void => {
   const oldTableHeaderId = codeToUIMessage.selectedGrid.tableHeaderId;
   const selection = figma.currentPage.selection[0];
   // if something on the Layer is selected
-  if (selection) {
+  if (selection && (selection.type === "GROUP" || selection.type === "COMPONENT")) {
     const bareboneGridGenGroups = Object.keys(Constants.bareboneGridGenGroups);
     // check if selection has children matching the barebone constructor of GridGen
     const selectedNodeChildren: readonly SceneNode[] = (selection as GroupNode).children;

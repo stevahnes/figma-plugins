@@ -34,7 +34,28 @@ onmessage = msg => {
 };
 
 window.onfocus = () => {
+  console.log("window :", window);
   uiToCodeMessage.type = Constants.UIToCodeMessageType.WINDOW_FOCUS;
   uiToCodeMessage.payload = true;
   parent.postMessage({ pluginMessage: uiToCodeMessage }, "*");
+};
+
+document.getElementById("edit").onclick = () => {
+  const name: string = (document.getElementById("clone-name") as HTMLInputElement).value;
+  if (name.length > 0) {
+    document.getElementById("lds").classList.add("is-visible");
+    setTimeout(() => {
+      parent.postMessage(
+        {
+          pluginMessage: {
+            type: Constants.UIToCodeMessageType.EDIT_CONTENTS,
+            payload: null,
+          },
+        },
+        "*",
+      );
+    }, 50);
+  } else {
+    document.getElementById("clone-name").classList.add("invalid");
+  }
 };
