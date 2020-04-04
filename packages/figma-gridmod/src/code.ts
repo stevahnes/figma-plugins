@@ -1,6 +1,6 @@
 import * as Interfaces from "./models/interfaces";
 import * as Constants from "./models/constants";
-import { getBorderTypesId, editRows, editColumns } from "./generators/generators";
+import { getBorderTypesId, editColumns } from "./generators/generators";
 
 const codeToUIMessage: Interfaces.CodeToUIMessage = {
   isValidGridGen: false,
