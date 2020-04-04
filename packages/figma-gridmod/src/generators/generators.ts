@@ -8,6 +8,7 @@ export const editColumns = (
   index?: number,
 ): void => {
   editBorders(selectedGrid, decrease, false, amount, all, index);
+  editBackgrounds(selectedGrid, selectedGrid.rows, decrease, true, amount, all, index);
   // TODO: create editRowBackgrounds, editTexts, editTableHeader
   return null;
 };
@@ -20,6 +21,7 @@ export const editRows = (
   index?: number,
 ): void => {
   editBorders(selectedGrid, decrease, true, amount, all, index);
+  editBackgrounds(selectedGrid, selectedGrid.rows, decrease, true, amount, all, index);
   // TODO: create editRowBackgrounds, editTexts, editTableHeader
   return null;
 };
@@ -72,6 +74,66 @@ const moveBorders = (id: string, decrease: boolean, amount: number, all: boolean
       // for Horizontal borders, increase === subtract as upward is negative
       !decrease ? (bordersToMove.children[i].y -= toAdd) : (bordersToMove.children[i].y += toAdd);
       toAdd += amount;
+    }
+  }
+};
+
+const editBackgrounds = (
+  selectedGrid: SelectedGrid,
+  totalBackgroundsCount: number,
+  decrease: boolean,
+  row: boolean,
+  amount: number,
+  all: boolean,
+  index?: number,
+): void => {
+  const toAdd: number = decrease ? -1 * amount : amount;
+  const oddBackgrounds: GroupNode = (figma.getNodeById(selectedGrid.rowBackgroundId) as GroupNode)
+    .children[0] as GroupNode;
+  const evenBackgrounds: GroupNode = (figma.getNodeById(selectedGrid.rowBackgroundId) as GroupNode)
+    .children[1] as GroupNode;
+  if (all) {
+    for (let i: number = 0; i < totalBackgroundsCount; i++) {
+      console.log("Math.round(i / 2) :", Math.floor(i / 2));
+      // if rowCount without header is odd
+      if (totalBackgroundsCount % 2 !== 0) {
+        i % 2 === 0
+          ? row
+            ? (oddBackgrounds.children[Math.floor(i / 2)].y += toAdd) // TODO and clone
+            : (oddBackgrounds.children[Math.floor(i / 2)].x += toAdd)
+          : row
+          ? (evenBackgrounds.children[i / 2].y += toAdd)
+          : (evenBackgrounds.children[i / 2].x += toAdd);
+        // else if rowCount without header is even
+      } else {
+        i % 2 !== 0
+          ? row
+            ? (oddBackgrounds.children[Math.floor(i / 2)].y += toAdd)
+            : (oddBackgrounds.children[Math.floor(i / 2)].x += toAdd)
+          : row
+          ? (evenBackgrounds.children[i / 2].y += toAdd)
+          : (evenBackgrounds.children[i / 2].x += toAdd);
+      }
+    }
+  } else {
+    // if rowCount without header is odd
+    if (totalBackgroundsCount % 2 !== 0) {
+      index % 2 === 0
+        ? row
+          ? (oddBackgrounds.children[Math.round(index / 2)].y += toAdd)
+          : (oddBackgrounds.children[Math.round(index / 2)].x += toAdd)
+        : row
+        ? (evenBackgrounds.children[index / 2].y += toAdd)
+        : (evenBackgrounds.children[index / 2].x += toAdd);
+      // else if rowCount without header is even
+    } else {
+      index % 2 !== 0
+        ? row
+          ? (oddBackgrounds.children[Math.round(index / 2)].y += toAdd)
+          : (oddBackgrounds.children[Math.round(index / 2)].x += toAdd)
+        : row
+        ? (evenBackgrounds.children[index / 2].y += toAdd)
+        : (evenBackgrounds.children[index / 2].x += toAdd);
     }
   }
 };
