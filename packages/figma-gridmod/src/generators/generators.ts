@@ -8,7 +8,7 @@ export const editColumns = (
   index?: number,
 ): void => {
   editBorders(selectedGrid, decrease, false, amount, all, index);
-  editBackgrounds(selectedGrid, selectedGrid.rows, decrease, true, amount, all, index);
+  editBackgrounds(selectedGrid, selectedGrid.rows, decrease, false, amount, all, index);
   // TODO: create editRowBackgrounds, editTexts, editTableHeader
   return null;
 };
@@ -92,48 +92,53 @@ const editBackgrounds = (
     .children[0] as GroupNode;
   const evenBackgrounds: GroupNode = (figma.getNodeById(selectedGrid.rowBackgroundId) as GroupNode)
     .children[1] as GroupNode;
+  const currentDimensions: { width: number; height: number } = {
+    width: oddBackgrounds.children[0].width,
+    height: oddBackgrounds.children[0].height,
+  };
   if (all) {
     for (let i: number = 0; i < totalBackgroundsCount; i++) {
-      console.log("Math.round(i / 2) :", Math.floor(i / 2));
-      // if rowCount without header is odd
-      if (totalBackgroundsCount % 2 !== 0) {
-        i % 2 === 0
-          ? row
-            ? (oddBackgrounds.children[Math.floor(i / 2)].y += toAdd) // TODO and clone
-            : (oddBackgrounds.children[Math.floor(i / 2)].x += toAdd)
-          : row
-          ? (evenBackgrounds.children[i / 2].y += toAdd)
-          : (evenBackgrounds.children[i / 2].x += toAdd);
-        // else if rowCount without header is even
-      } else {
-        i % 2 !== 0
-          ? row
-            ? (oddBackgrounds.children[Math.floor(i / 2)].y += toAdd)
-            : (oddBackgrounds.children[Math.floor(i / 2)].x += toAdd)
-          : row
-          ? (evenBackgrounds.children[i / 2].y += toAdd)
-          : (evenBackgrounds.children[i / 2].x += toAdd);
-      }
+      i % 2 === 0
+        ? row
+          ? (oddBackgrounds.children[Math.floor(i / 2)].resize(
+              currentDimensions.width,
+              currentDimensions.height + toAdd,
+            ),
+            (oddBackgrounds.children[Math.floor(i / 2)].y -= (i + 1) * toAdd))
+          : oddBackgrounds.children[Math.floor(i / 2)].resize(
+              currentDimensions.width + selectedGrid.columns * toAdd,
+              currentDimensions.height,
+            )
+        : row
+        ? (evenBackgrounds.children[Math.floor(i / 2)].resize(
+            currentDimensions.width,
+            currentDimensions.height + toAdd,
+          ),
+          (evenBackgrounds.children[Math.floor(i / 2)].y -= (i + 1) * toAdd))
+        : evenBackgrounds.children[Math.floor(i / 2)].resize(
+            currentDimensions.width + selectedGrid.columns * toAdd,
+            currentDimensions.height,
+          );
     }
   } else {
-    // if rowCount without header is odd
-    if (totalBackgroundsCount % 2 !== 0) {
-      index % 2 === 0
-        ? row
-          ? (oddBackgrounds.children[Math.round(index / 2)].y += toAdd)
-          : (oddBackgrounds.children[Math.round(index / 2)].x += toAdd)
-        : row
-        ? (evenBackgrounds.children[index / 2].y += toAdd)
-        : (evenBackgrounds.children[index / 2].x += toAdd);
-      // else if rowCount without header is even
-    } else {
-      index % 2 !== 0
-        ? row
-          ? (oddBackgrounds.children[Math.round(index / 2)].y += toAdd)
-          : (oddBackgrounds.children[Math.round(index / 2)].x += toAdd)
-        : row
-        ? (evenBackgrounds.children[index / 2].y += toAdd)
-        : (evenBackgrounds.children[index / 2].x += toAdd);
-    }
+    index % 2 === 0
+      ? row
+        ? oddBackgrounds.children[Math.floor(index / 2)].resize(
+            currentDimensions.width,
+            currentDimensions.height + toAdd,
+          )
+        : oddBackgrounds.children[Math.floor(index / 2)].resize(
+            currentDimensions.width + selectedGrid.columns * toAdd,
+            currentDimensions.height,
+          )
+      : row
+      ? evenBackgrounds.children[Math.floor(index / 2)].resize(
+          currentDimensions.width,
+          currentDimensions.height + toAdd,
+        )
+      : evenBackgrounds.children[Math.floor(index / 2)].resize(
+          currentDimensions.width + selectedGrid.columns * toAdd,
+          currentDimensions.height,
+        );
   }
 };

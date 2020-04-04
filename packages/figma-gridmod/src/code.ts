@@ -1,6 +1,6 @@
 import * as Interfaces from "./models/interfaces";
 import * as Constants from "./models/constants";
-import { getBorderTypesId, editRows } from "./generators/generators";
+import { getBorderTypesId, editRows, editColumns } from "./generators/generators";
 
 const codeToUIMessage: Interfaces.CodeToUIMessage = {
   isValidGridGen: false,
@@ -66,6 +66,6 @@ figma.ui.onmessage = (msg: Interfaces.UIToCodeMessage) => {
   if (msg.type === Constants.UIToCodeMessageType.WINDOW_FOCUS && msg.payload) {
     validGridGenCheck();
   } else if (msg.type === Constants.UIToCodeMessageType.EDIT_CONTENTS) {
-    editRows(msg.payload.selectedGrid, false, msg.payload.rows[1], true);
+    editColumns(msg.payload.selectedGrid, false, msg.payload.rows[1], true);
   }
 };
