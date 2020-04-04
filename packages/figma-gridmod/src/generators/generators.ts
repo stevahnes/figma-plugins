@@ -43,11 +43,12 @@ const editBorders = (
   index?: number,
 ): void => {
   const allBorders: { [key: string]: string } = getBorderTypesId(selectedGrid);
+  const hasHeader: boolean = selectedGrid.tableHeaderId !== "";
   row
     ? (resizeBorders(allBorders["Vertical"], decrease, amount, selectedGrid.rows, all),
-      moveBorders(allBorders["Horizontal"], decrease, amount, all, index))
+      moveBorders(hasHeader, allBorders["Horizontal"], decrease, amount, all, index))
     : (resizeBorders(allBorders["Horizontal"], decrease, amount, selectedGrid.columns, all),
-      moveBorders(allBorders["Vertical"], decrease, amount, all, index));
+      moveBorders(hasHeader, allBorders["Vertical"], decrease, amount, all, index));
 };
 
 const resizeBorders = (id: string, decrease: boolean, amount: number, multiplier: number, all: boolean): void => {
@@ -57,7 +58,14 @@ const resizeBorders = (id: string, decrease: boolean, amount: number, multiplier
   });
 };
 
-const moveBorders = (id: string, decrease: boolean, amount: number, all: boolean, index?: number): void => {
+const moveBorders = (
+  hasHeader: boolean,
+  id: string,
+  decrease: boolean,
+  amount: number,
+  all: boolean,
+  index?: number,
+): void => {
   const bordersToMove: GroupNode = figma.getNodeById(id) as GroupNode;
   const bordersToMoveGroupName = bordersToMove.name;
   const startIndex: number = !all ? index : 1;
@@ -73,7 +81,9 @@ const moveBorders = (id: string, decrease: boolean, amount: number, all: boolean
     for (let i: number = startIndex; i < bordersToMove.children.length; i++) {
       // for Horizontal borders, increase === subtract as upward is negative
       !decrease ? (bordersToMove.children[i].y -= toAdd) : (bordersToMove.children[i].y += toAdd);
-      toAdd += amount; // FIXME last border might be header top, add by headerHeight instead
+      if (!(i === bordersToMove.children.length - 2 && hasHeader)) {
+        toAdd += amount;
+      }
     }
   }
 };
