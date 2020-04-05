@@ -2,6 +2,8 @@ import "./ui.css";
 import * as Interfaces from "./models/interfaces";
 import * as Constants from "./models/constants";
 
+let isShiftHeld: boolean = false;
+
 const uiToCodeMessage: Interfaces.UIToCodeMessage = {
   type: Constants.UIToCodeMessageType.EDIT_CONTENTS,
   payload: null,
@@ -42,6 +44,81 @@ window.onfocus = () => {
 };
 
 document.getElementById("edit").onclick = () => {
+  modifyTable();
+};
+
+document.onkeydown = keyDown => {
+  if (keyDown.key) {
+    let activeElement = document.activeElement as HTMLInputElement;
+    switch (keyDown.key) {
+      case "ArrowUp":
+        activeElement.value = computeValueOnArrowPress("ArrowUp", activeElement, isShiftHeld).toString();
+        keyDown.preventDefault();
+        break;
+      case "ArrowDown":
+        activeElement.value = computeValueOnArrowPress("ArrowDown", activeElement, isShiftHeld).toString();
+        keyDown.preventDefault();
+        break;
+
+      case "Shift":
+        isShiftHeld = true;
+        keyDown.preventDefault();
+        break;
+      case "Tab":
+        if (activeElement.id === "edit") {
+          isShiftHeld
+            ? document.getElementById("amount").focus()
+            : document.getElementById("increase-decrease").focus();
+          keyDown.preventDefault();
+        } else if (activeElement.id === "increase-decrease") {
+          isShiftHeld ? document.getElementById("edit").focus() : document.getElementById("width-height").focus();
+          keyDown.preventDefault();
+        }
+        break;
+      case "E":
+        isShiftHeld ? modifyTable() : null;
+        isShiftHeld ? keyDown.preventDefault() : null;
+        break;
+      case "Enter":
+        if (activeElement.type === "checkbox") {
+          activeElement.checked = !activeElement.checked;
+        }
+        break;
+      default:
+        break;
+    }
+  }
+};
+
+document.onkeyup = keyUp => {
+  if (keyUp.key) {
+    switch (keyUp.key) {
+      case "Shift":
+        isShiftHeld = false;
+        keyUp.preventDefault();
+        break;
+    }
+  }
+};
+
+const computeValueOnArrowPress = (
+  arrowPressed: string,
+  activeElement: HTMLInputElement,
+  isShiftHeld: boolean,
+): number => {
+  let value: number = parseInt(activeElement.value, 10);
+  return value && !activeElement.list && activeElement.type === "text"
+    ? isShiftHeld
+      ? arrowPressed === "ArrowUp"
+        ? (value += 10)
+        : (value -= 10)
+      : arrowPressed === "ArrowUp"
+      ? (value += 1)
+      : (value -= 1)
+    : null;
+};
+
+const modifyTable = () => {
   document.getElementById("lds").classList.add("is-visible");
   setTimeout(() => {
     parent.postMessage(
@@ -70,6 +147,7 @@ const populateModificationOptions = (): void => {
   toggleRowColumn((document.getElementById("width-height") as HTMLSelectElement).value);
   document.getElementById("selected").classList.add("show");
   document.getElementById("deselected").classList.remove("show");
+  (document.getElementById("increase-decrease") as HTMLSelectElement).focus();
 };
 
 const toggleRowColumn = (property: string) => {
@@ -89,6 +167,7 @@ const toggleRowColumn = (property: string) => {
   (document.getElementById("column-row") as HTMLSelectElement).innerHTML = columnRowOptions;
   (document.getElementById("column-row") as HTMLSelectElement).disabled = false;
   (document.getElementById("amount") as HTMLInputElement).disabled = false;
+  (document.getElementById("edit") as HTMLInputElement).disabled = false;
 };
 
 const disableModificationOptions = (): void => {
@@ -97,6 +176,7 @@ const disableModificationOptions = (): void => {
     (document.getElementById("width-height") as HTMLSelectElement).disabled = true;
     (document.getElementById("column-row") as HTMLSelectElement).disabled = true;
     (document.getElementById("amount") as HTMLInputElement).disabled = true;
+    (document.getElementById("edit") as HTMLInputElement).disabled = true;
   }
   document.getElementById("selected").classList.remove("show");
   document.getElementById("deselected").classList.add("show");
