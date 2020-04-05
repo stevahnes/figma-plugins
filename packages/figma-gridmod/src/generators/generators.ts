@@ -265,6 +265,18 @@ const editTableHeader = (
       for (let i: number = index; i < tableHeaderTexts.children.length; i++) {
         tableHeaderTexts.children[i].x += toAdd;
       }
+      // move and resize floating filters (if any)
+      const tableHeaderFloatingFilters: GroupNode = tableHeader.children[2] as GroupNode;
+      // TODO this is a hacky way of doing it, better tell plugin ahead if header contains floating filter
+      if (tableHeaderFloatingFilters) {
+        tableHeaderFloatingFilters.children[index - 1].resize(
+          tableHeaderFloatingFilters.children[index - 1].width + toAdd,
+          tableHeaderFloatingFilters.children[index - 1].height,
+        );
+        for (let i: number = index; i < tableHeaderFloatingFilters.children.length; i++) {
+          tableHeaderFloatingFilters.children[i].x += toAdd;
+        }
+      }
     }
   } else {
     if (all) {
