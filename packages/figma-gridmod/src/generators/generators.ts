@@ -220,6 +220,7 @@ const editTableHeader = (
 ): void => {
   const toAdd: number = decrease ? -1 * amount : amount;
   const tableHeader: GroupNode = figma.getNodeById(selectedGrid.tableHeaderId) as GroupNode;
+  console.log("tableHeader :", tableHeader);
   const headerBackgroundDimension: { width: number; height: number } = {
     width: tableHeader.children[0].width,
     height: tableHeader.children[0].height,
@@ -239,6 +240,18 @@ const editTableHeader = (
           tableHeaderTexts.children[i].height,
         );
         i > 0 ? (tableHeaderTexts.children[i].x += i * toAdd) : null;
+      }
+      // move and resize floating filters (if any)
+      const tableHeaderFloatingFilters: GroupNode = tableHeader.children[2] as GroupNode;
+      // TODO this is a hacky way of doing it, better tell plugin ahead if header contains floating filter
+      if (tableHeaderFloatingFilters) {
+        for (let i: number = 0; i < tableHeaderFloatingFilters.children.length; i++) {
+          tableHeaderFloatingFilters.children[i].resize(
+            tableHeaderFloatingFilters.children[i].width + toAdd,
+            tableHeaderFloatingFilters.children[i].height,
+          );
+          i > 0 ? (tableHeaderFloatingFilters.children[i].x += i * toAdd) : null;
+        }
       }
     } else {
       // edit background dimension
