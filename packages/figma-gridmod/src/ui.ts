@@ -17,31 +17,32 @@ const selectedGrid: Interfaces.SelectedGrid = {
   tableHeaderId: "",
 };
 
+(document.getElementById("width-height") as HTMLSelectElement).onchange = () => {
+  toggleRowColumn((document.getElementById("width-height") as HTMLSelectElement).value);
+};
+
 onmessage = msg => {
-  const receivedCodeMessage: Interfaces.CodeToUIMessage = msg.data.pluginMessage;
-  Object.keys(selectedGrid).forEach(key => {
-    selectedGrid[key] !== receivedCodeMessage.selectedGrid[key]
-      ? (selectedGrid[key] = receivedCodeMessage.selectedGrid[key])
-      : null;
-  });
-  console.log(selectedGrid);
-  receivedCodeMessage.isValidGridGen
-    ? ((document.getElementById("selected-grid-name").innerHTML = selectedGrid.name),
-      document.getElementById("selected").classList.add("show"),
-      document.getElementById("deselected").classList.remove("show"))
-    : (document.getElementById("selected").classList.remove("show"),
-      document.getElementById("deselected").classList.add("show"));
+  if (typeof msg.data.pluginMessage !== "string") {
+    const receivedCodeMessage: Interfaces.CodeToUIMessage = msg.data.pluginMessage;
+    Object.keys(selectedGrid).forEach(key => {
+      selectedGrid[key] !== receivedCodeMessage.selectedGrid[key]
+        ? (selectedGrid[key] = receivedCodeMessage.selectedGrid[key])
+        : null;
+    });
+    receivedCodeMessage.isValidGridGen ? populateModificationOptions() : disableModificationOptions();
+  } else {
+    msg.data.pluginMessage === "SUCCESS" ? document.getElementById("lds").classList.remove("is-visible") : null;
+  }
 };
 
 window.onfocus = () => {
-  console.log("window :", window);
   uiToCodeMessage.type = Constants.UIToCodeMessageType.WINDOW_FOCUS;
   uiToCodeMessage.payload = true;
   parent.postMessage({ pluginMessage: uiToCodeMessage }, "*");
 };
 
 document.getElementById("edit").onclick = () => {
-  // document.getElementById("lds").classList.add("is-visible");
+  document.getElementById("lds").classList.add("is-visible");
   setTimeout(() => {
     parent.postMessage(
       {
@@ -49,12 +50,54 @@ document.getElementById("edit").onclick = () => {
           type: Constants.UIToCodeMessageType.EDIT_CONTENTS,
           payload: {
             selectedGrid: selectedGrid,
-            rows: ["All", 200],
-            columns: [],
+            decrease:
+              (document.getElementById("increase-decrease") as HTMLSelectElement).value === "decrease" ? true : false,
+            rows: (document.getElementById("width-height") as HTMLSelectElement).value === "height" ? true : false,
+            index: (document.getElementById("column-row") as HTMLSelectElement).value,
+            amount: parseInt((document.getElementById("amount") as HTMLInputElement).value, 10),
           },
         },
       },
       "*",
     );
   }, 50);
+};
+
+const populateModificationOptions = (): void => {
+  document.getElementById("selected-grid-name").innerHTML = selectedGrid.name;
+  (document.getElementById("increase-decrease") as HTMLSelectElement).disabled = false;
+  (document.getElementById("width-height") as HTMLSelectElement).disabled = false;
+  toggleRowColumn((document.getElementById("width-height") as HTMLSelectElement).value);
+  document.getElementById("selected").classList.add("show");
+  document.getElementById("deselected").classList.remove("show");
+};
+
+const toggleRowColumn = (property: string) => {
+  let columnRowOptions: string =
+    property === "width"
+      ? `<option value="column, all" selected>all columns</option>`
+      : `<option value="row, all" selected>all rows</option>`;
+  if (property === "width") {
+    for (let i: number = 0; i < selectedGrid.columns; i++) {
+      columnRowOptions += `<option value="${i + 1}">Column ${i + 1}</option>`;
+    }
+  } else {
+    for (let i: number = 0; i < selectedGrid.rows; i++) {
+      columnRowOptions += `<option value="${selectedGrid.rows - i}">Row ${i + 1}</option>`;
+    }
+  }
+  (document.getElementById("column-row") as HTMLSelectElement).innerHTML = columnRowOptions;
+  (document.getElementById("column-row") as HTMLSelectElement).disabled = false;
+  (document.getElementById("amount") as HTMLInputElement).disabled = false;
+};
+
+const disableModificationOptions = (): void => {
+  if (selectedGrid.name === "---") {
+    (document.getElementById("increase-decrease") as HTMLSelectElement).disabled = true;
+    (document.getElementById("width-height") as HTMLSelectElement).disabled = true;
+    (document.getElementById("column-row") as HTMLSelectElement).disabled = true;
+    (document.getElementById("amount") as HTMLInputElement).disabled = true;
+  }
+  document.getElementById("selected").classList.remove("show");
+  document.getElementById("deselected").classList.add("show");
 };

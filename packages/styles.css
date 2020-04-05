@@ -28,6 +28,15 @@ p {
   display: block;
 }
 
+.okay {
+  color: #1b8a6b;
+  display: none;
+}
+
+.okay.show {
+  display: block;
+}
+
 h4 {
   margin: 0;
   padding: 5px 0;

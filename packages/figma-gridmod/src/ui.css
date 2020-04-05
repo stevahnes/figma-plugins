@@ -3,12 +3,12 @@
 
 /* --- Buttons --- */
 .btn-standalone button {
-  padding: 8px 45px;
+  padding: 8px 80px;
 }
 
 /* --- Animated Loader --- */
 
 /* Based on loading.io */
 .lds-dual-ring {
-  padding: 200px 0;
+  padding: 65px 0;
 }

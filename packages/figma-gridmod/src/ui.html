@@ -3,16 +3,76 @@
     <div class="lds-dual-ring"></div>
   </div>
   <div class="row">
-    <div class="column half">
-      <h4>Selected Grid Name:&nbsp;</h4>
+    <div class="column third">
+      <h4>Selected:&nbsp;</h4>
     </div>
-    <div class="column half">
-      <h4 id="selected-grid-name">N.A.</h4>
+    <div class="column two-thirds">
+      <p id="selected-grid-name">---</p>
     </div>
   </div>
   <div class="row" id="selection-warnings">
-    <p id="selected" class="warning show">&nbsp;</p>
+    <p id="selected" class="okay show">Grid is selected and in focus.</p>
     <p id="deselected" class="warning">Grid is out of focus, did you select one?</p>
+  </div>
+  <div class="row">
+    <div class="column">
+      <h4>I want to:</h4>
+    </div>
+  </div>
+  <div class="row">
+    <div class="column half">
+      <div class="row">
+        <div class="column">
+          <select id="increase-decrease">
+            <option value="increase" selected>Increase</option>
+            <option value="decrease">Decrease</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="column half">
+      <div class="row">
+        <div class="column third">
+          <p>the&nbsp;</p>
+        </div>
+        <div class="column two-thirds">
+          <select id="width-height">
+            <option value="width" selected>width</option>
+            <option value="height">height</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="column half">
+      <div class="row">
+        <div class="column quarter">
+          <p>of&nbsp;</p>
+        </div>
+        <div class="column three-fourths">
+          <select id="column-row">
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="column half">
+      <div class="row">
+        <div class="column third">
+          <p>by&nbsp;</p>
+        </div>
+        <div class="column two-thirds">
+          <div class="row">
+            <div class="column two-thirds">
+              <input type="text" id="amount" value="20" />
+            </div>
+            <div class="column third">
+              <p>px</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
   <div class="row">
     <div class="column btn-standalone primary">
