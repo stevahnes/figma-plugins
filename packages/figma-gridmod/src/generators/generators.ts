@@ -75,14 +75,14 @@ const moveBorders = (
     for (let i: number = startIndex; i < bordersToMove.children.length; i++) {
       // for Vertical borders, increase === add as rightward is +ve
       !decrease ? (bordersToMove.children[i].x += toAdd) : (bordersToMove.children[i].x -= toAdd);
-      toAdd += amount;
+      all ? (toAdd += amount) : null;
     }
   } else {
     for (let i: number = startIndex; i < bordersToMove.children.length; i++) {
       // for Horizontal borders, increase === subtract as upward is negative
       !decrease ? (bordersToMove.children[i].y -= toAdd) : (bordersToMove.children[i].y += toAdd);
       if (!(i === bordersToMove.children.length - 2 && hasHeader)) {
-        toAdd += amount;
+        all ? (toAdd += amount) : null;
       }
     }
   }
@@ -131,33 +131,34 @@ const editBackgrounds = (
           );
     }
   } else {
-    index % 2 === 0
-      ? row
+    if (row) {
+      index % 2 === 0
         ? oddBackgrounds.children[Math.floor(index / 2)].resize(
             currentDimensions.width,
             currentDimensions.height + toAdd,
           )
-        : oddBackgrounds.children[Math.floor(index / 2)].resize(
-            currentDimensions.width + selectedGrid.columns * toAdd,
-            currentDimensions.height,
-          )
-      : row
-      ? evenBackgrounds.children[Math.floor(index / 2)].resize(
-          currentDimensions.width,
-          currentDimensions.height + toAdd,
-        )
-      : evenBackgrounds.children[Math.floor(index / 2)].resize(
-          currentDimensions.width + selectedGrid.columns * toAdd,
-          currentDimensions.height,
-        );
+        : evenBackgrounds.children[Math.floor(index / 2)].resize(
+            currentDimensions.width,
+            currentDimensions.height + toAdd,
+          );
+    } else {
+      for (let i: number = 0; i < totalBackgroundsCount; i++) {
+        i % 2 === 0
+          ? oddBackgrounds.children[Math.floor(i / 2)].resize(currentDimensions.width + toAdd, currentDimensions.height)
+          : evenBackgrounds.children[Math.floor(i / 2)].resize(
+              currentDimensions.width + toAdd,
+              currentDimensions.height,
+            );
+      }
+    }
     // then move the backgrounds to its correct position
     for (let i: number = index; i < totalBackgroundsCount; i++) {
       i % 2 === 0
         ? row
-          ? (oddBackgrounds.children[Math.floor(i / 2)].y -= (i + 1) * toAdd)
+          ? (oddBackgrounds.children[Math.floor(i / 2)].y -= toAdd)
           : null
         : row
-        ? (evenBackgrounds.children[Math.floor(i / 2)].y -= (i + 1) * toAdd)
+        ? (evenBackgrounds.children[Math.floor(i / 2)].y -= toAdd)
         : null;
     }
   }

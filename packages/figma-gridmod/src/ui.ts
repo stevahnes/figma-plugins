@@ -49,7 +49,7 @@ document.getElementById("edit").onclick = () => {
           type: Constants.UIToCodeMessageType.EDIT_CONTENTS,
           payload: {
             selectedGrid: selectedGrid,
-            rows: ["All", 20],
+            rows: ["All", 200],
             columns: [],
           },
         },
