@@ -10,7 +10,7 @@ export const editColumns = (
   editBorders(selectedGrid, decrease, false, amount, all, index);
   editBackgrounds(selectedGrid, selectedGrid.rows, decrease, false, amount, all, index);
   // editTexts(selectedGrid, decrease, false, amount, all);
-  selectedGrid.tableHeaderId !== "" ? editTableHeader(selectedGrid, decrease, false, amount, all) : null;
+  selectedGrid.tableHeaderId !== "" ? editTableHeader(selectedGrid, decrease, false, amount, all, index) : null;
 };
 
 export const editRows = (
@@ -23,7 +23,7 @@ export const editRows = (
   editBorders(selectedGrid, decrease, true, amount, all, index);
   editBackgrounds(selectedGrid, selectedGrid.rows, decrease, true, amount, all, index);
   // editTexts(selectedGrid, decrease, true, amount, all);
-  selectedGrid.tableHeaderId !== "" ? editTableHeader(selectedGrid, decrease, true, amount, all) : null;
+  selectedGrid.tableHeaderId !== "" ? editTableHeader(selectedGrid, decrease, true, amount, all, index) : null;
 };
 
 export const getBorderTypesId = (selectedGrid: SelectedGrid): { [key: string]: string } => {
@@ -132,16 +132,26 @@ const editBackgrounds = (
     }
   } else {
     if (row) {
-      index % 2 === 0
-        ? oddBackgrounds.children[Math.floor(index / 2)].resize(
+      // resize and move the background of interest first
+      (index - 1) % 2 === 0
+        ? (oddBackgrounds.children[Math.floor((index - 1) / 2)].resize(
             currentDimensions.width,
             currentDimensions.height + toAdd,
-          )
-        : evenBackgrounds.children[Math.floor(index / 2)].resize(
+          ),
+          (oddBackgrounds.children[Math.floor((index - 1) / 2)].y -= toAdd))
+        : (evenBackgrounds.children[Math.floor((index - 1) / 2)].resize(
             currentDimensions.width,
             currentDimensions.height + toAdd,
-          );
+          ),
+          (evenBackgrounds.children[Math.floor((index - 1) / 2)].y -= toAdd));
+      // then move the other backgrounds to its correct position
+      for (let i: number = index; i < totalBackgroundsCount; i++) {
+        i % 2 === 0
+          ? (oddBackgrounds.children[Math.floor(i / 2)].y -= toAdd)
+          : (evenBackgrounds.children[Math.floor(i / 2)].y -= toAdd);
+      }
     } else {
+      // resize all backgrounds (move not needed )
       for (let i: number = 0; i < totalBackgroundsCount; i++) {
         i % 2 === 0
           ? oddBackgrounds.children[Math.floor(i / 2)].resize(currentDimensions.width + toAdd, currentDimensions.height)
@@ -150,16 +160,6 @@ const editBackgrounds = (
               currentDimensions.height,
             );
       }
-    }
-    // then move the backgrounds to its correct position
-    for (let i: number = index; i < totalBackgroundsCount; i++) {
-      i % 2 === 0
-        ? row
-          ? (oddBackgrounds.children[Math.floor(i / 2)].y -= toAdd)
-          : null
-        : row
-        ? (evenBackgrounds.children[Math.floor(i / 2)].y -= toAdd)
-        : null;
     }
   }
 };
@@ -199,16 +199,26 @@ const editTableHeader = (
       );
       // move and resize texts
       const tableHeaderTexts: GroupNode = tableHeader.children[1] as GroupNode;
-      for (let i: number = 1; i < tableHeaderTexts.children.length; i++) {
-        tableHeaderTexts.children[i].x += i * toAdd;
+      for (let i: number = 0; i < tableHeaderTexts.children.length; i++) {
+        tableHeaderTexts.children[i].resize(
+          tableHeaderTexts.children[i].width + toAdd,
+          tableHeaderTexts.children[i].height,
+        );
+        i > 0 ? (tableHeaderTexts.children[i].x += i * toAdd) : null;
       }
     } else {
       // edit background dimension
       tableHeader.children[0].resize(headerBackgroundDimension.width + toAdd, headerBackgroundDimension.height);
       // move and resize texts
       const tableHeaderTexts: GroupNode = tableHeader.children[1] as GroupNode;
-      for (let i: number = index + 1; i < tableHeaderTexts.children.length; i++) {
-        tableHeaderTexts.children[i].x += (i - index + 2) * toAdd;
+      console.log("tableHeaderTexts :", tableHeaderTexts);
+      console.log("index :", index);
+      tableHeaderTexts.children[index - 1].resize(
+        tableHeaderTexts.children[index - 1].width + toAdd,
+        tableHeaderTexts.children[index - 1].height,
+      );
+      for (let i: number = index; i < tableHeaderTexts.children.length; i++) {
+        tableHeaderTexts.children[i].x += toAdd;
       }
     }
   } else {
