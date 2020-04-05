@@ -196,6 +196,17 @@ const editTexts = (
         columnTexts.x += toAdd;
       }
     }
+  } else {
+    const startIndex: number = all ? 0 : index - 1;
+    for (let i: number = 0; i < tabletexts.children.length; i++) {
+      const columnTexts: GroupNode = tabletexts.children[i] as GroupNode;
+      for (let j: number = startIndex; j < columnTexts.children.length; j++) {
+        if (all || j === startIndex) {
+          columnTexts.children[j].resize(columnTexts.children[j].width, columnTexts.children[j].height + toAdd);
+        }
+        all ? (columnTexts.children[j].y -= (j + 1) * toAdd) : (columnTexts.children[j].y -= toAdd);
+      }
+    }
   }
 };
 
