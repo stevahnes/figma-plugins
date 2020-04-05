@@ -1,22 +1,37 @@
-This plugin template uses Typescript. If you are familiar with Javascript, Typescript will
-look very familiar. In fact, valid Javascript code is already valid Typescript code.
+# GridMod [![Link to Figma](https://img.shields.io/badge/figma-@gridmod-blueviolet)](https://www.figma.com/community/plugin/815889316898860859) [![npm Version](https://img.shields.io/npm/v/figma-gridmod)](https://www.npmjs.com/package/figma-gridmod)
 
-Typescript adds type annotations to variables. This allows code editors such as Visual Studio Code
-to provide information about the Figma API while you are writing code, as well as help catch bugs
-you previously didn't notice.
+Modifier for tables generated with GridGen.
 
-For more information, visit https://www.typescriptlang.org/
+## How-To Use:
 
-Using Typescript requires a compiler to convert Typescript (code.ts) into Javascript (code.js)
-for the browser to run.
+- Select the parent group of the table and launch the plugin
+  - Plugin is capable of detecting if a valid GridGen table is selected
+  - If selection is changed mid-way through plugin utilization, the last selected table is remembered
+- GridMod is capable of modifying:
+  - The width or height of all columns/rows
+  - The width or height of individual columns/rows
+- Once the necessary inputs are entered, click on "Edit selected grid"
+- GridMod will perform the modification, notify you, and remain open
+  - This allows you to perform multiple edits consecutively without having to reopen GridMod
+- Supports both mouse and keyboard navigations:
+  - "Tab" to go to next input
+  - "Shift + Tab" to go to previous input
+  - "Arrow" keys on textboxes to increase/decrease by 1
+  - "Shift + Arrow" keys on textboxes to increaes/decrease by 10
+  - "Enter" or "Shift + M" on "Edit selected grid" to execute the modification
 
-To get the TypeScript compiler working:
+## Current Capabilites:
 
-1. Download Visual Studio Code if you haven't already: https://code.visualstudio.com/.
-2. Install the TypeScript compiler globally: `sudo npm install -g typescript`.
-3. Open this directory in Visual Studio Code.
-4. Compile TypeScript to JavaScript: Run the "Terminal > Run Build Task..." menu item,
-   then select "tsc: watch - tsconfig.json". You will have to do this again every time
-   you reopen Visual Studio Code.
+- Supports the following modifications of any GridGen-generated tables:
+  - The width or height of all columns/rows
+  - The width or height of individual columns/rows
+- Persistent UI allowing consecutive executions of various modifications
+- Enhanced UI experience with validations and loader
 
-That's it! Visual Studio Code will regenerate the JavaScript file every time you save.
+## Work-in-Progress:
+
+- Modification of GridGen-generated table headers
+
+## License:
+
+[MIT](/LICENSE)
