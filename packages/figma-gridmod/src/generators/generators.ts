@@ -9,7 +9,7 @@ export const editColumns = (
 ): void => {
   editBorders(selectedGrid, decrease, false, amount, all, index);
   editBackgrounds(selectedGrid, selectedGrid.rows, decrease, false, amount, all, index);
-  // editTexts(selectedGrid, decrease, false, amount, all);
+  editTexts(selectedGrid, decrease, false, amount, all, index);
   selectedGrid.tableHeaderId !== "" ? editTableHeader(selectedGrid, decrease, false, amount, all, index) : null;
 };
 
@@ -22,7 +22,7 @@ export const editRows = (
 ): void => {
   editBorders(selectedGrid, decrease, true, amount, all, index);
   editBackgrounds(selectedGrid, selectedGrid.rows, decrease, true, amount, all, index);
-  // editTexts(selectedGrid, decrease, true, amount, all);
+  editTexts(selectedGrid, decrease, true, amount, all, index);
   selectedGrid.tableHeaderId !== "" ? editTableHeader(selectedGrid, decrease, true, amount, all, index) : null;
 };
 
@@ -151,7 +151,7 @@ const editBackgrounds = (
           : (evenBackgrounds.children[Math.floor(i / 2)].y -= toAdd);
       }
     } else {
-      // resize all backgrounds (move not needed )
+      // resize all backgrounds (move not needed)
       for (let i: number = 0; i < totalBackgroundsCount; i++) {
         i % 2 === 0
           ? oddBackgrounds.children[Math.floor(i / 2)].resize(currentDimensions.width + toAdd, currentDimensions.height)
@@ -164,17 +164,40 @@ const editBackgrounds = (
   }
 };
 
-// const editTexts = (
-//   selectedGrid: SelectedGrid,
-//   decrease: boolean,
-//   row: boolean,
-//   amount: number,
-//   all: boolean,
-//   index?: number,
-// ): void => {
-//   console.log("selectedGridTexts :", (figma.getNodeById(selectedGrid.tableTextsId) as GroupNode).children);
-//   // TODO
-// };
+const editTexts = (
+  selectedGrid: SelectedGrid,
+  decrease: boolean,
+  row: boolean,
+  amount: number,
+  all: boolean,
+  index?: number,
+): void => {
+  const toAdd: number = decrease ? -1 * amount : amount;
+  const tabletexts: GroupNode = figma.getNodeById(selectedGrid.tableTextsId) as GroupNode;
+  if (!row) {
+    if (all) {
+      for (let i: number = 0; i < tabletexts.children.length; i++) {
+        const columnTexts: GroupNode = tabletexts.children[i] as GroupNode;
+        columnTexts.x += i * toAdd;
+        for (let j: number = 0; j < columnTexts.children.length; j++) {
+          columnTexts.children[j].resize(columnTexts.children[j].width + toAdd, columnTexts.children[j].height);
+        }
+      }
+    } else {
+      const columnTextsToResize: GroupNode = tabletexts.children[index - 1] as GroupNode;
+      for (let i: number = 0; i < columnTextsToResize.children.length; i++) {
+        columnTextsToResize.children[i].resize(
+          columnTextsToResize.children[i].width + toAdd,
+          columnTextsToResize.children[i].height,
+        );
+      }
+      for (let i: number = index; i < tabletexts.children.length; i++) {
+        const columnTexts: GroupNode = tabletexts.children[i] as GroupNode;
+        columnTexts.x += toAdd;
+      }
+    }
+  }
+};
 
 const editTableHeader = (
   selectedGrid: SelectedGrid,
@@ -211,8 +234,6 @@ const editTableHeader = (
       tableHeader.children[0].resize(headerBackgroundDimension.width + toAdd, headerBackgroundDimension.height);
       // move and resize texts
       const tableHeaderTexts: GroupNode = tableHeader.children[1] as GroupNode;
-      console.log("tableHeaderTexts :", tableHeaderTexts);
-      console.log("index :", index);
       tableHeaderTexts.children[index - 1].resize(
         tableHeaderTexts.children[index - 1].width + toAdd,
         tableHeaderTexts.children[index - 1].height,
