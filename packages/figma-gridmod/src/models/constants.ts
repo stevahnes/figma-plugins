@@ -1,5 +1,5 @@
 export const showUIOptions: ShowUIOptions = {
-  width: 300,
+  width: 320,
   height: 220,
   visible: true,
 };
