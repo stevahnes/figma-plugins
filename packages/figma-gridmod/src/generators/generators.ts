@@ -220,7 +220,6 @@ const editTableHeader = (
 ): void => {
   const toAdd: number = decrease ? -1 * amount : amount;
   const tableHeader: GroupNode = figma.getNodeById(selectedGrid.tableHeaderId) as GroupNode;
-  console.log("tableHeader :", tableHeader);
   const headerBackgroundDimension: { width: number; height: number } = {
     width: tableHeader.children[0].width,
     height: tableHeader.children[0].height,

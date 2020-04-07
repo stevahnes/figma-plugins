@@ -153,9 +153,10 @@ export function processInputToMessage(): void {
       break;
     case Constants.Modes.CELL_AND_TABLE_SIZE:
       createMessage.columns = Math.floor(createMessage.tableWidth / createMessage.columnWidth);
-      createMessage.rows = Math.floor(
-        (createMessage.tableHeight - createMessage.headerHeight) / createMessage.rowHeight + 1,
-      );
+      createMessage.rows =
+        createMessage.headerHeight > 0
+          ? Math.floor((createMessage.tableHeight - createMessage.headerHeight) / createMessage.rowHeight + 1)
+          : Math.floor((createMessage.tableHeight - createMessage.headerHeight) / createMessage.rowHeight);
       createMessage.referenceCoordinates.y = createMessage.tableHeight % createMessage.rowHeight;
       break;
     default:
