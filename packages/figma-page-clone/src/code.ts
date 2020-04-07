@@ -1,18 +1,34 @@
 const showUIOptions: ShowUIOptions = {
   visible: true,
   width: 300,
-  height: 205,
+  height: 500,
 };
 
 const childInstanceNodeRegex: RegExp = /I[0-9]+:[0-9]+;/;
 const masterComponentsIds: string[] = [];
 const clonedMasterComponentsIds: string[] = [];
 
+const initiateUI = (): void => {
+  const pages: { id: string; name: string }[] = [];
+  const frames: { id: string; name: string; selected: boolean }[] = [];
+  figma.root.children.forEach((child: PageNode) => {
+    pages.push({ id: child.id, name: child.name });
+  });
+  figma.currentPage.children.forEach((child: FrameNode) => {
+    frames.push({
+      id: child.id,
+      name: child.name,
+      selected: figma.currentPage.selection.indexOf(child) !== -1,
+    });
+  });
+  figma.ui.postMessage({ pages: pages, id: figma.currentPage.id, name: figma.currentPage.name, frames: frames });
+};
+
 let deepCloneMasterComponents: boolean = true;
 let deepCloneMasterComponentsIds: string[] = [];
 
 figma.showUI(__html__, showUIOptions);
-figma.ui.postMessage({ id: figma.currentPage.id, name: figma.currentPage.name });
+initiateUI();
 
 figma.ui.onmessage = (msg: {
   type: string;
@@ -22,7 +38,7 @@ figma.ui.onmessage = (msg: {
   locked: boolean;
 }) => {
   if (msg.type === "focus") {
-    figma.ui.postMessage({ id: figma.currentPage.id, name: figma.currentPage.name });
+    initiateUI();
   }
   if (msg.type === "cloned") {
     const clone: PageNode = figma.currentPage.clone();

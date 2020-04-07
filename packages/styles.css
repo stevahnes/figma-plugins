@@ -190,6 +190,14 @@ input:disabled {
   width: 25% !important;
 }
 
+.eighty {
+  width: 80% !important;
+}
+
+.twenty {
+  width: 20% !important;
+}
+
 .label {
   width: 65% !important;
 }

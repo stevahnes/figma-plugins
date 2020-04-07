@@ -12,3 +12,11 @@
 .lds-dual-ring {
   padding: 60px 0;
 }
+
+/* --- Container for Frames --- */
+.scrollable-container {
+  height: 150px;
+  overflow-y: auto;
+  border: 1px solid #bebebe;
+  border-radius: 3px;
+}

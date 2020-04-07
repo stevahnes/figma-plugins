@@ -4,38 +4,48 @@
   </div>
   <div class="row">
     <div class="column third">
-      <h4>Selected:&nbsp;</h4>
+      <h4>Current Page:&nbsp;</h4>
     </div>
     <div class="column two-thirds">
       <p id="selected-page-name">---</p>
     </div>
   </div>
+  <div id="frames" class="scrollable-container"></div>
+  <div id="line-break" class="row">
+    <div class="column">&nbsp;</div>
+  </div>
   <div class="row">
     <div class="column third">
-      <h4>Clone Name:&nbsp;</h4>
+      <h4>Clone to:&nbsp;</h4>
+    </div>
+    <div class="column two-thirds">
+      <select id="pages-in-document"></select>
+    </div>
+  </div>
+  <div class="row">
+    <div class="column third">
+      <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Name:&nbsp;</p>
     </div>
     <div class="column two-thirds">
       <input type="text" id="clone-name" />
     </div>
   </div>
-  <div id="sanitize-checkbox" class="row">
-    <div class="column two-thirds">
-      <h4>Remove hidden layers&nbsp;</h4>
+  <div id="line-break" class="row">
+    <div class="column">&nbsp;</div>
+  </div>
+  <div class="row">
+    <div class="column three-fourths">
+      <h4>Options</h4>
     </div>
-    <div class="column third">
-      <div class="column" style="width: 15%;">
-        <label class="container">
-          <input id="sanitize" type="checkbox" />
-          <span class="figma-checkbox"></span>
-        </label>
-      </div>
+    <div class="column quarter">
+      <h4>Apply?</h4>
     </div>
   </div>
   <div id="clone-master-checkbox" class="row">
-    <div class="column two-thirds">
-      <h4>In-page master components&nbsp;</h4>
+    <div class="column eighty">
+      <p>In-page master components&nbsp;</p>
     </div>
-    <div class="column third">
+    <div class="column twenty">
       <div class="column" style="width: 15%;">
         <label class="container">
           <input id="clone-master" type="checkbox" />
@@ -44,11 +54,37 @@
       </div>
     </div>
   </div>
-  <div id="locked-checkbox" class="row">
-    <div class="column two-thirds">
-      <h4>Lock all frames&nbsp;</h4>
+  <div id="overwrite-checkbox" class="row">
+    <div class="column eighty">
+      <p>Overwrite existing frames&nbsp;</p>
     </div>
-    <div class="column third">
+    <div class="column twenty">
+      <div class="column" style="width: 15%;">
+        <label class="container">
+          <input id="overwrite" type="checkbox" />
+          <span class="figma-checkbox"></span>
+        </label>
+      </div>
+    </div>
+  </div>
+  <div id="sanitize-checkbox" class="row">
+    <div class="column eighty">
+      <p>Remove hidden layers&nbsp;</p>
+    </div>
+    <div class="column twenty">
+      <div class="column" style="width: 15%;">
+        <label class="container">
+          <input id="sanitize" type="checkbox" />
+          <span class="figma-checkbox"></span>
+        </label>
+      </div>
+    </div>
+  </div>
+  <div id="locked-checkbox" class="row">
+    <div class="column eighty">
+      <p>Lock all frames&nbsp;</p>
+    </div>
+    <div class="column twenty">
       <div class="column" style="width: 15%;">
         <label class="container">
           <input id="locked" type="checkbox" />
@@ -56,6 +92,9 @@
         </label>
       </div>
     </div>
+  </div>
+  <div id="line-break" class="row">
+    <div class="column">&nbsp;</div>
   </div>
   <div class="row">
     <div class="column btn-standalone primary">
