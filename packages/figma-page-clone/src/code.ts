@@ -32,19 +32,60 @@ initiateUI();
 
 figma.ui.onmessage = (msg: {
   type: string;
+  frames: string[];
+  destination: string;
   name: string;
-  sanitize: boolean;
   "clone-master": boolean;
+  overwrite: boolean;
+  sanitize: boolean;
   locked: boolean;
 }) => {
   if (msg.type === "focus") {
     initiateUI();
   }
   if (msg.type === "cloned") {
-    const clone: PageNode = figma.currentPage.clone();
-    figma.currentPage = figma.getNodeById(clone.id) as PageNode;
-    const oldName: string = clone.name;
-    clone.name = msg.name;
+    let clone: PageNode;
+    // go to destination page or create new page
+    if (msg.destination) {
+      figma.currentPage = figma.getNodeById(msg.destination) as PageNode;
+      clone = figma.currentPage;
+    } else {
+      clone = figma.createPage();
+      figma.currentPage = figma.getNodeById(clone.id) as PageNode;
+      clone.name = msg.name;
+    }
+    // clone logic based on overwrite or not
+    if (msg.overwrite) {
+      // get all the frame names of current page
+      const existingFrames: { id: string; name: string }[] = [];
+      figma.currentPage.children.forEach(frameNode => {
+        existingFrames.push({ id: frameNode.id, name: frameNode.name });
+      });
+      msg.frames.forEach(frame => {
+        const frameToClone: FrameNode = figma.getNodeById(frame) as FrameNode;
+        // check if a frame with same name exists in currentPage
+        const existingFrameIndex: number = existingFrames.findIndex(frame => frame.name === frameToClone.name);
+        // if there is an existing node of the same name
+        if (existingFrameIndex > -1) {
+          // get the node
+          const existingFrameNode: FrameNode = figma.getNodeById(existingFrames[existingFrameIndex].id) as FrameNode;
+          // clone the frame as per the msg.frames
+          const newFrameNode: FrameNode = frameToClone.clone();
+          // reposition cloned frame to old frame
+          newFrameNode.x = existingFrameNode.x;
+          newFrameNode.y = existingFrameNode.y;
+          // delete existing or old frame
+          existingFrameNode.remove();
+          // for safety, splice the replace entry from existingFrameIndex in case there are 2 frames with same name;
+          existingFrames.splice(existingFrameIndex, 1);
+        } else {
+          // if there is none of the same name
+          frameToClone.clone();
+        }
+      });
+    } else {
+      msg.frames.forEach(frame => (figma.getNodeById(frame) as FrameNode).clone());
+    }
     if (msg.sanitize) {
       const hiddenNodes = clone.findAll(node => node.visible === false);
       hiddenNodes.forEach(node => {
@@ -53,8 +94,10 @@ figma.ui.onmessage = (msg: {
     }
     if (msg["clone-master"]) {
       // get all INSTANCE type nodes
-      const instanceNodes = clone.findAll(node => node.type === "INSTANCE" && !childInstanceNodeRegex.test(node.id));
-      (instanceNodes as InstanceNode[]).forEach(node => {
+      const instanceNodes: InstanceNode[] = clone.findAll(
+        node => node.type === "INSTANCE" && !childInstanceNodeRegex.test(node.id),
+      ) as InstanceNode[];
+      instanceNodes.forEach(node => {
         masterComponentsIds.indexOf(node.masterComponent.id) === -1
           ? masterComponentsIds.push(node.masterComponent.id)
           : null;
@@ -69,7 +112,7 @@ figma.ui.onmessage = (msg: {
         }
       });
       // remap individual INSTANCE nodes to their new master COMPONENT nodes
-      (instanceNodes as InstanceNode[]).forEach(node => {
+      instanceNodes.forEach(node => {
         node.masterComponent = figma.getNodeById(
           clonedMasterComponentsIds[masterComponentsIds.indexOf(node.masterComponent.id)],
         ) as ComponentNode;
@@ -113,16 +156,18 @@ figma.ui.onmessage = (msg: {
         deepCloneMasterComponentsIds = [...nextDeepCloneMasterComponentsIds];
       }
       // then group them into a components group
-      const componentGroup = figma.group(
-        figma.currentPage.findAll(node => node.type === "COMPONENT"),
-        figma.currentPage,
-      );
-      componentGroup.name = "Master Components";
+      const componentNodes: ComponentNode[] = figma.currentPage.findAll(
+        node => node.type === "COMPONENT",
+      ) as ComponentNode[];
+      if (componentNodes.length > 0) {
+        const componentGroup = figma.group(componentNodes, figma.currentPage);
+        componentGroup.name = "Master Components";
+      }
     }
     if (msg.locked) {
       clone.children.forEach((child: SceneNode) => (child.locked = true));
     }
-    figma.notify(`👍 Successfully cloned ${oldName} into ${clone.name}`);
+    figma.notify(`👍 Successfully cloned selected frames into ${clone.name}`);
     figma.closePlugin();
   }
 };
