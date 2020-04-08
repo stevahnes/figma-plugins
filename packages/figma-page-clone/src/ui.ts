@@ -54,13 +54,16 @@ document.getElementById("pages-in-document").onchange = () => {
 };
 
 document.getElementById("clone").onclick = () => {
+  document.getElementById("frames").classList.remove("empty");
   let framesToClone: string[] = [];
   possibleFramesToClone.forEach(frame => {
     (document.getElementById(frame) as HTMLInputElement).checked ? framesToClone.push(frame) : null;
   });
   const destinationId: string = (document.getElementById("pages-in-document") as HTMLSelectElement).value;
   const name: string = (document.getElementById("clone-name") as HTMLInputElement).value;
-  if (destinationId) {
+  if (framesToClone.length === 0) {
+    document.getElementById("frames").classList.add("empty");
+  } else if (destinationId) {
     setTimeout(() => {
       parent.postMessage(
         {
