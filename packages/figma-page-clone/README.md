@@ -7,13 +7,16 @@ One-click, fuss-free tool to clone a page.
 - Launch the plugin
 - While the plugin is active, you are free to move between pages
 - Click on the plugin again once you're on the page you want to clone
-- Verify that the "Selected" page name is reflected on the plugin UI
-- Name the clone to be created
+- Verify that the "Current Page" name is reflected on the plugin UI
+- Select the frames you want to clone
+  - Pro-tip: you can pre-select the frames you want to clone before launching the plugin
+- Choose a destination page, or select New Page and name the page to be created
 - Options available:
-  - Remove hidden layers
   - Make in-page copies of required master components
     - Useful if changes on original master components should not affect cloned instances
     - Copies of master components are automatically grouped and hidden
+  - Overwrite existing frames with the same name (if you choose to clone to an existing page)
+  - Remove hidden layers
   - Automatically lock all frames
 - Finally, click on "Clone" and let the plugin do the rest!
 
