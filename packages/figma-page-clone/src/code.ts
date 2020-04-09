@@ -87,7 +87,7 @@ figma.ui.onmessage = (msg: {
       msg.frames.forEach(frame => (figma.getNodeById(frame) as FrameNode).clone());
     }
     if (msg.sanitize) {
-      const hiddenNodes = clone.findAll(node => node.visible === false);
+      const hiddenNodes = clone.findAll(node => node.visible === false && node.type !== "COMPONENT");
       hiddenNodes.forEach(node => {
         !childInstanceNodeRegex.test(node.id) ? (figma.getNodeById(node.id) ? node.remove() : null) : null;
       });
@@ -113,9 +113,12 @@ figma.ui.onmessage = (msg: {
       });
       // remap individual INSTANCE nodes to their new master COMPONENT nodes
       instanceNodes.forEach(node => {
+        // TODO findAll nodes within this instance that is not another instance
+        // TODO remember the properties editable based on each type
         node.masterComponent = figma.getNodeById(
           clonedMasterComponentsIds[masterComponentsIds.indexOf(node.masterComponent.id)],
         ) as ComponentNode;
+        // TODO re-apply the properties here (if works, need to optimize for text char replacement)
       });
       // deep clone INSTANCE nodes of new master COMPONENT nodes
       deepCloneMasterComponentsIds = [...clonedMasterComponentsIds];
@@ -161,7 +164,6 @@ figma.ui.onmessage = (msg: {
       ) as GroupNode;
       if (masterComponentGroup) {
         masterComponentGroup.children.forEach(child => figma.currentPage.appendChild(child));
-        masterComponentGroup.remove();
       }
       // then group them into a components group
       const componentNodes: ComponentNode[] = figma.currentPage.findAll(
