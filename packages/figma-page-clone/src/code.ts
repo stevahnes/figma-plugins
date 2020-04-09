@@ -56,10 +56,10 @@ figma.ui.onmessage = (msg: {
     }
     // clone logic based on overwrite or not
     if (msg.overwrite) {
-      // get all the frame names of current page
+      // get all the FRAME names of current page
       const existingFrames: { id: string; name: string }[] = [];
-      figma.currentPage.children.forEach(frameNode => {
-        existingFrames.push({ id: frameNode.id, name: frameNode.name });
+      figma.currentPage.children.forEach(node => {
+        node.type === "FRAME" ? existingFrames.push({ id: node.id, name: node.name }) : null;
       });
       msg.frames.forEach(frame => {
         const frameToClone: FrameNode = figma.getNodeById(frame) as FrameNode;
@@ -154,6 +154,14 @@ figma.ui.onmessage = (msg: {
           }
         });
         deepCloneMasterComponentsIds = [...nextDeepCloneMasterComponentsIds];
+      }
+      // ungroup and existing Master Components
+      const masterComponentGroup: GroupNode = figma.currentPage.findOne(
+        node => node.name === "Master Components" && node.type === "GROUP",
+      ) as GroupNode;
+      if (masterComponentGroup) {
+        masterComponentGroup.children.forEach(child => figma.currentPage.appendChild(child));
+        masterComponentGroup.remove();
       }
       // then group them into a components group
       const componentNodes: ComponentNode[] = figma.currentPage.findAll(
