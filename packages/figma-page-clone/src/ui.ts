@@ -64,6 +64,7 @@ document.getElementById("clone").onclick = () => {
   if (framesToClone.length === 0) {
     document.getElementById("frames").classList.add("empty");
   } else if (destinationId) {
+    document.getElementById("lds").classList.add("is-visible");
     setTimeout(() => {
       parent.postMessage(
         {
