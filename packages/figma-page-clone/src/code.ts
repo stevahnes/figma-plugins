@@ -214,13 +214,12 @@ const detachInstance = (instance: InstanceNode): void => {
   newFrame.y = instance.y;
   instance.children.forEach(child => {
     const childClone: SceneNode = child.clone();
+    childClone.x = child.x;
+    childClone.y = child.y;
     newFrame.appendChild(childClone);
-    childClone.x = newFrame.x;
-    childClone.y = newFrame.y;
     childClone.type === "INSTANCE" ? childInstances.push(childClone) : null;
   });
-  // parent.insertChild(parent.children.indexOf(instance), newFrame);
-  parent.appendChild(newFrame);
+  parent.insertChild(parent.children.indexOf(instance), newFrame);
   instance.remove();
-  childInstances.length > 0 ? childInstances.forEach(child => detachInstance(child)) : null;
+  // childInstances.length > 0 ? childInstances.forEach(child => detachInstance(child)) : null;
 };
