@@ -25,7 +25,7 @@ window.onfocus = () => {
         frames: [],
         destinationId: "",
         name: "",
-        "clone-master": false,
+        "detach-instances": false,
         overwrite: false,
         sanitize: false,
         locked: false,
@@ -49,7 +49,7 @@ document.getElementById("pages-in-document").onchange = () => {
     (document.getElementById("clone-name") as HTMLInputElement).disabled = true;
     // enable overwrite
     (document.getElementById("overwrite") as HTMLInputElement).disabled = false;
-    (document.getElementById("clone-master") as HTMLInputElement).focus();
+    (document.getElementById("detach-instances") as HTMLInputElement).focus();
   }
 };
 
@@ -73,7 +73,7 @@ document.getElementById("clone").onclick = () => {
             frames: framesToClone,
             destination: destinationId,
             name: "",
-            "clone-master": (document.getElementById("clone-master") as HTMLInputElement).checked,
+            "detach-instances": (document.getElementById("detach-instances") as HTMLInputElement).checked,
             overwrite: (document.getElementById("overwrite") as HTMLInputElement).checked,
             sanitize: (document.getElementById("sanitize") as HTMLInputElement).checked,
             locked: (document.getElementById("locked") as HTMLInputElement).checked,
@@ -92,7 +92,7 @@ document.getElementById("clone").onclick = () => {
             frames: framesToClone,
             destination: "",
             name: (document.getElementById("clone-name") as HTMLInputElement).value,
-            "clone-master": (document.getElementById("clone-master") as HTMLInputElement).checked,
+            "detach-instances": (document.getElementById("detach-instances") as HTMLInputElement).checked,
             overwrite: false,
             sanitize: (document.getElementById("sanitize") as HTMLInputElement).checked,
             locked: (document.getElementById("locked") as HTMLInputElement).checked,

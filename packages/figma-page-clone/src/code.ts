@@ -35,7 +35,7 @@ figma.ui.onmessage = (msg: {
   frames: string[];
   destination: string;
   name: string;
-  "clone-master": boolean;
+  "detach-instances": boolean;
   overwrite: boolean;
   sanitize: boolean;
   locked: boolean;
@@ -55,6 +55,7 @@ figma.ui.onmessage = (msg: {
       clone.name = msg.name;
     }
     // clone logic based on overwrite or not
+    let cloneFrameNodes: FrameNode[] = [];
     if (msg.overwrite) {
       // get all the FRAME names of current page
       const existingFrames: { id: string; name: string }[] = [];
@@ -78,13 +79,34 @@ figma.ui.onmessage = (msg: {
           existingFrameNode.remove();
           // for safety, splice the replace entry from existingFrameIndex in case there are 2 frames with same name;
           existingFrames.splice(existingFrameIndex, 1);
+          // add newFrameNode to cloneFrameNodes for detach instance logic
+          cloneFrameNodes.push(newFrameNode);
         } else {
           // if there is none of the same name
-          frameToClone.clone();
+          const newFrameNode: FrameNode = frameToClone.clone();
+          // add newFrameNode to cloneFrameNodes for detach instance logic
+          cloneFrameNodes.push(newFrameNode);
         }
       });
     } else {
-      msg.frames.forEach(frame => (figma.getNodeById(frame) as FrameNode).clone());
+      msg.frames.forEach(frame => {
+        const newFrameNode: FrameNode = (figma.getNodeById(frame) as FrameNode).clone();
+        // add newFrameNode to cloneFrameNodes for detach instance logic
+        cloneFrameNodes.push(newFrameNode);
+      });
+    }
+    if (msg["detach-instances"]) {
+      let currentLayerNodes = [...cloneFrameNodes];
+      while (currentLayerNodes.length > 0) {
+        let nextLayerNodes = [];
+        currentLayerNodes.forEach(node => {
+          const instances: InstanceNode[] = node.findChildren(child => child.type === "INSTANCE") as InstanceNode[];
+          instances.length > 0
+            ? instances.forEach(instance => detachInstance(instance))
+            : (nextLayerNodes = node.findChildren(child => child.type === "GROUP" || child.type === "FRAME"));
+        });
+        currentLayerNodes = [...nextLayerNodes];
+      }
     }
     if (msg.sanitize) {
       const hiddenNodes = clone.findAll(node => node.visible === false && node.type !== "COMPONENT");
@@ -180,4 +202,25 @@ figma.ui.onmessage = (msg: {
     figma.notify(`👍 Successfully cloned selected frames into ${clone.name}`);
     figma.closePlugin();
   }
+};
+
+const detachInstance = (instance: InstanceNode): void => {
+  let childInstances: InstanceNode[] = [];
+  const parent = instance.parent;
+  const newFrame = figma.createFrame();
+  newFrame.resize(instance.width, instance.height);
+  newFrame.name = instance.name;
+  newFrame.x = instance.x;
+  newFrame.y = instance.y;
+  instance.children.forEach(child => {
+    const childClone: SceneNode = child.clone();
+    newFrame.appendChild(childClone);
+    childClone.x = newFrame.x;
+    childClone.y = newFrame.y;
+    childClone.type === "INSTANCE" ? childInstances.push(childClone) : null;
+  });
+  // parent.insertChild(parent.children.indexOf(instance), newFrame);
+  parent.appendChild(newFrame);
+  instance.remove();
+  childInstances.length > 0 ? childInstances.forEach(child => detachInstance(child)) : null;
 };
