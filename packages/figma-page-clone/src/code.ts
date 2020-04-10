@@ -101,9 +101,10 @@ figma.ui.onmessage = (msg: {
         let nextLayerNodes = [];
         currentLayerNodes.forEach(node => {
           const instances: InstanceNode[] = node.findChildren(child => child.type === "INSTANCE") as InstanceNode[];
-          instances.length > 0
-            ? instances.forEach(instance => detachInstance(instance))
-            : (nextLayerNodes = node.findChildren(child => child.type === "GROUP" || child.type === "FRAME"));
+          instances.length > 0 ? instances.forEach(instance => detachInstance(instance)) : null;
+          nextLayerNodes = nextLayerNodes.concat(
+            node.findChildren(child => child.type === "GROUP" || child.type === "FRAME"),
+          );
         });
         currentLayerNodes = [...nextLayerNodes];
       }
