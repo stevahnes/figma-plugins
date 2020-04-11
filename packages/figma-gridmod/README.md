@@ -2,7 +2,7 @@
 
 Modifier for tables generated with GridGen.
 
-## How-To Use:
+## How to Use:
 
 - Select the parent group of the table and launch the plugin
   - Plugin is capable of detecting if a valid GridGen table is selected

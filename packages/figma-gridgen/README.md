@@ -2,7 +2,7 @@
 
 Utilizes built-in Figma rectangles, lines, and texts to generate tables with neatly organized layers.
 
-## How-To Use:
+## How to Use:
 
 - Select one of three constraint modes (keyboard shortcuts added):
   - Cell and table size ("Alt + 1")
