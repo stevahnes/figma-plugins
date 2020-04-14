@@ -1,4 +1,4 @@
-# ![GridGen](https://raw.githubusercontent.com/stevahnes/figma-plugins/master/packages/figma-gridgen/media/icon.svg?sanitize=true) [![Link to Figma](https://badgen.net/badge/figma/@gridgen/purple)](https://www.figma.com/c/plugin/796759972238579874) [![npm Version](https://badgen.net/npm/v/figma-gridgen?icon=npm)](https://www.npmjs.com/package/figma-gridgen)
+# ![GridGen](https://raw.githubusercontent.com/stevahnes/figma-plugins/master/packages/figma-gridgen/media/icon.svg?sanitize=true) GridGen [![Link to Figma](https://badgen.net/badge/figma/@gridgen/purple)](https://www.figma.com/c/plugin/796759972238579874) [![npm Version](https://badgen.net/npm/v/figma-gridgen?icon=npm)](https://www.npmjs.com/package/figma-gridgen)
 
 Utilizes built-in Figma rectangles, lines, and texts to generate tables with neatly organized layers.
 
