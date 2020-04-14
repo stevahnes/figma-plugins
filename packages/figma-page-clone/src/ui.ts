@@ -1,6 +1,7 @@
 import "./ui.css";
 
 let isShiftHeld: boolean = false;
+let checkedFramesCount: number = 0;
 let boundaryInputId: string = "";
 let possibleFramesToClone: string[] = [];
 
@@ -13,6 +14,13 @@ onmessage = (msg: MessageEvent): void => {
   const availableFrames: string = constructAvailableFramesList(msg.data.pluginMessage.frames);
   (document.getElementById("pages-in-document") as HTMLSelectElement).innerHTML = destinationOptions;
   document.getElementById("frames").innerHTML = availableFrames;
+  checkedFramesCountValidation();
+  possibleFramesToClone.forEach(frame => {
+    (document.getElementById(frame) as HTMLInputElement).onchange = () => {
+      (document.getElementById(frame) as HTMLInputElement).checked ? checkedFramesCount++ : checkedFramesCount--;
+      checkedFramesCountValidation();
+    };
+  });
   (document.getElementById("clone-name") as HTMLInputElement).value = `Copy of ${msg.data.pluginMessage.name}`;
   (document.getElementById("clone-name") as HTMLInputElement).select();
 };
@@ -149,6 +157,14 @@ document.onkeyup = keyUp => {
   }
 };
 
+const checkedFramesCountValidation = (): void => {
+  checkedFramesCount > 5
+    ? (document.getElementById("too-much").classList.add("show"),
+      document.getElementById("okay").classList.remove("show"))
+    : (document.getElementById("too-much").classList.remove("show"),
+      document.getElementById("okay").classList.add("show"));
+};
+
 const constructDestinationPageOptions = (pages: { id: string; name: string }[], currentPageId: string): string => {
   let options: string = `<option value="" selected>New Page</option>`;
   pages.forEach((page: { id: string; name: string }) => {
@@ -161,10 +177,10 @@ const constructAvailableFramesList = (frames: { id: string; name: string; select
   const preCheckedFramesAvailable: boolean = Boolean(frames.find(frame => frame.selected));
   let availableFrames: string = `
   <div id="checkbox-container" class="row">
-      <div class="column three-fourths">
+      <div class="column eighty">
         <h4>Available Frames</h4>
       </div>
-      <div class="column quarter">
+      <div class="column twenty">
         <h4>Clone?</h4>
       </div>
     </div>
@@ -172,16 +188,22 @@ const constructAvailableFramesList = (frames: { id: string; name: string; select
   /* Reset UI variables */
   boundaryInputId = "";
   possibleFramesToClone.length = 0;
+  checkedFramesCount = 0;
   frames.forEach((frame: { id: string; name: string; selected: boolean }) => {
     boundaryInputId === "" ? (boundaryInputId = `${frame.id}`) : null;
     possibleFramesToClone.push(frame.id);
     const checked: string = preCheckedFramesAvailable ? (frame.selected ? "checked" : "") : "checked";
+    checkedFramesCount = preCheckedFramesAvailable
+      ? frame.selected
+        ? (checkedFramesCount += 1)
+        : checkedFramesCount
+      : (checkedFramesCount += 1);
     availableFrames += `
     <div id="checkbox-container" class="row">
-      <div class="column eighty">
+      <div class="column eighty-five">
         <p>${frame.name}&nbsp;</p>
       </div>
-      <div class="column twenty">
+      <div class="column fifteen">
         <div class="column" style="width: 15%;">
           <label class="container">
             <input id="${frame.id}" type="checkbox" ${checked}/>

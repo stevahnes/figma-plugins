@@ -1,6 +1,6 @@
 const showUIOptions: ShowUIOptions = {
   visible: true,
-  width: 300,
+  width: 350,
   height: 500,
 };
 

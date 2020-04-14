@@ -194,8 +194,16 @@ input:disabled {
   width: 80% !important;
 }
 
+.eighty-five {
+  width: 85% !important;
+}
+
 .twenty {
   width: 20% !important;
+}
+
+.fifteen {
+  width: 15% !important;
 }
 
 .label {

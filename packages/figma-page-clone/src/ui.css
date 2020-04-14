@@ -24,3 +24,8 @@
 .scrollable-container.empty {
   border: 1px solid #ef5533;
 }
+
+#okay,
+#too-much {
+  font-size: 11px;
+}
