@@ -1,6 +1,6 @@
 {
   "name": "figma-retro-snake",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Feeling exhausted after long hours of designing? De-stress with the classic Snake game, now seamlessly integrated with Figma!",
   "main": "code.js",
   "scripts": {
