@@ -2,6 +2,8 @@
 
 Modifier for tables generated with GridGen.
 
+![Artwork](https://raw.githubusercontent.com/stevahnes/figma-plugins/master/packages/figma-gridmod/media/artwork.jpg)
+
 ## How to Use:
 
 - Select the parent group of the table and launch the plugin

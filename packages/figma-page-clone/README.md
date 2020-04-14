@@ -2,6 +2,8 @@
 
 One-click, fuss-free tool to clone a page.
 
+![Artwork](https://raw.githubusercontent.com/stevahnes/figma-plugins/master/packages/figma-page-clone/media/artwork.jpeg)
+
 ## How to Use:
 
 - Launch the plugin
