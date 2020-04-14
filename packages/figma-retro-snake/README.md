@@ -1,4 +1,4 @@
-# Retro Snake [![Link to Figma](https://img.shields.io/badge/figma-@retro--snake-blueviolet)](https://www.figma.com/community/plugin/812994090875519300) [![npm Version](https://img.shields.io/npm/v/figma-retro-snake)](https://www.npmjs.com/package/figma-retro-snake)
+# Retro Snake [![Link to Figma](https://badgen.net/badge/figma/@retro-snake/purple)](https://www.figma.com/community/plugin/812994090875519300) [![npm Version](https://badgen.net/npm/v/figma-retro-snake?icon=npm)](https://www.npmjs.com/package/figma-retro-snake)
 
 Worked for too long? Needing a break? Unwind with a classic!
 

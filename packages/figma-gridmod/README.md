@@ -1,4 +1,4 @@
-# GridMod [![Link to Figma](https://img.shields.io/badge/figma-@gridmod-blueviolet)](https://www.figma.com/community/plugin/815889316898860859) [![npm Version](https://img.shields.io/npm/v/figma-gridmod)](https://www.npmjs.com/package/figma-gridmod)
+# GridMod [![Link to Figma](https://badgen.net/badge/figma/@gridmod/purple)](https://www.figma.com/community/plugin/815889316898860859) [![npm Version](https://badgen.net/npm/v/figma-gridmod?icon=npm)](https://www.npmjs.com/package/figma-gridmod)
 
 Modifier for tables generated with GridGen.
 

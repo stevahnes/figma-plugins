@@ -1,4 +1,4 @@
-# PageClone [![Link to Figma](https://img.shields.io/badge/figma-@page-clone-blueviolet)](https://www.figma.com/community/plugin/824942413886528676) [![npm Version](https://img.shields.io/npm/v/figma-page-clone)](https://www.npmjs.com/package/figma-page-clone)
+# PageClone [![Link to Figma](https://badgen.net/badge/figma/@pageclone/purple)](https://www.figma.com/community/plugin/824942413886528676) [![npm Version](https://badgen.net/npm/v/figma-page-clone?icon=npm)](https://www.npmjs.com/package/figma-page-clone)
 
 One-click, fuss-free tool to clone a page.
 

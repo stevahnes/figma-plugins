@@ -1,4 +1,4 @@
-# GridGen [![Link to Figma](https://img.shields.io/badge/figma-@gridgen-blueviolet)](https://www.figma.com/c/plugin/796759972238579874) [![npm Version](https://img.shields.io/npm/v/figma-gridgen)](https://www.npmjs.com/package/figma-gridgen)
+# GridGen [![Link to Figma](https://badgen.net/badge/figma/@gridgen/purple)](https://www.figma.com/c/plugin/796759972238579874) [![npm Version](https://badgen.net/npm/v/figma-gridgen?icon=npm)](https://www.npmjs.com/package/figma-gridgen)
 
 Utilizes built-in Figma rectangles, lines, and texts to generate tables with neatly organized layers.
 
