@@ -1,0 +1,16 @@
+<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="128" height="128" fill="white"/>
+<path d="M126.5 62.5344C126.5 96.2101 98.5507 123.569 64 123.569C29.4493 123.569 1.5 96.2101 1.5 62.5344C1.5 28.8586 29.4493 1.5 64 1.5C98.5507 1.5 126.5 28.8586 126.5 62.5344Z" fill="#333333" stroke="black" stroke-width="3"/>
+<rect x="0.5" y="0.5" width="127" height="127" fill="#333333" stroke="black"/>
+<rect x="27" y="91.8988" width="21.5789" height="12.6509" fill="#C0F0F4"/>
+<rect x="78.7894" y="75.0309" width="21.5789" height="12.6509" fill="#C0F0F4"/>
+<rect x="27" y="24.4275" width="21.5789" height="12.6509" fill="#C0F0F4"/>
+<rect x="27" y="41.2953" width="21.5789" height="12.6509" fill="#F0C9D7"/>
+<rect x="78.7894" y="91.8988" width="21.5789" height="12.6509" fill="#F0C9D7"/>
+<rect x="52.8947" y="24.4275" width="21.5789" height="12.6509" fill="#FFDDD1"/>
+<rect x="78.7894" y="58.1631" width="21.5789" height="12.6509" fill="#FFDDD1"/>
+<rect x="78.7895" y="24.4275" width="21.5789" height="12.6509" fill="#FFDDD1"/>
+<rect x="52.8947" y="57.3197" width="21.5789" height="12.6509" fill="#D4C2E1"/>
+<rect x="27" y="57.3197" width="21.5789" height="12.6509" fill="#D4C2E1"/>
+<rect x="52.8947" y="91.8988" width="21.5789" height="12.6509" fill="#D4C2E1"/>
+</svg>

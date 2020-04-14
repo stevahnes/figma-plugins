@@ -4,10 +4,13 @@
 <rect x="0.5" y="0.5" width="127" height="127" fill="#333333" stroke="black"/>
 <rect x="27" y="59.5263" width="21.5789" height="12.9474" fill="#BDD7EA"/>
 <rect x="52.8947" y="59.5263" width="21.5789" height="12.9474" fill="#C0F0F4"/>
+<rect x="78.8947" y="59.5263" width="21.5789" height="12.9474" fill="#C0F0F4"/>
 <rect x="78.7895" y="76.7895" width="21.5789" height="12.9474" fill="#C0F0F4"/>
 <rect x="27" y="42.2632" width="21.5789" height="12.9474" fill="#F0C9D7"/>
-<rect x="52.8947" y="25" width="21.5789" height="12.9474" fill="#FFDDD1"/>
+<rect x="52.8947" y="25" width="21.5789" height="12.9474" fill="#FFDDD1" fill-opacity="0.5"/>
+<rect x="27" y="94" width="21.5789" height="12.9474" fill="#FFDDD1"/>
 <rect x="78.7895" y="42.2632" width="21.5789" height="12.9474" fill="#FFDDD1"/>
 <rect x="27" y="76.7895" width="21.5789" height="12.9474" fill="#D4C2E1"/>
-<rect x="52.8947" y="94.0526" width="21.5789" height="12.9474" fill="#D4C2E1"/>
+<rect x="52.8947" y="94.0526" width="21.5789" height="12.9474" fill="#D4C2E1" fill-opacity="0.5"/>
+<rect x="78.8947" y="94.0526" width="21.5789" height="12.9474" fill="#D4C2E1"/>
 </svg>
