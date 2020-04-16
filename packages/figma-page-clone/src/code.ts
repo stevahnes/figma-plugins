@@ -1,7 +1,7 @@
 const showUIOptions: ShowUIOptions = {
   visible: true,
   width: 350,
-  height: 500,
+  height: 510,
 };
 
 const childInstanceNodeRegex: RegExp = /I[0-9]+:[0-9]+;/;
