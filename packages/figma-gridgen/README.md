@@ -43,10 +43,6 @@ Utilizes built-in Figma rectangles, lines, and texts to generate tables with nea
 - Caching and preloading of last input
 - Resetting to last cached input upon changes
 
-## Work-in-Progress:
-
-- Edit mode
-
 ## License:
 
 [MIT](/LICENSE)

@@ -30,10 +30,6 @@ Modifier for tables generated with GridGen.
 - Persistent UI allowing consecutive executions of various modifications
 - Enhanced UI experience with validations and loader
 
-## Work-in-Progress:
-
-- Modification of GridGen-generated table headers
-
 ## License:
 
 [MIT](/LICENSE)

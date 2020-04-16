@@ -21,10 +21,6 @@ One-click, fuss-free tool to clone a page.
   - Automatically lock all frames
 - Finally, click on "Clone" and let the plugin do the rest!
 
-## Work-in-Progress:
-
-- Fix in-page master component feature
-
 ## License:
 
 [MIT](/LICENSE)
