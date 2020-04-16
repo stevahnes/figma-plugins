@@ -4,11 +4,12 @@
   "scripts": {
     "start": "lerna run start",
     "build": "lerna run build",
+    "refresh": "rm -rf ./node_modules ./package-lock.json && npm install",
     "lint": "concurrently 'npm:lint-ts' 'npm:lint-css'",
     "lint-ts": "npx eslint --no-eslintrc -c .eslintrc packages/*/src/**/*.ts",
     "lint-css": "npx stylelint --config .stylelintrc packages/*/src/**/*.css",
     "fix": "npx prettier --write packages/**/*.{ts,css,json,md}",
-    "ci": "npm run fix && npm run lint && npm run build"
+    "ci": "npm run fix && npm run lint && npm run refresh && npm run build"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^2.27.0",
