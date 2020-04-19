@@ -287,7 +287,7 @@ export async function saveMessage(key: string, value: Interfaces.PluginMessage):
 function onPromiseResolved(header: boolean): void {
   if (isDataSaved && isTableFontLoaded && (isHeaderFontLoaded || !header)) {
     /* Notify Success to User */
-    Figma.notify("👍 GridGen successfully generated your table", 300);
+    Figma.notify("👍 Table successfully generated. Install GridMod to modify it easily!", 2400);
     Figma.closePlugin();
   }
 }
