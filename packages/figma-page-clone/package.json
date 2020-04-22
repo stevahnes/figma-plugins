@@ -1,6 +1,6 @@
 {
   "name": "figma-page-clone",
-  "version": "2.1.7",
+  "version": "2.1.8",
   "description": "One-click tool to clone a page",
   "main": "code.js",
   "scripts": {
