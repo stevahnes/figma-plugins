@@ -44,6 +44,7 @@ figma.ui.onmessage = (msg: {
     initiateUI();
   }
   if (msg.type === "cloned") {
+    /* NOTE: PageClone actually clones EVERYTHING except DOCUMENT. However, I have not found a way to improve type casting  */
     let clone: PageNode;
     // go to destination page or create new page
     if (msg.destination) {
