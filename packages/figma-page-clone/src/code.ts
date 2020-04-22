@@ -55,12 +55,12 @@ figma.ui.onmessage = (msg: {
       clone.name = msg.name;
     }
     // clone logic based on overwrite or not
-    let cloneFrameNodes: FrameNode[] = [];
+    let pageChildrenNodes: FrameNode[] = [];
     if (msg.overwrite) {
       // get all the FRAME names of current page
       const existingFrames: { id: string; name: string }[] = [];
       figma.currentPage.children.forEach(node => {
-        node.type === "FRAME" ? existingFrames.push({ id: node.id, name: node.name }) : null;
+        existingFrames.push({ id: node.id, name: node.name });
       });
       msg.frames.forEach(frame => {
         const frameToClone: FrameNode = figma.getNodeById(frame) as FrameNode;
@@ -80,31 +80,35 @@ figma.ui.onmessage = (msg: {
           // for safety, splice the replace entry from existingFrameIndex in case there are 2 frames with same name;
           existingFrames.splice(existingFrameIndex, 1);
           // add newFrameNode to cloneFrameNodes for detach instance logic
-          cloneFrameNodes.push(newFrameNode);
+          pageChildrenNodes.push(newFrameNode);
         } else {
           // if there is none of the same name
           const newFrameNode: FrameNode = frameToClone.clone();
           // add newFrameNode to cloneFrameNodes for detach instance logic
-          cloneFrameNodes.push(newFrameNode);
+          pageChildrenNodes.push(newFrameNode);
         }
       });
     } else {
       msg.frames.forEach(frame => {
         const newFrameNode: FrameNode = (figma.getNodeById(frame) as FrameNode).clone();
         // add newFrameNode to cloneFrameNodes for detach instance logic
-        cloneFrameNodes.push(newFrameNode);
+        pageChildrenNodes.push(newFrameNode);
       });
     }
     if (msg["detach-instances"]) {
-      let currentLayerNodes = [...cloneFrameNodes];
+      let currentLayerNodes = [figma.currentPage];
       while (currentLayerNodes.length > 0) {
         let nextLayerNodes = [];
         currentLayerNodes.forEach(node => {
-          const instances: InstanceNode[] = node.findChildren(child => child.type === "INSTANCE") as InstanceNode[];
-          instances.length > 0 ? instances.forEach(instance => detachInstance(instance)) : null;
-          nextLayerNodes = nextLayerNodes.concat(
-            node.findChildren(child => child.type === "GROUP" || child.type === "FRAME"),
-          );
+          if (node.children) {
+            const instances: InstanceNode[] = node.findChildren(
+              child => child.type === "INSTANCE" || child.type === "COMPONENT",
+            ) as InstanceNode[];
+            instances.length > 0 ? instances.forEach(instance => detachInstance(instance)) : null;
+            nextLayerNodes = nextLayerNodes.concat(
+              node.findChildren(child => child.type === "GROUP" || child.type === "FRAME"),
+            );
+          }
         });
         currentLayerNodes = [...nextLayerNodes];
       }
