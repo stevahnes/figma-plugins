@@ -1,6 +1,6 @@
 {
   "name": "figma-gridmod",
-  "version": "1.0.6",
+  "version": "1.1.0",
   "description": "Modifier plugin for GridGen table/grid",
   "main": "webpack.config.js",
   "scripts": {
