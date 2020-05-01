@@ -17,6 +17,8 @@ const selectedGrid: Interfaces.SelectedGrid = {
   tableTextsId: "",
   bordersId: "",
   tableHeaderId: "",
+  minimumTextWidth: 0,
+  minimumTextHeight: 0,
 };
 
 (document.getElementById("width-height") as HTMLSelectElement).onchange = () => {
@@ -119,25 +121,47 @@ const computeValueOnArrowPress = (
 };
 
 const modifyTable = () => {
-  document.getElementById("lds").classList.add("is-visible");
-  setTimeout(() => {
-    parent.postMessage(
-      {
-        pluginMessage: {
-          type: Constants.UIToCodeMessageType.EDIT_CONTENTS,
-          payload: {
-            selectedGrid: selectedGrid,
-            decrease:
-              (document.getElementById("increase-decrease") as HTMLSelectElement).value === "decrease" ? true : false,
-            rows: (document.getElementById("width-height") as HTMLSelectElement).value === "height" ? true : false,
-            index: (document.getElementById("column-row") as HTMLSelectElement).value,
-            amount: parseInt((document.getElementById("amount") as HTMLInputElement).value, 10),
+  document.getElementById("valid").classList.add("show");
+  document.getElementById("invalid").classList.remove("show");
+  let validInput: boolean = true;
+  const amount: number = parseInt((document.getElementById("amount") as HTMLInputElement).value, 10);
+  if ((document.getElementById("increase-decrease") as HTMLSelectElement).value === "decrease") {
+    if ((document.getElementById("width-height") as HTMLSelectElement).value === "width") {
+      document.getElementById("invalid").innerHTML = "Reduction will cause text to have less than 0 width.";
+      if (selectedGrid.minimumTextWidth - amount <= 0) {
+        validInput = false;
+      }
+    } else if ((document.getElementById("width-height") as HTMLSelectElement).value === "height") {
+      document.getElementById("invalid").innerHTML = "Reduction will cause text to have less than 0 height.";
+      if (selectedGrid.minimumTextHeight - amount <= 0) {
+        validInput = false;
+      }
+    }
+  }
+  if (validInput) {
+    document.getElementById("lds").classList.add("is-visible");
+    setTimeout(() => {
+      parent.postMessage(
+        {
+          pluginMessage: {
+            type: Constants.UIToCodeMessageType.EDIT_CONTENTS,
+            payload: {
+              selectedGrid: selectedGrid,
+              decrease:
+                (document.getElementById("increase-decrease") as HTMLSelectElement).value === "decrease" ? true : false,
+              rows: (document.getElementById("width-height") as HTMLSelectElement).value === "height" ? true : false,
+              index: (document.getElementById("column-row") as HTMLSelectElement).value,
+              amount: amount,
+            },
           },
         },
-      },
-      "*",
-    );
-  }, 50);
+        "*",
+      );
+    }, 50);
+  } else {
+    document.getElementById("valid").classList.remove("show");
+    document.getElementById("invalid").classList.add("show");
+  }
 };
 
 const populateModificationOptions = (): void => {

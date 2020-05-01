@@ -13,6 +13,8 @@ const codeToUIMessage: Interfaces.CodeToUIMessage = {
     tableTextsId: "",
     bordersId: "",
     tableHeaderId: "",
+    minimumTextWidth: 0,
+    minimumTextHeight: 0,
   },
 };
 
@@ -32,21 +34,38 @@ const validGridGenCheck = (): void => {
         : (codeToUIMessage.isValidGridGen = false);
     });
     // if selected is a valid GridGen, update selected grid id
-    codeToUIMessage.isValidGridGen
-      ? ((codeToUIMessage.selectedGrid.id = selection.id), (codeToUIMessage.selectedGrid.name = selection.name))
-      : null;
-    // if selected grid has changed but table header id is not updated, means new grid has no table header
-    codeToUIMessage.selectedGrid.id !== oldGridId && oldTableHeaderId === codeToUIMessage.selectedGrid.tableHeaderId
-      ? (codeToUIMessage.selectedGrid.tableHeaderId = "")
-      : null;
-    // Finally, calculate number of rows and columns without header
-    const allBorders: { [key: string]: string } = getBorderTypesId(codeToUIMessage.selectedGrid);
-    codeToUIMessage.selectedGrid.tableHeaderId === ""
-      ? (codeToUIMessage.selectedGrid.rows =
-          (figma.getNodeById(allBorders["Horizontal"]) as GroupNode).children.length - 1)
-      : (codeToUIMessage.selectedGrid.rows =
-          (figma.getNodeById(allBorders["Horizontal"]) as GroupNode).children.length - 2);
-    codeToUIMessage.selectedGrid.columns = (figma.getNodeById(allBorders["Vertical"]) as GroupNode).children.length - 1;
+    if (codeToUIMessage.isValidGridGen) {
+      (codeToUIMessage.selectedGrid.id = selection.id), (codeToUIMessage.selectedGrid.name = selection.name);
+      // if selected grid has changed but table header id is not updated, means new grid has no table header
+      codeToUIMessage.selectedGrid.id !== oldGridId && oldTableHeaderId === codeToUIMessage.selectedGrid.tableHeaderId
+        ? (codeToUIMessage.selectedGrid.tableHeaderId = "")
+        : null;
+      // Finally, calculate number of rows and columns without header
+      const allBorders: { [key: string]: string } = getBorderTypesId(codeToUIMessage.selectedGrid);
+      codeToUIMessage.selectedGrid.tableHeaderId === ""
+        ? (codeToUIMessage.selectedGrid.rows =
+            (figma.getNodeById(allBorders["Horizontal"]) as GroupNode).children.length - 1)
+        : (codeToUIMessage.selectedGrid.rows =
+            (figma.getNodeById(allBorders["Horizontal"]) as GroupNode).children.length - 2);
+      codeToUIMessage.selectedGrid.columns =
+        (figma.getNodeById(allBorders["Vertical"]) as GroupNode).children.length - 1;
+      (figma.getNodeById(codeToUIMessage.selectedGrid.id) as GroupNode)
+        .findAll(node => node.type === "TEXT")
+        .forEach(textNode => {
+          if (
+            codeToUIMessage.selectedGrid.minimumTextHeight === 0 ||
+            codeToUIMessage.selectedGrid.minimumTextHeight > textNode.height
+          ) {
+            codeToUIMessage.selectedGrid.minimumTextHeight = textNode.height;
+          }
+          if (
+            codeToUIMessage.selectedGrid.minimumTextWidth === 0 ||
+            codeToUIMessage.selectedGrid.minimumTextWidth > textNode.width
+          ) {
+            codeToUIMessage.selectedGrid.minimumTextWidth = textNode.width;
+          }
+        });
+    }
   } else {
     codeToUIMessage.isValidGridGen = false;
   }

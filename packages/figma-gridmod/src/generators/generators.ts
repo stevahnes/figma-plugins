@@ -102,46 +102,44 @@ const editBackgrounds = (
     .children[0] as GroupNode;
   const evenBackgrounds: GroupNode = (figma.getNodeById(selectedGrid.rowBackgroundId) as GroupNode)
     .children[1] as GroupNode;
-  const currentDimensions: { width: number; height: number } = {
-    width: oddBackgrounds.children[0].width,
-    height: oddBackgrounds.children[0].height,
-  };
   if (all) {
     for (let i: number = 0; i < totalBackgroundsCount; i++) {
-      i % 2 === 0
-        ? row
+      if (i % 2 === 0) {
+        row
           ? (oddBackgrounds.children[Math.floor(i / 2)].resize(
-              currentDimensions.width,
-              currentDimensions.height + toAdd,
+              oddBackgrounds.children[Math.floor(i / 2)].width,
+              oddBackgrounds.children[Math.floor(i / 2)].height + toAdd,
             ),
             (oddBackgrounds.children[Math.floor(i / 2)].y -= (i + 1) * toAdd))
           : oddBackgrounds.children[Math.floor(i / 2)].resize(
-              currentDimensions.width + selectedGrid.columns * toAdd,
-              currentDimensions.height,
-            )
-        : row
-        ? (evenBackgrounds.children[Math.floor(i / 2)].resize(
-            currentDimensions.width,
-            currentDimensions.height + toAdd,
-          ),
-          (evenBackgrounds.children[Math.floor(i / 2)].y -= (i + 1) * toAdd))
-        : evenBackgrounds.children[Math.floor(i / 2)].resize(
-            currentDimensions.width + selectedGrid.columns * toAdd,
-            currentDimensions.height,
-          );
+              oddBackgrounds.children[Math.floor(i / 2)].width + selectedGrid.columns * toAdd,
+              oddBackgrounds.children[Math.floor(i / 2)].height,
+            );
+      } else {
+        row
+          ? (evenBackgrounds.children[Math.floor(i / 2)].resize(
+              evenBackgrounds.children[Math.floor(i / 2)].width,
+              evenBackgrounds.children[Math.floor(i / 2)].height + toAdd,
+            ),
+            (evenBackgrounds.children[Math.floor(i / 2)].y -= (i + 1) * toAdd))
+          : evenBackgrounds.children[Math.floor(i / 2)].resize(
+              evenBackgrounds.children[Math.floor(i / 2)].width + selectedGrid.columns * toAdd,
+              evenBackgrounds.children[Math.floor(i / 2)].height,
+            );
+      }
     }
   } else {
     if (row) {
       // resize and move the background of interest first
       (index - 1) % 2 === 0
         ? (oddBackgrounds.children[Math.floor((index - 1) / 2)].resize(
-            currentDimensions.width,
-            currentDimensions.height + toAdd,
+            oddBackgrounds.children[Math.floor((index - 1) / 2)].width,
+            oddBackgrounds.children[Math.floor((index - 1) / 2)].height + toAdd,
           ),
           (oddBackgrounds.children[Math.floor((index - 1) / 2)].y -= toAdd))
         : (evenBackgrounds.children[Math.floor((index - 1) / 2)].resize(
-            currentDimensions.width,
-            currentDimensions.height + toAdd,
+            evenBackgrounds.children[Math.floor((index - 1) / 2)].width,
+            evenBackgrounds.children[Math.floor((index - 1) / 2)].height + toAdd,
           ),
           (evenBackgrounds.children[Math.floor((index - 1) / 2)].y -= toAdd));
       // then move the other backgrounds to its correct position
@@ -154,10 +152,13 @@ const editBackgrounds = (
       // resize all backgrounds (move not needed)
       for (let i: number = 0; i < totalBackgroundsCount; i++) {
         i % 2 === 0
-          ? oddBackgrounds.children[Math.floor(i / 2)].resize(currentDimensions.width + toAdd, currentDimensions.height)
+          ? oddBackgrounds.children[Math.floor(i / 2)].resize(
+              oddBackgrounds.children[Math.floor(i / 2)].width + toAdd,
+              oddBackgrounds.children[Math.floor(i / 2)].height,
+            )
           : evenBackgrounds.children[Math.floor(i / 2)].resize(
-              currentDimensions.width + toAdd,
-              currentDimensions.height,
+              evenBackgrounds.children[Math.floor(i / 2)].width + toAdd,
+              evenBackgrounds.children[Math.floor(i / 2)].height,
             );
       }
     }

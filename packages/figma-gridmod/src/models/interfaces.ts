@@ -19,4 +19,6 @@ export interface SelectedGrid {
   tableTextsId: string;
   bordersId: string;
   tableHeaderId: string;
+  minimumTextWidth: number;
+  minimumTextHeight: number;
 }
