@@ -121,6 +121,7 @@ const computeValueOnArrowPress = (
 };
 
 const modifyTable = () => {
+  document.getElementById("amount").classList.remove("invalid");
   document.getElementById("valid").classList.add("show");
   document.getElementById("invalid").classList.remove("show");
   let validInput: boolean = true;
@@ -159,6 +160,7 @@ const modifyTable = () => {
       );
     }, 50);
   } else {
+    document.getElementById("amount").classList.add("invalid");
     document.getElementById("valid").classList.remove("show");
     document.getElementById("invalid").classList.add("show");
   }
