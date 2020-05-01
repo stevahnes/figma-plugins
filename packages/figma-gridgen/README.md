@@ -2,7 +2,7 @@
 
 Utilizes built-in Figma rectangles, lines, and texts to generate tables with neatly organized layers.
 
-![Artwork](https://raw.githubusercontent.com/stevahnes/figma-plugins/master/packages/figma-gridgen/media/artwork.jpeg)
+![Artwork](https://raw.githubusercontent.com/stevahnes/figma-plugins/master/packages/figma-gridgen/media/artwork.jpg)
 
 ## How to Use:
 
