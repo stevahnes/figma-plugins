@@ -126,8 +126,8 @@ figma.ui.onmessage = (msg: {
         node => node.type === "INSTANCE" && !childInstanceNodeRegex.test(node.id),
       ) as InstanceNode[];
       instanceNodes.forEach(node => {
-        masterComponentsIds.indexOf(node.masterComponent.id) === -1
-          ? masterComponentsIds.push(node.masterComponent.id)
+        masterComponentsIds.indexOf(node.mainComponent.id) === -1
+          ? masterComponentsIds.push(node.mainComponent.id)
           : null;
       });
       // get and store the unique master COMPONENT nodes, if they are not in cloned page
@@ -143,8 +143,8 @@ figma.ui.onmessage = (msg: {
       instanceNodes.forEach(node => {
         // TODO findAll nodes within this instance that is not another instance
         // TODO remember the properties editable based on each type
-        node.masterComponent = figma.getNodeById(
-          clonedMasterComponentsIds[masterComponentsIds.indexOf(node.masterComponent.id)],
+        node.mainComponent = figma.getNodeById(
+          clonedMasterComponentsIds[masterComponentsIds.indexOf(node.mainComponent.id)],
         ) as ComponentNode;
         // TODO re-apply the properties here (if works, need to optimize for text char replacement)
       });
@@ -160,23 +160,23 @@ figma.ui.onmessage = (msg: {
               // if any of them are INSTANCE components
               if (child.type === "INSTANCE") {
                 // get the id of the location of the child's master COMPONENT node
-                const childMasterComponentParent: string = child.masterComponent.parent
-                  ? child.masterComponent.parent.id
+                const childMasterComponentParent: string = child.mainComponent.parent
+                  ? child.mainComponent.parent.id
                   : "";
                 // if child's master COMPONENT not in currentPage
                 if (childMasterComponentParent !== figma.currentPage.id) {
                   // if child's master COMPONENT is not cloned yet
-                  if (masterComponentsIds.indexOf(child.masterComponent.id) === -1) {
-                    masterComponentsIds.push(child.masterComponent.id);
-                    const masterClone = (child.masterComponent as ComponentNode).clone();
+                  if (masterComponentsIds.indexOf(child.mainComponent.id) === -1) {
+                    masterComponentsIds.push(child.mainComponent.id);
+                    const masterClone = (child.mainComponent as ComponentNode).clone();
                     masterClone.visible = false;
                     clonedMasterComponentsIds.push(masterClone.id);
                     nextDeepCloneMasterComponentsIds.push(masterClone.id);
                     deepCloneMasterComponents = true;
-                    child.masterComponent = masterClone;
+                    child.mainComponent = masterClone;
                   } else {
-                    child.masterComponent = figma.getNodeById(
-                      clonedMasterComponentsIds[masterComponentsIds.indexOf(child.masterComponent.id)],
+                    child.mainComponent = figma.getNodeById(
+                      clonedMasterComponentsIds[masterComponentsIds.indexOf(child.mainComponent.id)],
                     ) as ComponentNode;
                   }
                 }
