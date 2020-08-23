@@ -51,5 +51,8 @@
     "*.css": [
       "stylelint --config .stylelintrc --fix"
     ]
+  },
+  "dependencies": {
+    "@jaames/iro": "^5.2.0"
   }
 }

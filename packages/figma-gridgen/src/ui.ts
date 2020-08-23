@@ -2,6 +2,7 @@ import "./ui.css";
 import * as Utils from "./utils/utils";
 import * as Interfaces from "./models/interfaces";
 import * as Constants from "./models/constants";
+import iro from "@jaames/iro";
 
 /* State Changes Variable */
 let isShiftHeld: boolean = false;
@@ -30,6 +31,48 @@ onmessage = msg => {
     setDefaultForMode(activeMode);
     setDefaultForGenericInputs();
   }
+};
+
+/* ----------------- Color Pickers -----------------  */
+let backgroundPickerMode: number = -1; // 0 is primary, 1 is striped
+let backgroundColorPicker: iro.ColorPicker = new (iro.ColorPicker as any)(
+  Utils.getHTMLElementById("backgroundPicker"),
+  {
+    width: 200,
+  },
+);
+
+const primaryPickerButton: HTMLInputElement = Utils.getHTMLInputElementById("primaryPickerButton");
+const stripedPickerButton: HTMLInputElement = Utils.getHTMLInputElementById("stripedPickerButton");
+primaryPickerButton.onclick = () => {
+  backgroundPickerMode = 0;
+  const primaryBackgroundInput: HTMLInputElement = Utils.getHTMLInputElementById("primarybackgroundColor");
+  backgroundColorPicker.color.set(primaryBackgroundInput.value);
+  backgroundColorPicker.on("color:change", function(color) {
+    if (backgroundPickerMode === 0) {
+      primaryBackgroundInput.value = (color.hexString as string).toUpperCase();
+    }
+  });
+  let modal: HTMLElement = Utils.getHTMLElementById("pickerModal");
+  modal.style.display = "grid";
+};
+stripedPickerButton.onclick = () => {
+  backgroundPickerMode = 1;
+  const stripedBackgroundInput: HTMLInputElement = Utils.getHTMLInputElementById("stripedbackgroundColor");
+  backgroundColorPicker.color.set(stripedBackgroundInput.value);
+  backgroundColorPicker.on("color:change", function(color) {
+    if (backgroundPickerMode === 1) {
+      stripedBackgroundInput.value = (color.hexString as string).toUpperCase();
+    }
+  });
+  let modal: HTMLElement = Utils.getHTMLElementById("pickerModal");
+  modal.style.display = "grid";
+};
+
+const modalCloseSpan: HTMLElement = Utils.getHTMLElementById("closeSpan");
+modalCloseSpan.onclick = () => {
+  let modal: HTMLElement = Utils.getHTMLElementById("pickerModal");
+  modal.style.display = "none";
 };
 
 /* ----------------- Document OnChange Actions -----------------  */

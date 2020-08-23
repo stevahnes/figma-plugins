@@ -2,6 +2,12 @@
   <div id="lds" class="lds-container">
     <div class="lds-dual-ring"></div>
   </div>
+  <div id="pickerModal" class="modal">
+    <div class="modal-content">
+      <span id="closeSpan" class="close">&times;</span>
+      <div id="backgroundPicker"></div>
+    </div>
+  </div>
   <div class="row">
     <h4>Constraints</h4>
   </div>
@@ -65,7 +71,14 @@
       <p>Primary table color</p>
     </div>
     <div class="column half">
-      <input type="text" id="primarybackgroundColor" />
+      <div class="row" style="padding: 0px;">
+        <div class="column eighty">
+          <input type="text" id="primarybackgroundColor" />
+        </div>
+        <div class="column twenty btn-standalone">
+          <button id="primaryPickerButton" style="margin-top: 3px;">⬇</button>
+        </div>
+      </div>
     </div>
   </div>
   <div class="row">
@@ -194,7 +207,14 @@
           </label>
         </div>
         <div class="column three-fourths">
-          <input type="text" id="stripedbackgroundColor" />
+          <div class="row" style="padding: 0px;">
+            <div class="column eighty">
+              <input type="text" id="stripedbackgroundColor" />
+            </div>
+            <div class="column twenty btn-standalone">
+              <button id="stripedPickerButton" style="margin-top: 3px;">⬇</button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
