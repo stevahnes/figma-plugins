@@ -34,7 +34,7 @@ onmessage = msg => {
 };
 
 /* ----------------- Color Pickers -----------------  */
-let backgroundPickerMode: number = -1; // 0 is primary, 1 is striped
+let backgroundPickerMode: number = -1; // 0 is primary, 1 is striped, 2 is border
 let backgroundColorPicker: iro.ColorPicker = new (iro.ColorPicker as any)(
   Utils.getHTMLElementById("backgroundPicker"),
   {
@@ -44,6 +44,7 @@ let backgroundColorPicker: iro.ColorPicker = new (iro.ColorPicker as any)(
 
 const primaryPickerButton: HTMLInputElement = Utils.getHTMLInputElementById("primaryPickerButton");
 const stripedPickerButton: HTMLInputElement = Utils.getHTMLInputElementById("stripedPickerButton");
+const borderPickerButton: HTMLInputElement = Utils.getHTMLInputElementById("borderPickerButton");
 primaryPickerButton.onclick = () => {
   backgroundPickerMode = 0;
   const primaryBackgroundInput: HTMLInputElement = Utils.getHTMLInputElementById("primarybackgroundColor");
@@ -63,6 +64,18 @@ stripedPickerButton.onclick = () => {
   backgroundColorPicker.on("color:change", function(color) {
     if (backgroundPickerMode === 1) {
       stripedBackgroundInput.value = (color.hexString as string).toUpperCase();
+    }
+  });
+  let modal: HTMLElement = Utils.getHTMLElementById("pickerModal");
+  modal.style.display = "grid";
+};
+borderPickerButton.onclick = () => {
+  backgroundPickerMode = 2;
+  const borderBackgroundInput: HTMLInputElement = Utils.getHTMLInputElementById("borderColor");
+  backgroundColorPicker.color.set(borderBackgroundInput.value);
+  backgroundColorPicker.on("color:change", function(color) {
+    if (backgroundPickerMode === 2) {
+      borderBackgroundInput.value = (color.hexString as string).toUpperCase();
     }
   });
   let modal: HTMLElement = Utils.getHTMLElementById("pickerModal");
