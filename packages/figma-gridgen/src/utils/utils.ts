@@ -229,6 +229,8 @@ export function toggleEditable(
     htmlTagById.disabled = true;
     htmlTagById.value = Constants.DefaultValuesForInputs.DISABLED;
   }
+  // TODO put this somewhere else?
+  getHTMLInputElementById("stripedPickerButton").disabled = getHTMLInputElementById("stripedbackgroundColor").disabled;
   return null;
 }
 
