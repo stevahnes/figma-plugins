@@ -187,6 +187,8 @@ const checkedFramesCountValidationAndSelectAll = (): void => {
     selectAllCheckbox.checked = false;
     if (checkedFramesCount !== 0) {
       selectAllCheckboxSpan.classList.add("partial-checked");
+    } else {
+      selectAllCheckboxSpan.classList.remove("partial-checked");
     }
   }
   checkedFramesCount > 5
