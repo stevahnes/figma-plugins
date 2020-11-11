@@ -14,11 +14,29 @@ onmessage = (msg: MessageEvent): void => {
   const availableFrames: string = constructAvailableFramesList(msg.data.pluginMessage.frames);
   (document.getElementById("pages-in-document") as HTMLSelectElement).innerHTML = destinationOptions;
   document.getElementById("frames").innerHTML = availableFrames;
-  checkedFramesCountValidation();
+  checkedFramesCountValidationAndSelectAll();
+  // UI logic
+  const selectAllCheckbox: HTMLInputElement = document.getElementById("select-all-checkbox") as HTMLInputElement;
+  selectAllCheckbox.onclick = () => {
+    // if checkbox is checked, uncheck all frames
+    if (!selectAllCheckbox.checked) {
+      possibleFramesToClone.forEach(frame => {
+        (document.getElementById(frame) as HTMLInputElement).checked = false;
+        checkedFramesCount = 0;
+        checkedFramesCountValidationAndSelectAll();
+      });
+    } else {
+      possibleFramesToClone.forEach(frame => {
+        (document.getElementById(frame) as HTMLInputElement).checked = true;
+        checkedFramesCount = possibleFramesToClone.length;
+        checkedFramesCountValidationAndSelectAll();
+      });
+    }
+  };
   possibleFramesToClone.forEach(frame => {
     (document.getElementById(frame) as HTMLInputElement).onchange = () => {
       (document.getElementById(frame) as HTMLInputElement).checked ? checkedFramesCount++ : checkedFramesCount--;
-      checkedFramesCountValidation();
+      checkedFramesCountValidationAndSelectAll();
     };
   });
   (document.getElementById("clone-name") as HTMLInputElement).value = `Copy of ${msg.data.pluginMessage.name}`;
@@ -157,7 +175,20 @@ document.onkeyup = keyUp => {
   }
 };
 
-const checkedFramesCountValidation = (): void => {
+const checkedFramesCountValidationAndSelectAll = (): void => {
+  const selectAllCheckbox: HTMLInputElement = document.getElementById("select-all-checkbox") as HTMLInputElement;
+  const selectAllCheckboxSpan: HTMLInputElement = document.getElementById(
+    "select-all-checkbox-span",
+  ) as HTMLInputElement;
+  if (possibleFramesToClone.length === checkedFramesCount) {
+    selectAllCheckbox.checked = true;
+    selectAllCheckboxSpan.classList.remove("partial-checked");
+  } else {
+    selectAllCheckbox.checked = false;
+    if (checkedFramesCount !== 0) {
+      selectAllCheckboxSpan.classList.add("partial-checked");
+    }
+  }
   checkedFramesCount > 5
     ? (document.getElementById("too-much").classList.add("show"),
       document.getElementById("okay").classList.remove("show"))
@@ -175,16 +206,7 @@ const constructDestinationPageOptions = (pages: { id: string; name: string }[], 
 
 const constructAvailableFramesList = (frames: { id: string; name: string; selected: boolean }[]): string => {
   const preCheckedFramesAvailable: boolean = Boolean(frames.find(frame => frame.selected));
-  let availableFrames: string = `
-  <div id="checkbox-container" class="row">
-      <div class="column eighty">
-        <h4>Available Frames</h4>
-      </div>
-      <div class="column twenty">
-        <h4>Clone?</h4>
-      </div>
-    </div>
-  `;
+  let availableFrames: string = "";
   /* Reset UI variables */
   boundaryInputId = "";
   possibleFramesToClone.length = 0;
@@ -199,7 +221,7 @@ const constructAvailableFramesList = (frames: { id: string; name: string; select
         : checkedFramesCount
       : (checkedFramesCount += 1);
     availableFrames += `
-    <div id="checkbox-container" class="row">
+    <div class="checkbox-container row">
       <div class="column eighty-five">
         <p>${frame.name}&nbsp;</p>
       </div>
@@ -214,5 +236,23 @@ const constructAvailableFramesList = (frames: { id: string; name: string; select
     </div>
   `;
   });
-  return availableFrames;
+  const partialCheckedClass: string =
+    checkedFramesCount !== 0 && possibleFramesToClone.length > checkedFramesCount ? "partial-checked" : "";
+  const checked: string = possibleFramesToClone.length === checkedFramesCount ? "checked" : "";
+  let availableFramesHeader: string = `
+  <div class="checkbox-container row">
+      <div class="column eighty-five">
+        <h4>Available Frames</h4>
+      </div>
+      <div class="column fifteen">
+        <div class="column" style="width: 15%;">
+          <label class="container">
+            <input id="select-all-checkbox" type="checkbox" ${checked}/>
+            <span id="select-all-checkbox-span" class="figma-checkbox ${partialCheckedClass}"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+  `;
+  return availableFramesHeader + availableFrames;
 };

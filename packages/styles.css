@@ -313,6 +313,31 @@ input:disabled {
   border-radius: 0;
 }
 
+.container input ~ .figma-checkbox.partial-checked {
+  background-color: #18a0fb;
+  border-radius: 2px;
+  -webkit-transform: rotate(0deg) scale(1);
+  -ms-transform: rotate(0deg) scale(1);
+  transform: rotate(0deg) scale(1);
+  opacity: 1;
+  border: 1px solid #18a0fb;
+}
+
+.container input ~ .figma-checkbox.partial-checked::after {
+  -webkit-transform: rotate(0deg) scale(1);
+  -ms-transform: rotate(0deg) scale(1);
+  transform: rotate(0deg) scale(1);
+  opacity: 1;
+  left: 2px;
+  top: 4px;
+  width: 4px;
+  height: 0;
+  border: solid #fff;
+  border-width: 1px;
+  background-color: transparent;
+  border-radius: 0;
+}
+
 .toggle-display {
   display: none;
 }
