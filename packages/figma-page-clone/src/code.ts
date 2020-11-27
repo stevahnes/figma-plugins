@@ -225,6 +225,8 @@ const detachInstance = (instance: InstanceNode): void => {
     newFrame.appendChild(childClone);
   });
   newFrame.visible = instance.visible;
+  newFrame.rotation = instance.rotation;
+  newFrame.constraints = instance.constraints;
   parent.insertChild(parent.children.indexOf(instance), newFrame);
   instance.remove();
 };
