@@ -101,6 +101,9 @@ figma.ui.onmessage = (msg: {
       while (currentLayerNodes.length > 0) {
         let nextLayerNodes = [];
         currentLayerNodes.forEach(node => {
+          if (node.name === "Icon 36") {
+            console.log("node.children :>> ", node.children);
+          }
           if (node.children) {
             const instances: InstanceNode[] = node.findChildren(
               child => child.type === "INSTANCE" || child.type === "COMPONENT",
@@ -224,6 +227,7 @@ const detachInstance = (instance: InstanceNode): void => {
     childClone.y = child.y;
     newFrame.appendChild(childClone);
   });
+  newFrame.visible = instance.visible;
   parent.insertChild(parent.children.indexOf(instance), newFrame);
   instance.remove();
 };
