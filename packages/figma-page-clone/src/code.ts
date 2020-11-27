@@ -222,6 +222,34 @@ const detachInstance = (instance: InstanceNode): void => {
     const childClone: SceneNode = child.clone();
     childClone.x = child.x;
     childClone.y = child.y;
+    switch (child.type) {
+      case "RECTANGLE":
+        (childClone as RectangleNode).cornerRadius = child.cornerRadius;
+        (childClone as RectangleNode).cornerSmoothing = child.cornerSmoothing;
+        if (child.cornerRadius === figma.mixed) {
+          (childClone as RectangleNode).topLeftRadius = child.topLeftRadius;
+          (childClone as RectangleNode).topRightRadius = child.topRightRadius;
+          (childClone as RectangleNode).bottomLeftRadius = child.bottomLeftRadius;
+          (childClone as RectangleNode).bottomRightRadius = child.bottomRightRadius;
+        }
+        break;
+      case "POLYGON":
+        (childClone as RectangleNode).cornerRadius = child.cornerRadius;
+        (childClone as RectangleNode).cornerSmoothing = child.cornerSmoothing;
+        break;
+      case "ELLIPSE":
+        (childClone as RectangleNode).cornerRadius = child.cornerRadius;
+        (childClone as RectangleNode).cornerSmoothing = child.cornerSmoothing;
+        break;
+      case "STAR":
+        (childClone as RectangleNode).cornerRadius = child.cornerRadius;
+        (childClone as RectangleNode).cornerSmoothing = child.cornerSmoothing;
+        break;
+      case "VECTOR":
+        (childClone as RectangleNode).cornerRadius = child.cornerRadius;
+        (childClone as RectangleNode).cornerSmoothing = child.cornerSmoothing;
+        break;
+    }
     newFrame.appendChild(childClone);
   });
   newFrame.visible = instance.visible;
