@@ -234,20 +234,28 @@ const detachInstance = (instance: InstanceNode): void => {
         }
         break;
       case "POLYGON":
-        (childClone as RectangleNode).cornerRadius = child.cornerRadius;
-        (childClone as RectangleNode).cornerSmoothing = child.cornerSmoothing;
+        (childClone as PolygonNode).cornerRadius = child.cornerRadius;
+        (childClone as PolygonNode).cornerSmoothing = child.cornerSmoothing;
         break;
       case "ELLIPSE":
-        (childClone as RectangleNode).cornerRadius = child.cornerRadius;
-        (childClone as RectangleNode).cornerSmoothing = child.cornerSmoothing;
+        (childClone as EllipseNode).cornerRadius = child.cornerRadius;
+        (childClone as EllipseNode).cornerSmoothing = child.cornerSmoothing;
         break;
       case "STAR":
-        (childClone as RectangleNode).cornerRadius = child.cornerRadius;
-        (childClone as RectangleNode).cornerSmoothing = child.cornerSmoothing;
+        (childClone as StarNode).cornerRadius = child.cornerRadius;
+        (childClone as StarNode).cornerSmoothing = child.cornerSmoothing;
         break;
       case "VECTOR":
-        (childClone as RectangleNode).cornerRadius = child.cornerRadius;
-        (childClone as RectangleNode).cornerSmoothing = child.cornerSmoothing;
+        (childClone as VectorNode).cornerRadius = child.cornerRadius;
+        (childClone as VectorNode).cornerSmoothing = child.cornerSmoothing;
+        break;
+      case "TEXT":
+        // (childClone as TextNode).textAlignHorizontal = child.textAlignHorizontal;
+        // (childClone as TextNode).textAlignVertical = child.textAlignVertical;
+        // (childClone as TextNode).textAutoResize = child.textAutoResize;
+        // (childClone as TextNode).paragraphIndent = child.paragraphIndent;
+        // (childClone as TextNode).paragraphSpacing = child.paragraphSpacing;
+        // (childClone as TextNode).autoRename = child.autoRename;
         break;
     }
     newFrame.appendChild(childClone);
