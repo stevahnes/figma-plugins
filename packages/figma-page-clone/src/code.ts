@@ -213,42 +213,45 @@ figma.ui.onmessage = (msg: {
 const detachInstance = (instance: InstanceNode): void => {
   const parent = instance.parent;
   const newFrame = figma.createFrame();
-  newFrame.resize(instance.width, instance.height);
   newFrame.name = instance.name;
-  newFrame.fills = instance.fills ? clone(instance.fills) : [];
   newFrame.x = instance.x;
   newFrame.y = instance.y;
+  newFrame.resize(instance.width, instance.height);
+  newFrame.visible = instance.visible;
+  newFrame.rotation = instance.rotation;
+  newFrame.locked = instance.locked;
+  newFrame.isMask = instance.isMask;
+  newFrame.constraints = instance.constraints;
+  newFrame.clipsContent = instance.clipsContent;
+  newFrame.layoutMode = instance.layoutMode;
+  newFrame.cornerRadius = instance.cornerRadius;
+  newFrame.cornerSmoothing = instance.cornerSmoothing;
+  if (newFrame.cornerRadius === figma.mixed) {
+    newFrame.topLeftRadius = instance.topLeftRadius;
+    newFrame.topRightRadius = instance.topRightRadius;
+    newFrame.bottomLeftRadius = instance.bottomLeftRadius;
+    newFrame.bottomRightRadius = instance.bottomRightRadius;
+  }
+  // fill properties
+  newFrame.fills = instance.fills ? clone(instance.fills) : [];
+  // strokes properties
+  newFrame.strokes = instance.strokes ? clone(instance.strokes) : [];
+  newFrame.strokeWeight = instance.strokeWeight;
+  newFrame.strokeMiterLimit = instance.strokeMiterLimit;
+  newFrame.strokeAlign = instance.strokeAlign;
+  newFrame.strokeCap = instance.strokeCap;
+  newFrame.strokeJoin = instance.strokeJoin;
   instance.children.forEach(child => {
     const childClone: SceneNode = child.clone();
+    childClone.name = child.name;
     childClone.x = child.x;
     childClone.y = child.y;
+    childClone.visible = child.visible;
+    childClone.rotation = child.rotation;
+    childClone.locked = child.locked;
+    childClone.layoutAlign = child.layoutAlign;
+    childClone.layoutGrow = child.layoutGrow;
     switch (child.type) {
-      case "RECTANGLE":
-        (childClone as RectangleNode).cornerRadius = child.cornerRadius;
-        (childClone as RectangleNode).cornerSmoothing = child.cornerSmoothing;
-        if (child.cornerRadius === figma.mixed) {
-          (childClone as RectangleNode).topLeftRadius = child.topLeftRadius;
-          (childClone as RectangleNode).topRightRadius = child.topRightRadius;
-          (childClone as RectangleNode).bottomLeftRadius = child.bottomLeftRadius;
-          (childClone as RectangleNode).bottomRightRadius = child.bottomRightRadius;
-        }
-        break;
-      case "POLYGON":
-        (childClone as PolygonNode).cornerRadius = child.cornerRadius;
-        (childClone as PolygonNode).cornerSmoothing = child.cornerSmoothing;
-        break;
-      case "ELLIPSE":
-        (childClone as EllipseNode).cornerRadius = child.cornerRadius;
-        (childClone as EllipseNode).cornerSmoothing = child.cornerSmoothing;
-        break;
-      case "STAR":
-        (childClone as StarNode).cornerRadius = child.cornerRadius;
-        (childClone as StarNode).cornerSmoothing = child.cornerSmoothing;
-        break;
-      case "VECTOR":
-        (childClone as VectorNode).cornerRadius = child.cornerRadius;
-        (childClone as VectorNode).cornerSmoothing = child.cornerSmoothing;
-        break;
       case "TEXT":
         // (childClone as TextNode).textAlignHorizontal = child.textAlignHorizontal;
         // (childClone as TextNode).textAlignVertical = child.textAlignVertical;
@@ -257,12 +260,142 @@ const detachInstance = (instance: InstanceNode): void => {
         // (childClone as TextNode).paragraphSpacing = child.paragraphSpacing;
         // (childClone as TextNode).autoRename = child.autoRename;
         break;
+      case "SLICE":
+        break;
+      case "LINE":
+        (childClone as LineNode).opacity = child.opacity;
+        (childClone as LineNode).blendMode = child.blendMode;
+        (childClone as LineNode).isMask = child.isMask;
+        (childClone as LineNode).constraints = child.constraints;
+        // fill properties
+        (childClone as LineNode).fills = child.fills ? clone(child.fills) : [];
+        // stroke properties
+        (childClone as LineNode).strokes = child.strokes ? clone(child.strokes) : [];
+        (childClone as LineNode).strokeWeight = child.strokeWeight;
+        (childClone as LineNode).strokeMiterLimit = child.strokeMiterLimit;
+        (childClone as LineNode).strokeAlign = child.strokeAlign;
+        (childClone as LineNode).strokeCap = child.strokeCap;
+        (childClone as LineNode).strokeJoin = child.strokeJoin;
+        break;
+      case "FRAME":
+        (childClone as FrameNode).opacity = child.opacity;
+        (childClone as FrameNode).blendMode = child.blendMode;
+        (childClone as FrameNode).isMask = child.isMask;
+        (childClone as FrameNode).constraints = child.constraints;
+        (childClone as FrameNode).clipsContent = child.clipsContent;
+        (childClone as FrameNode).layoutMode = child.layoutMode;
+        (childClone as FrameNode).cornerRadius = child.cornerRadius;
+        (childClone as FrameNode).cornerSmoothing = child.cornerSmoothing;
+        if (child.cornerRadius === figma.mixed) {
+          (childClone as FrameNode).topLeftRadius = child.topLeftRadius;
+          (childClone as FrameNode).topRightRadius = child.topRightRadius;
+          (childClone as FrameNode).bottomLeftRadius = child.bottomLeftRadius;
+          (childClone as FrameNode).bottomRightRadius = child.bottomRightRadius;
+        }
+        // fill properties
+        (childClone as FrameNode).fills = child.fills ? clone(child.fills) : [];
+        // stroke properties
+        (childClone as FrameNode).strokes = child.strokes ? clone(child.strokes) : [];
+        (childClone as FrameNode).strokeWeight = child.strokeWeight;
+        (childClone as FrameNode).strokeMiterLimit = child.strokeMiterLimit;
+        (childClone as FrameNode).strokeAlign = child.strokeAlign;
+        (childClone as FrameNode).strokeCap = child.strokeCap;
+        (childClone as FrameNode).strokeJoin = child.strokeJoin;
+        break;
+      case "RECTANGLE":
+        (childClone as RectangleNode).opacity = child.opacity;
+        (childClone as RectangleNode).blendMode = child.blendMode;
+        (childClone as RectangleNode).isMask = child.isMask;
+        (childClone as RectangleNode).constraints = child.constraints;
+        (childClone as RectangleNode).cornerRadius = child.cornerRadius;
+        (childClone as RectangleNode).cornerSmoothing = child.cornerSmoothing;
+        if (child.cornerRadius === figma.mixed) {
+          (childClone as RectangleNode).topLeftRadius = child.topLeftRadius;
+          (childClone as RectangleNode).topRightRadius = child.topRightRadius;
+          (childClone as RectangleNode).bottomLeftRadius = child.bottomLeftRadius;
+          (childClone as RectangleNode).bottomRightRadius = child.bottomRightRadius;
+        }
+        // fill properties
+        (childClone as RectangleNode).fills = child.fills ? clone(child.fills) : [];
+        // stroke properties
+        (childClone as RectangleNode).strokes = child.strokes ? clone(child.strokes) : [];
+        (childClone as RectangleNode).strokeWeight = child.strokeWeight;
+        (childClone as RectangleNode).strokeMiterLimit = child.strokeMiterLimit;
+        (childClone as RectangleNode).strokeAlign = child.strokeAlign;
+        (childClone as RectangleNode).strokeCap = child.strokeCap;
+        (childClone as RectangleNode).strokeJoin = child.strokeJoin;
+        break;
+      case "POLYGON":
+        (childClone as PolygonNode).opacity = child.opacity;
+        (childClone as PolygonNode).blendMode = child.blendMode;
+        (childClone as PolygonNode).isMask = child.isMask;
+        (childClone as PolygonNode).constraints = child.constraints;
+        (childClone as PolygonNode).cornerRadius = child.cornerRadius;
+        (childClone as PolygonNode).cornerSmoothing = child.cornerSmoothing;
+        // fill properties
+        (childClone as PolygonNode).fills = child.fills ? clone(child.fills) : [];
+        // stroke properties
+        (childClone as PolygonNode).strokes = child.strokes ? clone(child.strokes) : [];
+        (childClone as PolygonNode).strokeWeight = child.strokeWeight;
+        (childClone as PolygonNode).strokeMiterLimit = child.strokeMiterLimit;
+        (childClone as PolygonNode).strokeAlign = child.strokeAlign;
+        (childClone as PolygonNode).strokeCap = child.strokeCap;
+        (childClone as PolygonNode).strokeJoin = child.strokeJoin;
+        break;
+      case "ELLIPSE":
+        (childClone as EllipseNode).opacity = child.opacity;
+        (childClone as EllipseNode).blendMode = child.blendMode;
+        (childClone as EllipseNode).isMask = child.isMask;
+        (childClone as EllipseNode).constraints = child.constraints;
+        (childClone as EllipseNode).cornerRadius = child.cornerRadius;
+        (childClone as EllipseNode).cornerSmoothing = child.cornerSmoothing;
+        // fill properties
+        (childClone as EllipseNode).fills = child.fills ? clone(child.fills) : [];
+        // stroke properties
+        (childClone as EllipseNode).strokes = child.strokes ? clone(child.strokes) : [];
+        (childClone as EllipseNode).strokeWeight = child.strokeWeight;
+        (childClone as EllipseNode).strokeMiterLimit = child.strokeMiterLimit;
+        (childClone as EllipseNode).strokeAlign = child.strokeAlign;
+        (childClone as EllipseNode).strokeCap = child.strokeCap;
+        (childClone as EllipseNode).strokeJoin = child.strokeJoin;
+        break;
+      case "STAR":
+        (childClone as StarNode).opacity = child.opacity;
+        (childClone as StarNode).blendMode = child.blendMode;
+        (childClone as StarNode).isMask = child.isMask;
+        (childClone as StarNode).constraints = child.constraints;
+        (childClone as StarNode).cornerRadius = child.cornerRadius;
+        (childClone as StarNode).cornerSmoothing = child.cornerSmoothing;
+        // fill properties
+        (childClone as StarNode).fills = child.fills ? clone(child.fills) : [];
+        // stroke properties
+        (childClone as StarNode).strokes = child.strokes ? clone(child.strokes) : [];
+        (childClone as StarNode).strokeWeight = child.strokeWeight;
+        (childClone as StarNode).strokeMiterLimit = child.strokeMiterLimit;
+        (childClone as StarNode).strokeAlign = child.strokeAlign;
+        (childClone as StarNode).strokeCap = child.strokeCap;
+        (childClone as StarNode).strokeJoin = child.strokeJoin;
+        break;
+      case "VECTOR":
+        (childClone as VectorNode).opacity = child.opacity;
+        (childClone as VectorNode).blendMode = child.blendMode;
+        (childClone as VectorNode).isMask = child.isMask;
+        (childClone as VectorNode).constraints = child.constraints;
+        (childClone as VectorNode).cornerRadius = child.cornerRadius;
+        (childClone as VectorNode).cornerSmoothing = child.cornerSmoothing;
+        // fill properties
+        (childClone as VectorNode).fills = child.fills ? clone(child.fills) : [];
+        // stroke properties
+        (childClone as VectorNode).strokes = child.strokes ? clone(child.strokes) : [];
+        (childClone as VectorNode).strokeWeight = child.strokeWeight;
+        (childClone as VectorNode).strokeMiterLimit = child.strokeMiterLimit;
+        (childClone as VectorNode).strokeAlign = child.strokeAlign;
+        (childClone as VectorNode).strokeCap = child.strokeCap;
+        (childClone as VectorNode).strokeJoin = child.strokeJoin;
+        break;
     }
     newFrame.appendChild(childClone);
   });
-  newFrame.visible = instance.visible;
-  newFrame.rotation = instance.rotation;
-  newFrame.constraints = instance.constraints;
   parent.insertChild(parent.children.indexOf(instance), newFrame);
   instance.remove();
 };
