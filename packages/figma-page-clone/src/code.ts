@@ -363,7 +363,9 @@ const detachInstance = (instance: InstanceNode): void => {
         (childClone as PolygonNode).blendMode = child.blendMode;
         (childClone as PolygonNode).isMask = child.isMask;
         (childClone as PolygonNode).constraints = child.constraints;
-        (childClone as PolygonNode).cornerRadius = child.cornerRadius;
+        if (child.cornerRadius !== figma.mixed) {
+          (childClone as PolygonNode).cornerRadius = child.cornerRadius;
+        }
         (childClone as PolygonNode).cornerSmoothing = child.cornerSmoothing;
         // fill properties
         (childClone as PolygonNode).fills = child.fills ? clone(child.fills) : [];
@@ -380,7 +382,9 @@ const detachInstance = (instance: InstanceNode): void => {
         (childClone as EllipseNode).blendMode = child.blendMode;
         (childClone as EllipseNode).isMask = child.isMask;
         (childClone as EllipseNode).constraints = child.constraints;
-        (childClone as EllipseNode).cornerRadius = child.cornerRadius;
+        if (child.cornerRadius !== figma.mixed) {
+          (childClone as EllipseNode).cornerRadius = child.cornerRadius;
+        }
         (childClone as EllipseNode).cornerSmoothing = child.cornerSmoothing;
         // fill properties
         (childClone as EllipseNode).fills = child.fills ? clone(child.fills) : [];
@@ -397,7 +401,9 @@ const detachInstance = (instance: InstanceNode): void => {
         (childClone as StarNode).blendMode = child.blendMode;
         (childClone as StarNode).isMask = child.isMask;
         (childClone as StarNode).constraints = child.constraints;
-        (childClone as StarNode).cornerRadius = child.cornerRadius;
+        if (child.cornerRadius !== figma.mixed) {
+          (childClone as StarNode).cornerRadius = child.cornerRadius;
+        }
         (childClone as StarNode).cornerSmoothing = child.cornerSmoothing;
         // fill properties
         (childClone as StarNode).fills = child.fills ? clone(child.fills) : [];
@@ -414,7 +420,9 @@ const detachInstance = (instance: InstanceNode): void => {
         (childClone as VectorNode).blendMode = child.blendMode;
         (childClone as VectorNode).isMask = child.isMask;
         (childClone as VectorNode).constraints = child.constraints;
-        (childClone as VectorNode).cornerRadius = child.cornerRadius;
+        if (child.cornerRadius !== figma.mixed) {
+          (childClone as VectorNode).cornerRadius = child.cornerRadius;
+        }
         (childClone as VectorNode).cornerSmoothing = child.cornerSmoothing;
         // fill properties
         (childClone as VectorNode).fills = child.fills ? clone(child.fills) : [];
