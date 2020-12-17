@@ -224,13 +224,14 @@ const detachInstance = (instance: InstanceNode): void => {
   newFrame.constraints = instance.constraints;
   newFrame.clipsContent = instance.clipsContent;
   newFrame.layoutMode = instance.layoutMode;
-  newFrame.cornerRadius = instance.cornerRadius;
   newFrame.cornerSmoothing = instance.cornerSmoothing;
   if (newFrame.cornerRadius === figma.mixed) {
     newFrame.topLeftRadius = instance.topLeftRadius;
     newFrame.topRightRadius = instance.topRightRadius;
     newFrame.bottomLeftRadius = instance.bottomLeftRadius;
     newFrame.bottomRightRadius = instance.bottomRightRadius;
+  } else {
+    newFrame.cornerRadius = instance.cornerRadius;
   }
   // parent frame auto-layout
   newFrame.layoutMode = instance.layoutMode;
@@ -272,12 +273,12 @@ const detachInstance = (instance: InstanceNode): void => {
         (childClone as TextNode).blendMode = child.blendMode;
         (childClone as TextNode).isMask = child.isMask;
         (childClone as TextNode).constraints = child.constraints;
-        (childClone as TextNode).textAlignHorizontal = child.textAlignHorizontal;
-        (childClone as TextNode).textAlignVertical = child.textAlignVertical;
-        (childClone as TextNode).textAutoResize = child.textAutoResize;
-        (childClone as TextNode).paragraphIndent = child.paragraphIndent;
-        (childClone as TextNode).paragraphSpacing = child.paragraphSpacing;
-        (childClone as TextNode).autoRename = child.autoRename;
+        // (childClone as TextNode).textAlignHorizontal = child.textAlignHorizontal;
+        // (childClone as TextNode).textAlignVertical = child.textAlignVertical;
+        // (childClone as TextNode).textAutoResize = child.textAutoResize;
+        // (childClone as TextNode).paragraphIndent = child.paragraphIndent;
+        // (childClone as TextNode).paragraphSpacing = child.paragraphSpacing;
+        // (childClone as TextNode).autoRename = child.autoRename;
         break;
       case "SLICE":
         break;
@@ -314,13 +315,14 @@ const detachInstance = (instance: InstanceNode): void => {
         (childClone as FrameNode).paddingBottom = child.paddingBottom;
         (childClone as FrameNode).itemSpacing = child.itemSpacing;
         // corner radius properties
-        (childClone as FrameNode).cornerRadius = child.cornerRadius;
         (childClone as FrameNode).cornerSmoothing = child.cornerSmoothing;
         if (child.cornerRadius === figma.mixed) {
           (childClone as FrameNode).topLeftRadius = child.topLeftRadius;
           (childClone as FrameNode).topRightRadius = child.topRightRadius;
           (childClone as FrameNode).bottomLeftRadius = child.bottomLeftRadius;
           (childClone as FrameNode).bottomRightRadius = child.bottomRightRadius;
+        } else {
+          (childClone as FrameNode).cornerRadius = child.cornerRadius;
         }
         // fill properties
         (childClone as FrameNode).fills = child.fills ? clone(child.fills) : [];
@@ -337,13 +339,14 @@ const detachInstance = (instance: InstanceNode): void => {
         (childClone as RectangleNode).blendMode = child.blendMode;
         (childClone as RectangleNode).isMask = child.isMask;
         (childClone as RectangleNode).constraints = child.constraints;
-        (childClone as RectangleNode).cornerRadius = child.cornerRadius;
         (childClone as RectangleNode).cornerSmoothing = child.cornerSmoothing;
         if (child.cornerRadius === figma.mixed) {
           (childClone as RectangleNode).topLeftRadius = child.topLeftRadius;
           (childClone as RectangleNode).topRightRadius = child.topRightRadius;
           (childClone as RectangleNode).bottomLeftRadius = child.bottomLeftRadius;
           (childClone as RectangleNode).bottomRightRadius = child.bottomRightRadius;
+        } else {
+          (childClone as RectangleNode).cornerRadius = child.cornerRadius;
         }
         // fill properties
         (childClone as RectangleNode).fills = child.fills ? clone(child.fills) : [];
