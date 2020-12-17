@@ -232,6 +232,17 @@ const detachInstance = (instance: InstanceNode): void => {
     newFrame.bottomLeftRadius = instance.bottomLeftRadius;
     newFrame.bottomRightRadius = instance.bottomRightRadius;
   }
+  // parent frame auto-layout
+  newFrame.layoutMode = instance.layoutMode;
+  newFrame.primaryAxisSizingMode = instance.primaryAxisSizingMode;
+  newFrame.counterAxisSizingMode = instance.counterAxisSizingMode;
+  newFrame.primaryAxisAlignItems = instance.primaryAxisAlignItems;
+  newFrame.counterAxisAlignItems = instance.counterAxisAlignItems;
+  newFrame.paddingLeft = instance.paddingLeft;
+  newFrame.paddingRight = instance.paddingRight;
+  newFrame.paddingTop = instance.paddingTop;
+  newFrame.paddingBottom = instance.paddingBottom;
+  newFrame.itemSpacing = instance.itemSpacing;
   // fill properties
   newFrame.fills = instance.fills ? clone(instance.fills) : [];
   // strokes properties
@@ -241,6 +252,9 @@ const detachInstance = (instance: InstanceNode): void => {
   newFrame.strokeAlign = instance.strokeAlign;
   newFrame.strokeCap = instance.strokeCap;
   newFrame.strokeJoin = instance.strokeJoin;
+  // inheritance auto-layout properties
+  newFrame.layoutAlign = instance.layoutAlign;
+  newFrame.layoutGrow = instance.layoutGrow;
   instance.children.forEach(child => {
     const childClone: SceneNode = child.clone();
     childClone.name = child.name;
@@ -249,16 +263,21 @@ const detachInstance = (instance: InstanceNode): void => {
     childClone.visible = child.visible;
     childClone.rotation = child.rotation;
     childClone.locked = child.locked;
+    // inheritance auto-layout properties
     childClone.layoutAlign = child.layoutAlign;
     childClone.layoutGrow = child.layoutGrow;
     switch (child.type) {
       case "TEXT":
-        // (childClone as TextNode).textAlignHorizontal = child.textAlignHorizontal;
-        // (childClone as TextNode).textAlignVertical = child.textAlignVertical;
-        // (childClone as TextNode).textAutoResize = child.textAutoResize;
-        // (childClone as TextNode).paragraphIndent = child.paragraphIndent;
-        // (childClone as TextNode).paragraphSpacing = child.paragraphSpacing;
-        // (childClone as TextNode).autoRename = child.autoRename;
+        (childClone as TextNode).opacity = child.opacity;
+        (childClone as TextNode).blendMode = child.blendMode;
+        (childClone as TextNode).isMask = child.isMask;
+        (childClone as TextNode).constraints = child.constraints;
+        (childClone as TextNode).textAlignHorizontal = child.textAlignHorizontal;
+        (childClone as TextNode).textAlignVertical = child.textAlignVertical;
+        (childClone as TextNode).textAutoResize = child.textAutoResize;
+        (childClone as TextNode).paragraphIndent = child.paragraphIndent;
+        (childClone as TextNode).paragraphSpacing = child.paragraphSpacing;
+        (childClone as TextNode).autoRename = child.autoRename;
         break;
       case "SLICE":
         break;
@@ -283,7 +302,18 @@ const detachInstance = (instance: InstanceNode): void => {
         (childClone as FrameNode).isMask = child.isMask;
         (childClone as FrameNode).constraints = child.constraints;
         (childClone as FrameNode).clipsContent = child.clipsContent;
+        // parent frame auto-layout
         (childClone as FrameNode).layoutMode = child.layoutMode;
+        (childClone as FrameNode).primaryAxisSizingMode = child.primaryAxisSizingMode;
+        (childClone as FrameNode).counterAxisSizingMode = child.counterAxisSizingMode;
+        (childClone as FrameNode).primaryAxisAlignItems = child.primaryAxisAlignItems;
+        (childClone as FrameNode).counterAxisAlignItems = child.counterAxisAlignItems;
+        (childClone as FrameNode).paddingLeft = child.paddingLeft;
+        (childClone as FrameNode).paddingRight = child.paddingRight;
+        (childClone as FrameNode).paddingTop = child.paddingTop;
+        (childClone as FrameNode).paddingBottom = child.paddingBottom;
+        (childClone as FrameNode).itemSpacing = child.itemSpacing;
+        // corner radius properties
         (childClone as FrameNode).cornerRadius = child.cornerRadius;
         (childClone as FrameNode).cornerSmoothing = child.cornerSmoothing;
         if (child.cornerRadius === figma.mixed) {
