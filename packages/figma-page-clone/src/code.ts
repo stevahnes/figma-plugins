@@ -225,13 +225,13 @@ const detachInstance = (instance: InstanceNode): void => {
   newFrame.clipsContent = instance.clipsContent;
   newFrame.layoutMode = instance.layoutMode;
   newFrame.cornerSmoothing = instance.cornerSmoothing;
-  if (newFrame.cornerRadius === figma.mixed) {
+  if (typeof instance.cornerRadius === "number") {
+    newFrame.cornerRadius = instance.cornerRadius;
+  } else {
     newFrame.topLeftRadius = instance.topLeftRadius;
     newFrame.topRightRadius = instance.topRightRadius;
     newFrame.bottomLeftRadius = instance.bottomLeftRadius;
     newFrame.bottomRightRadius = instance.bottomRightRadius;
-  } else {
-    newFrame.cornerRadius = instance.cornerRadius;
   }
   // parent frame auto-layout
   newFrame.layoutMode = instance.layoutMode;
@@ -316,13 +316,13 @@ const detachInstance = (instance: InstanceNode): void => {
         (childClone as FrameNode).itemSpacing = child.itemSpacing;
         // corner radius properties
         (childClone as FrameNode).cornerSmoothing = child.cornerSmoothing;
-        if (child.cornerRadius === figma.mixed) {
+        if (typeof child.cornerRadius === "number") {
+          (childClone as FrameNode).cornerRadius = child.cornerRadius;
+        } else {
           (childClone as FrameNode).topLeftRadius = child.topLeftRadius;
           (childClone as FrameNode).topRightRadius = child.topRightRadius;
           (childClone as FrameNode).bottomLeftRadius = child.bottomLeftRadius;
           (childClone as FrameNode).bottomRightRadius = child.bottomRightRadius;
-        } else {
-          (childClone as FrameNode).cornerRadius = child.cornerRadius;
         }
         // fill properties
         (childClone as FrameNode).fills = child.fills ? clone(child.fills) : [];
@@ -340,13 +340,13 @@ const detachInstance = (instance: InstanceNode): void => {
         (childClone as RectangleNode).isMask = child.isMask;
         (childClone as RectangleNode).constraints = child.constraints;
         (childClone as RectangleNode).cornerSmoothing = child.cornerSmoothing;
-        if (child.cornerRadius === figma.mixed) {
+        if (typeof child.cornerRadius === "number") {
+          (childClone as RectangleNode).cornerRadius = child.cornerRadius;
+        } else {
           (childClone as RectangleNode).topLeftRadius = child.topLeftRadius;
           (childClone as RectangleNode).topRightRadius = child.topRightRadius;
           (childClone as RectangleNode).bottomLeftRadius = child.bottomLeftRadius;
           (childClone as RectangleNode).bottomRightRadius = child.bottomRightRadius;
-        } else {
-          (childClone as RectangleNode).cornerRadius = child.cornerRadius;
         }
         // fill properties
         (childClone as RectangleNode).fills = child.fills ? clone(child.fills) : [];
@@ -363,7 +363,7 @@ const detachInstance = (instance: InstanceNode): void => {
         (childClone as PolygonNode).blendMode = child.blendMode;
         (childClone as PolygonNode).isMask = child.isMask;
         (childClone as PolygonNode).constraints = child.constraints;
-        if (child.cornerRadius !== figma.mixed) {
+        if (typeof child.cornerRadius === "number") {
           (childClone as PolygonNode).cornerRadius = child.cornerRadius;
         }
         (childClone as PolygonNode).cornerSmoothing = child.cornerSmoothing;
@@ -382,7 +382,7 @@ const detachInstance = (instance: InstanceNode): void => {
         (childClone as EllipseNode).blendMode = child.blendMode;
         (childClone as EllipseNode).isMask = child.isMask;
         (childClone as EllipseNode).constraints = child.constraints;
-        if (child.cornerRadius !== figma.mixed) {
+        if (typeof child.cornerRadius === "number") {
           (childClone as EllipseNode).cornerRadius = child.cornerRadius;
         }
         (childClone as EllipseNode).cornerSmoothing = child.cornerSmoothing;
@@ -401,7 +401,7 @@ const detachInstance = (instance: InstanceNode): void => {
         (childClone as StarNode).blendMode = child.blendMode;
         (childClone as StarNode).isMask = child.isMask;
         (childClone as StarNode).constraints = child.constraints;
-        if (child.cornerRadius !== figma.mixed) {
+        if (typeof child.cornerRadius === "number") {
           (childClone as StarNode).cornerRadius = child.cornerRadius;
         }
         (childClone as StarNode).cornerSmoothing = child.cornerSmoothing;
@@ -420,7 +420,7 @@ const detachInstance = (instance: InstanceNode): void => {
         (childClone as VectorNode).blendMode = child.blendMode;
         (childClone as VectorNode).isMask = child.isMask;
         (childClone as VectorNode).constraints = child.constraints;
-        if (child.cornerRadius !== figma.mixed) {
+        if (typeof child.cornerRadius === "number") {
           (childClone as VectorNode).cornerRadius = child.cornerRadius;
         }
         (childClone as VectorNode).cornerSmoothing = child.cornerSmoothing;
