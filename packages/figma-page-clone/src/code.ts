@@ -248,6 +248,8 @@ const detachInstance = (instance: InstanceNode): void => {
   newFrame.fills = instance.fills ? clone(instance.fills) : [];
   // strokes properties
   newFrame.strokes = instance.strokes ? clone(instance.strokes) : [];
+  // effects properties
+  newFrame.effects = instance.effects ? clone(instance.effects) : [];
   newFrame.strokeWeight = instance.strokeWeight;
   newFrame.strokeMiterLimit = instance.strokeMiterLimit;
   newFrame.strokeAlign = instance.strokeAlign;
