@@ -248,6 +248,8 @@ const detachInstance = (instance: InstanceNode): void => {
   newFrame.fills = instance.fills ? clone(instance.fills) : [];
   // strokes properties
   newFrame.strokes = instance.strokes ? clone(instance.strokes) : [];
+  // effects properties
+  newFrame.effects = instance.effects ? clone(instance.effects) : [];
   newFrame.strokeWeight = instance.strokeWeight;
   newFrame.strokeMiterLimit = instance.strokeMiterLimit;
   newFrame.strokeAlign = instance.strokeAlign;
@@ -291,6 +293,8 @@ const detachInstance = (instance: InstanceNode): void => {
         (childClone as LineNode).fills = child.fills ? clone(child.fills) : [];
         // stroke properties
         (childClone as LineNode).strokes = child.strokes ? clone(child.strokes) : [];
+        // effects properties
+        (childClone as LineNode).effects = child.effects ? clone(child.effects) : [];
         (childClone as LineNode).strokeWeight = child.strokeWeight;
         (childClone as LineNode).strokeMiterLimit = child.strokeMiterLimit;
         (childClone as LineNode).strokeAlign = child.strokeAlign;
@@ -328,6 +332,8 @@ const detachInstance = (instance: InstanceNode): void => {
         (childClone as FrameNode).fills = child.fills ? clone(child.fills) : [];
         // stroke properties
         (childClone as FrameNode).strokes = child.strokes ? clone(child.strokes) : [];
+        // effects properties
+        (childClone as FrameNode).effects = child.effects ? clone(child.effects) : [];
         (childClone as FrameNode).strokeWeight = child.strokeWeight;
         (childClone as FrameNode).strokeMiterLimit = child.strokeMiterLimit;
         (childClone as FrameNode).strokeAlign = child.strokeAlign;
@@ -352,6 +358,8 @@ const detachInstance = (instance: InstanceNode): void => {
         (childClone as RectangleNode).fills = child.fills ? clone(child.fills) : [];
         // stroke properties
         (childClone as RectangleNode).strokes = child.strokes ? clone(child.strokes) : [];
+        // effects properties
+        (childClone as RectangleNode).effects = child.effects ? clone(child.effects) : [];
         (childClone as RectangleNode).strokeWeight = child.strokeWeight;
         (childClone as RectangleNode).strokeMiterLimit = child.strokeMiterLimit;
         (childClone as RectangleNode).strokeAlign = child.strokeAlign;
@@ -371,6 +379,8 @@ const detachInstance = (instance: InstanceNode): void => {
         (childClone as PolygonNode).fills = child.fills ? clone(child.fills) : [];
         // stroke properties
         (childClone as PolygonNode).strokes = child.strokes ? clone(child.strokes) : [];
+        // effects properties
+        (childClone as PolygonNode).effects = child.effects ? clone(child.effects) : [];
         (childClone as PolygonNode).strokeWeight = child.strokeWeight;
         (childClone as PolygonNode).strokeMiterLimit = child.strokeMiterLimit;
         (childClone as PolygonNode).strokeAlign = child.strokeAlign;
@@ -390,6 +400,8 @@ const detachInstance = (instance: InstanceNode): void => {
         (childClone as EllipseNode).fills = child.fills ? clone(child.fills) : [];
         // stroke properties
         (childClone as EllipseNode).strokes = child.strokes ? clone(child.strokes) : [];
+        // effects properties
+        (childClone as EllipseNode).effects = child.effects ? clone(child.effects) : [];
         (childClone as EllipseNode).strokeWeight = child.strokeWeight;
         (childClone as EllipseNode).strokeMiterLimit = child.strokeMiterLimit;
         (childClone as EllipseNode).strokeAlign = child.strokeAlign;
@@ -409,6 +421,8 @@ const detachInstance = (instance: InstanceNode): void => {
         (childClone as StarNode).fills = child.fills ? clone(child.fills) : [];
         // stroke properties
         (childClone as StarNode).strokes = child.strokes ? clone(child.strokes) : [];
+        // effects properties
+        (childClone as StarNode).effects = child.effects ? clone(child.effects) : [];
         (childClone as StarNode).strokeWeight = child.strokeWeight;
         (childClone as StarNode).strokeMiterLimit = child.strokeMiterLimit;
         (childClone as StarNode).strokeAlign = child.strokeAlign;
@@ -428,6 +442,8 @@ const detachInstance = (instance: InstanceNode): void => {
         (childClone as VectorNode).fills = child.fills ? clone(child.fills) : [];
         // stroke properties
         (childClone as VectorNode).strokes = child.strokes ? clone(child.strokes) : [];
+        // effects properties
+        (childClone as VectorNode).effects = child.effects ? clone(child.effects) : [];
         (childClone as VectorNode).strokeWeight = child.strokeWeight;
         (childClone as VectorNode).strokeMiterLimit = child.strokeMiterLimit;
         (childClone as VectorNode).strokeAlign = child.strokeAlign;
