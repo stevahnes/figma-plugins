@@ -96,6 +96,7 @@ export function validateInput(
   resetInvalidInput();
   getHTMLElementById("validValidator").classList.add("show");
   getHTMLElementById("negativeValidator").classList.remove("show");
+  getHTMLElementById("minimumRowsValidator").classList.remove("show");
   getHTMLElementById("constraintValidator").classList.remove("show");
   // negative and invalid value check
   let inputsToValidate: string[] = Constants.defaultInputsForModes[mode].concat(["tableFontSize"]);
@@ -111,13 +112,21 @@ export function validateInput(
       getHTMLInputElementById(input).classList.add("invalid");
       getHTMLElementById("validValidator").classList.remove("show");
       getHTMLElementById("negativeValidator").classList.add("show");
+      getHTMLElementById("minimumRowsValidator").classList.remove("show");
       getHTMLElementById("constraintValidator").classList.remove("show");
       validInput = false;
     }
   }
   // limit check
   if (validInput) {
-    if (
+    if ((!hasHeader && rows < 1) || (hasHeader && rows < 2)) {
+      setInvalidInputs(mode);
+      getHTMLElementById("validValidator").classList.remove("show");
+      getHTMLElementById("negativeValidator").classList.remove("show");
+      getHTMLElementById("minimumRowsValidator").classList.add("show");
+      getHTMLElementById("constraintValidator").classList.remove("show");
+      validInput = false;
+    } else if (
       columns * columnWidth > Constants.maxDimensionInPixels ||
       rows * rowHeight > Constants.maxDimensionInPixels ||
       columns > Constants.maxNumberOfRowsOrColumns ||
@@ -126,6 +135,7 @@ export function validateInput(
       setInvalidInputs(mode);
       getHTMLElementById("validValidator").classList.remove("show");
       getHTMLElementById("negativeValidator").classList.remove("show");
+      getHTMLElementById("minimumRowsValidator").classList.remove("show");
       getHTMLElementById("constraintValidator").classList.add("show");
       validInput = false;
     }

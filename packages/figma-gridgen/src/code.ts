@@ -59,18 +59,21 @@ function processMessage(message: Interfaces.PluginMessage): void {
       message.stripedbackgroundColor,
       message.referenceCoordinates,
     );
-    const evenRowBackgroundGroup: GroupNode = generateRowBackground(
-      Constants.RowBackgroundType.EVEN,
-      message.rows,
-      message.rowHeight,
-      message.columnWidth * message.columns,
-      message.alternateBackgrounds,
-      message.header,
-      message.primarybackgroundColor,
-      message.stripedbackgroundColor,
-      message.referenceCoordinates,
-    );
-    const rowBackgroundNode: SceneNode[] = [oddRowBackgroundGroup, evenRowBackgroundGroup];
+    const rowBackgroundNode: SceneNode[] = [oddRowBackgroundGroup];
+    if ((message.header && message.rows > 2) || (!message.header && message.rows > 1)) {
+      const evenRowBackgroundGroup: GroupNode = generateRowBackground(
+        Constants.RowBackgroundType.EVEN,
+        message.rows,
+        message.rowHeight,
+        message.columnWidth * message.columns,
+        message.alternateBackgrounds,
+        message.header,
+        message.primarybackgroundColor,
+        message.stripedbackgroundColor,
+        message.referenceCoordinates,
+      );
+      rowBackgroundNode.push(evenRowBackgroundGroup);
+    }
     const rowBackgroundGroup: GroupNode = Figma.groupNodes(rowBackgroundNode, figma.currentPage);
     rowBackgroundGroup.name = "Row Background";
 
