@@ -244,6 +244,9 @@ const detachInstance = (instance: InstanceNode): void => {
   newFrame.paddingTop = instance.paddingTop;
   newFrame.paddingBottom = instance.paddingBottom;
   newFrame.itemSpacing = instance.itemSpacing;
+  // opacity and blend mode
+  newFrame.opacity = instance.opacity;
+  newFrame.blendMode = instance.blendMode;
   // fill properties
   newFrame.fills = instance.fills ? clone(instance.fills) : [];
   // strokes properties
