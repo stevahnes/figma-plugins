@@ -238,11 +238,11 @@ const detachInstance = (instance: InstanceNode): void => {
     if (!READ_ONLY_OR_DEPRECATED_KEYS.includes(i)) {
       if (FUNCTION_BASED_KEYS.includes(i)) {
         if (i === "width" && instance[i] >= 0.01) {
-          const resizeHeight: number = newFrame.height >= 0.01 ? newFrame.height : 0.01;
+          const resizeHeight: number = Math.max(newFrame.height, 0.01);
           newFrame.resize(instance[i], resizeHeight);
         }
         if (i === "height" && instance[i] >= 0.01) {
-          const resizeWidth: number = newFrame.width >= 0.01 ? newFrame.width : 0.01;
+          const resizeWidth: number = Math.max(newFrame.width, 0.01);
           newFrame.resize(resizeWidth, instance[i]);
         }
       } else {
@@ -260,11 +260,11 @@ const detachInstance = (instance: InstanceNode): void => {
         if (!READ_ONLY_OR_DEPRECATED_KEYS.includes(j)) {
           if (FUNCTION_BASED_KEYS.includes(j)) {
             if (j === "width" && child[j] >= 0.01) {
-              const resizeHeight: number = childClone.height >= 0.01 ? childClone.height : 0.01;
+              const resizeHeight: number = childClone.type === "LINE" ? 0 : Math.max(childClone.height, 0.01);
               childClone.resize(child[j], resizeHeight);
             }
             if (j === "height" && child[j] >= 0.01) {
-              const resizeWidth: number = childClone.width >= 0.01 ? childClone.width : 0.01;
+              const resizeWidth: number = Math.max(childClone.width, 0.01);
               childClone.resize(resizeWidth, child[j]);
             }
           } else {
