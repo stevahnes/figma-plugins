@@ -238,10 +238,12 @@ const detachInstance = (instance: InstanceNode): void => {
     if (!READ_ONLY_OR_DEPRECATED_KEYS.includes(i)) {
       if (FUNCTION_BASED_KEYS.includes(i)) {
         if (i === "width" && instance[i] >= 0.01) {
-          newFrame.resize(instance[i], newFrame.height);
+          const resizeHeight: number = newFrame.height >= 0.01 ? newFrame.height : 0.01;
+          newFrame.resize(instance[i], resizeHeight);
         }
         if (i === "height" && instance[i] >= 0.01) {
-          newFrame.resize(newFrame.width, instance[i]);
+          const resizeWidth: number = newFrame.width >= 0.01 ? newFrame.width : 0.01;
+          newFrame.resize(resizeWidth, instance[i]);
         }
       } else {
         // if cornerRadius is figma.mixed, rely on the other individual keys
@@ -258,10 +260,12 @@ const detachInstance = (instance: InstanceNode): void => {
         if (!READ_ONLY_OR_DEPRECATED_KEYS.includes(j)) {
           if (FUNCTION_BASED_KEYS.includes(j)) {
             if (j === "width" && child[j] >= 0.01) {
-              childClone.resize(child[j], childClone.height);
+              const resizeHeight: number = childClone.height >= 0.01 ? childClone.height : 0.01;
+              childClone.resize(child[j], resizeHeight);
             }
             if (j === "height" && child[j] >= 0.01) {
-              childClone.resize(childClone.width, child[j]);
+              const resizeWidth: number = childClone.width >= 0.01 ? childClone.width : 0.01;
+              childClone.resize(resizeWidth, child[j]);
             }
           } else {
             // if cornerRadius is figma.mixed, rely on the other individual keys
