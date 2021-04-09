@@ -237,10 +237,10 @@ const detachInstance = (instance: InstanceNode): void => {
   for (const i in newFrame) {
     if (!READ_ONLY_OR_DEPRECATED_KEYS.includes(i)) {
       if (FUNCTION_BASED_KEYS.includes(i)) {
-        if (i === "width") {
+        if (i === "width" && instance[i] >= 0.01) {
           newFrame.resize(instance[i], newFrame.height);
         }
-        if (i === "height") {
+        if (i === "height" && instance[i] >= 0.01) {
           newFrame.resize(newFrame.width, instance[i]);
         }
       } else {
@@ -257,10 +257,10 @@ const detachInstance = (instance: InstanceNode): void => {
       for (const j in childClone) {
         if (!READ_ONLY_OR_DEPRECATED_KEYS.includes(j)) {
           if (FUNCTION_BASED_KEYS.includes(j)) {
-            if (j === "width") {
+            if (j === "width" && child[j] >= 0.01) {
               childClone.resize(child[j], childClone.height);
             }
-            if (j === "height") {
+            if (j === "height" && child[j] >= 0.01) {
               childClone.resize(childClone.width, child[j]);
             }
           } else {
