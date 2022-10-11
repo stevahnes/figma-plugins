@@ -283,9 +283,9 @@ const detachInstance = (instance: InstanceNode): void => {
   instance.remove();
 };
 
-async function loadNodeFont(fontName: FontName): Promise<void> {
-  await figma.loadFontAsync(fontName).catch(error => console.error(error));
-}
+// async function loadNodeFont(fontName: FontName): Promise<void> {
+//   await figma.loadFontAsync(fontName).catch(error => console.error(error));
+// }
 
 function clone(val) {
   const type = typeof val;

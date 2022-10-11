@@ -23,7 +23,7 @@
       "plugins": ["@typescript-eslint"],
       "rules": {
         "curly": "error",
-        "quotes": ["error", "double"],
+        "quotes": ["error", "double", { "allowTemplateLiterals": true }],
         // note you must disable the base rule as it can report incorrect errors
         "no-unused-vars": "off",
         "@typescript-eslint/no-unused-vars": [
