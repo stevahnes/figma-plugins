@@ -1,7 +1,7 @@
 language: node_js
 
 node_js:
-  - "node" # represents the latest stable Node.js release
+  - "16" # represents the latest stable Node.js release
 
 script:
   - npm run ci
